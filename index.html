@@ -5809,10 +5809,12 @@ function astToSymPy(ast) {
   if (!ast) return '0';
   switch(ast.type) {
     case 'NUM':   return String(ast.val);
-    case 'VAR':   return ast.name;
+    case 'VAR':   return ast.name || ast.val || '?';
     case 'CONST': {
+      // W tym kalkulatorze zmienne i stałe mają typ CONST z polem val
+      const v = ast.val || ast.name || '';
       const map = { e:'E', pi:'pi', inf:'oo', phi:'GoldenRatio', gamma:'EulerGamma' };
-      return map[ast.name] || ast.name;
+      return map[v] || v;
     }
     case 'UNARY': return `(-(${astToSymPy(ast.arg)}))`;
     case 'BINOP': {
@@ -5867,9 +5869,16 @@ async function getSymPyExprSteps(exprStr) {
 }
 
 // Zbiera nazwy zmiennych z AST
+// W tym kalkulatorze zmienne mają typ CONST z polem val (np. {type:'CONST', val:'x'})
+// Stałe matematyczne (e, pi, phi) są filtrowane
 function collectVars(ast) {
   if (!ast) return [];
-  if (ast.type === 'VAR') return [ast.name];
+  const MATH_CONSTS = new Set(['e','pi','inf','phi','gamma']);
+  if (ast.type === 'VAR') return [ast.name || ast.val].filter(Boolean);
+  if (ast.type === 'CONST') {
+    const v = ast.val || ast.name || '';
+    return MATH_CONSTS.has(v) ? [] : [v];
+  }
   if (ast.type === 'BINOP') return [...collectVars(ast.left), ...collectVars(ast.right)];
   if (ast.type === 'UNARY') return collectVars(ast.arg);
   if (ast.type === 'FUNC') return ast.args.flatMap(collectVars);
