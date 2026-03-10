@@ -1869,12 +1869,12 @@ function solveEquation() {
     // Render KaTeX
     resultEl.querySelectorAll('.eq-step').forEach(el => {
       const latex = decodeURIComponent(el.dataset.latex || '');
-      renderLatex(latex, el, true);
+      renderKatex(latex, el, true);
     });
     resultEl.querySelectorAll('.root-box[data-latex]').forEach(el => {
       const latex = decodeURIComponent(el.dataset.latex || '');
       const approx = el.dataset.approx || '';
-      renderLatex(latex, el, true);
+      renderKatex(latex, el, true);
       el.title = approx ? `≈ ${approx}` : '';
     });
 
@@ -5947,7 +5947,7 @@ async function upgradeEqStepsWithSymPy(lhsStr, rhsStr, varName) {
   // Re-render KaTeX
   resultEl.querySelectorAll('.eq-step').forEach(el => {
     const latex = decodeURIComponent(el.dataset.latex || '');
-    renderLatex(latex, el, true);
+    renderKatex(latex, el, true);
   });
 
   // Aktualizuj header
