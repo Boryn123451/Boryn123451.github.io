@@ -1768,14 +1768,30 @@ function solveEquation() {
           }
         }
 
-        // Cardano fallback
-        const p=(3*A*C-B*B)/(3*A*A), q=(2*B*B*B-9*A*B*C+27*A*A*D)/(27*A*A*A);
+        // Brak ładnej faktoryzacji — pokaż wszystkie pierwiastki numerycznie
         if (!isStandard) steps.push(`${fmt0} = 0`);
-        steps.push(
-          `\\text{Postać zredukowana: } t^{3} ${p>=0?`+ ${nL(p)}`:nL(p)}t ${q>=0?`+ ${nL(q)}`:nL(q)} = 0`,
-          `D = \\dfrac{q^{2}}{4} + \\dfrac{p^{3}}{27} = ${nL(q*q/4 + p*p*p/27)}`
-        );
-        return { header: 'Wzór Cardano', steps };
+        const _sols3 = solveCubic(A, B, C, D);
+        const _all3  = _sols3.roots || [];
+        let _ri = 1;
+        const _seen3 = new Set();
+        _all3.forEach(r => {
+          const isReal = typeof r === 'number' || Math.abs((r.im)||0) < 1e-9;
+          const re = typeof r === 'number' ? r : (r.re||0);
+          const im = typeof r === 'number' ? 0 : (r.im||0);
+          const key = Math.round(re*1e5)/1e5 + ':' + Math.round(Math.abs(im)*1e5)/1e5;
+          if (_seen3.has(key)) return;
+          _seen3.add(key);
+          if (isReal) {
+            steps.push({label:'Pierwiastek rzeczywisty', latex:`${vn}_{${_ri}} \\approx ${nL(re)}`});
+            _ri++;
+          } else {
+            const signStr = im >= 0 ? '+' : '-';
+            steps.push({label:'Pierwiastki zespolone (sprzężone)',
+              latex:`${vn}_{${_ri},${_ri+1}} \\approx ${nL(re)} \\pm ${nL(Math.abs(im))}i`});
+            _ri += 2;
+          }
+        });
+        return { header: 'Równanie sześcienne — pierwiastki', steps };
       }
 
       if (deg === 4) {
@@ -5623,20 +5639,54 @@ def _poly_steps(lhs, rhs, combined, var, deg, c, steps, orig):
             return {'header': 'Rozkład na czynniki (tw. Bézouta)',
                     'steps': steps, 'solutions': [lx(simplify(s)) for s in real_sols]}
 
-        # Wzór Cardano
+        # Brak ładnej faktoryzacji — pokaż pierwiastki numerycznie
         show_standard()
-        p_c = (3*A*C - B**2) / (3*A**2)
-        q_c = (2*B**3 - 9*A*B*C + 27*A**2*D) / (27*A**3)
-        p_cs, q_cs = simplify(p_c), simplify(q_c)
-        steps.append({'label': 'Postać zredukowana (podstawienie t = x − b/3a)',
-                       'latex': f't^3 + {lx(p_cs)}t + {lx(q_cs)} = 0'})
         sols = solve(expr_c, var)
-        real_sols = [s for s in sols if s.is_real]
-        for i, s in enumerate(real_sols):
-            steps.append({'label': f'{vn}\\\\!_{{{i+1}}}',
-                           'latex': f'{vn}_{{{i+1}}} = {lx(simplify(s))}'})
-        return {'header': 'Wzór Cardano', 'steps': steps,
-                'solutions': [lx(simplify(s)) for s in real_sols]}
+        real_sols  = sorted([s for s in sols if s.is_real],
+                             key=lambda s: float(s.evalf()))
+        cplx_sols  = [s for s in sols if not s.is_real]
+
+        def fmt_root(s):
+            ev = complex(s.evalf(10))
+            re_v = float(ev.real)
+            im_v = float(ev.imag)
+            # Sprawdź czy to ładna wymierna
+            try:
+                ns = nsimplify(re_v + 1j*im_v if abs(im_v)>1e-9 else re_v,
+                                rational=True, tolerance=1e-6)
+                if len(str(ns)) < 20:
+                    return lx(ns), True
+            except Exception:
+                pass
+            if abs(im_v) < 1e-9:
+                return f'{re_v:.10g}'.replace('.', '{,}'), False
+            sign = '+' if im_v >= 0 else '-'
+            return f'{re_v:.6g} {sign} {abs(im_v):.6g}i'.replace('.', '{,}'), False
+
+        idx = 1
+        for s in real_sols:
+            val, exact = fmt_root(s)
+            prefix = '' if exact else r'\approx '
+            steps.append({'label': 'Pierwiastek rzeczywisty',
+                           'latex': f'{vn}_{{{idx}}} {prefix}= {val}'})
+            idx += 1
+
+        seen_re = set()
+        for s in cplx_sols:
+            ev = complex(s.evalf(10))
+            key = round(ev.real, 5)
+            if key in seen_re:
+                continue
+            seen_re.add(key)
+            re_v = f'{float(ev.real):.6g}'.replace('.', '{,}')
+            im_v = f'{abs(float(ev.imag)):.6g}'.replace('.', '{,}')
+            steps.append({'label': 'Pierwiastki zespolone (sprzężone)',
+                           'latex': f'{vn}_{{{idx},{idx+1}}} \\approx {re_v} \\pm {im_v}i'})
+            idx += 2
+
+        all_vals = [fmt_root(s)[0] for s in real_sols + cplx_sols]
+        return {'header': 'Równanie sześcienne — pierwiastki', 'steps': steps,
+                'solutions': all_vals}
 
     # ────────────────────────────────────────────────────────
     # STOPIEŃ 4
