@@ -1628,10 +1628,25 @@ function solveEquation() {
       if (deg === 1) {
         const [A, B] = cs.length === 2 ? cs : [cs[cs.length-2], cs[cs.length-1]];
         const steps = [origEq];
-        if (!isStandard) steps.push(`${fmtPoly([A,B], vn)} = 0`);
-        if (Math.abs(B) > 1e-9) steps.push(`${fmtPoly([A], vn)} = ${nL(-B)}`);
-        if (Math.abs(A - 1) > 1e-9) steps.push(`${vn} = \\frac{${nL(-B)}}{${nL(A)}}`);
-        steps.push(`${vn} = ${nL(-B/A)}`);
+        // Przenoś wyrazy naturalnie, bez sprowadzania do =0
+        const lhsVal = evL(0), rhsVal = evR(0); // stałe po obu stronach
+        const lhsHasConst = Math.abs(Lc[Lc.length-1]) > 1e-9;
+        const rhsHasVar   = Math.abs(Rc[Rc.length-2]||0) > 1e-9;
+        // Krok 1: jeśli prawa strona ma zmienną, przenieś na lewą
+        if (rhsHasVar) steps.push(`${fmtPoly([A,B], vn)} = 0`);
+        // Krok 2: przenieś stałą z lewej na prawą (jeśli istnieje)
+        const rhs2 = -B/A, lhsLatex = Math.abs(A-1)<1e-9?vn:`${nL(A)}${vn}`;
+        if (Math.abs(B) > 1e-9 && !rhsHasVar) {
+          steps.push(`${lhsLatex} = ${nL(-B)}`);
+        }
+        // Krok 3: podziel przez współczynnik (jeśli A≠1)
+        const sol = -B/A;
+        if (Math.abs(A - 1) > 1e-9 && Math.abs(A + 1) > 1e-9) {
+          steps.push(`${vn} = \\frac{${nL(-B)}}{${nL(A)}}`);
+        } else if (Math.abs(A + 1) < 1e-9) {
+          steps.push(`${vn} = ${nL(-sol)}`);
+        }
+        steps.push(`${vn} = ${nL(sol)}`);
         return { header: 'Równanie liniowe', steps };
       }
 
@@ -5478,18 +5493,37 @@ def _poly_steps(lhs, rhs, combined, var, deg, c, steps, orig):
         return f'{lx(combined)} = 0'
 
     def show_standard():
-        """Dodaj krok 'postać standardowa' jeśli jest inna niż oryginalna."""
+        """Dodaj krok przeniesienia wyrazów tylko gdy sensowny — bez sztucznego =0 gdy niepotrzebne."""
         sf = std_form()
-        if sf != orig:
-            steps.append({'label': 'Postać standardowa', 'latex': sf})
+        # Nie pokazuj jeśli oryginał już jest w formie =0 lub różnica jest tylko kosmetyczna
+        if sf == orig:
+            return
+        # Nie pokazuj "Ax²+Bx+C=0" gdy oryginał jest prostszy np. "x²=k"
+        combined_lx = lx(combined)
+        if orig == f'{combined_lx} = 0':
+            return
+        steps.append({'label': 'Postać standardowa', 'latex': sf})
 
     # ────────────────────────────────────────────────────────
     # STOPIEŃ 1: równanie liniowe
     # ────────────────────────────────────────────────────────
     if deg == 1:
         A, B = c[0], c[1]
-        show_standard()
         sol = simplify(-B / A)
+        # Zachowaj oryginalną formę, przenoś naturalnie bez sprowadzania do =0
+        lhs_var_part = lx(A * var)  # np. "3x"
+        rhs_val = lx(-B)            # prawa strona po przeniesieniu stałej
+        # Krok: przenieś stałą z lewej na prawą (jeśli lewa ma stałą)
+        lhs_const = lhs - A*var     # stała po lewej
+        rhs_const = rhs             # prawa strona oryginalna
+        new_rhs = simplify(rhs - lhs_const)  # prawa po przeniesieniu
+        if lhs_const != 0:
+            steps.append({'label': 'Przeniesienie wyrazów',
+                           'latex': f'{lhs_var_part} = {lx(new_rhs)}'})
+        # Krok: podziel przez współczynnik
+        if A != 1 and A != -1:
+            steps.append({'label': f'Dzielenie przez {lx(A)}',
+                           'latex': f'{vn} = \\dfrac{{{lx(new_rhs)}}}{{{lx(A)}}}'})
         steps.append({'label': 'Rozwiązanie', 'latex': f'{vn} = {lx(sol)}'})
         return {'header': 'Równanie liniowe', 'steps': steps, 'solutions': [lx(sol)]}
 
