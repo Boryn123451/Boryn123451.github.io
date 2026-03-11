@@ -2178,9 +2178,10 @@ function setupCanvasEvents() {
     document.getElementById('canvasCoords').textContent =
       `x = ${parseFloat(wx.toPrecision(5))}`;
 
+    const GRAPH_COLORS=['#f59e0b','#60a5fa','#4ade80','#f472b6','#a78bfa'];
     const wyArr = parsedFunctions.map((fn,i) => {
       if (!fn) return null;
-      try { return {label:`f${i+1}`, y:fn(wx)}; }
+      try { return {label:`f${i+1}`, y:fn(wx), color:GRAPH_COLORS[i%GRAPH_COLORS.length]}; }
       catch { return null; }
     }).filter(Boolean);
 
@@ -6168,37 +6169,74 @@ function isFullyUnlocked(){return _isActivated;}
 
 function applyLicenseRestrictions(){
   if(_isActivated) return;
-  // Zablokuj wszystkie przyciski poza podstawowymi operacjami i cyframi
-  const ALLOWED_DATA=['0','1','2','3','4','5','6','7','8','9',
-    '+','-','*','/','(',')','.','=','C','CE','DEL','='];
-  document.querySelectorAll('.btn-key').forEach(btn=>{
-    const d=btn.dataset.val||btn.dataset.action||btn.textContent.trim();
-    const isBasic=ALLOWED_DATA.some(a=>d===a||btn.dataset.action===a);
-    if(!isBasic){
+
+  // 1. Ukryj wszystkie tryby poza głównym kalkulatorem
+  ['eqDisplay','graphDisplay','calculusDisplay','histDisplay','convDisplay'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el) el.style.display='none';
+  });
+
+  // 2. Ukryj przyciski trybów poza "calc"
+  document.querySelectorAll('.mode-btn').forEach(btn=>{
+    if(btn.dataset.mode && btn.dataset.mode!=='calc'){
+      btn.style.visibility='hidden';
+      btn.style.pointerEvents='none';
+    }
+  });
+
+  // 3. Zablokuj przyciski zaawansowane (wszystko poza cyframi i +-*/)
+  const BASIC_INSERT=['+','-','*','/','0','1','2','3','4','5','6','7','8','9','(',')','.'];
+  const BASIC_ACTION=['clear','clearEntry','backspace','calculate','toggleSign','percent'];
+  document.querySelectorAll('[data-insert],[data-action],[data-widget]').forEach(btn=>{
+    const ins=btn.dataset.insert||'';
+    const act=btn.dataset.action||'';
+    const isBasicIns=BASIC_INSERT.includes(ins.trim());
+    const isBasicAct=BASIC_ACTION.includes(act);
+    const isDigit=/^\d$/.test(btn.textContent.trim());
+    if(!isBasicIns && !isBasicAct && !isDigit && !btn.dataset.widget===false){
+      btn.classList.add('locked-feature');
+      btn.disabled=true;
+    }
+    if(btn.dataset.widget){
       btn.classList.add('locked-feature');
       btn.disabled=true;
     }
   });
-  // Ukryj tryb równania i historię
-  document.querySelectorAll('[data-mode="eq"],#historyPanel,.mode-btn[data-mode="eq"]').forEach(el=>{
-    el.style.display='none';
+
+  // 4. Zablokuj btn-fn, btn-const, btn-mem, btn-special
+  document.querySelectorAll('.btn-fn,.btn-const,.btn-mem,.btn-special,.mw-btn').forEach(btn=>{
+    btn.classList.add('locked-feature');
+    btn.disabled=true;
   });
-  // Pokaż baner "Wersja Trial"
+
+  // 5. Przechwyć switchMode żeby nie dało się wejść w inne tryby
+  window._origSwitchMode=window.switchMode;
+  window.switchMode=function(mode){
+    if(!_isActivated && mode!=='calc') return;
+    window._origSwitchMode(mode);
+  };
+
   showTrialBanner();
 }
 
 function removeRestrictions(){
+  // Przywróć tryby
+  ['eqDisplay','graphDisplay','calculusDisplay','histDisplay','convDisplay'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el) el.style.display='';  // switchMode zadecyduje co pokazać
+  });
+  document.querySelectorAll('.mode-btn').forEach(btn=>{
+    btn.style.visibility='';
+    btn.style.pointerEvents='';
+  });
   document.querySelectorAll('.locked-feature').forEach(btn=>{
     btn.classList.remove('locked-feature');
     btn.disabled=false;
   });
-  document.querySelectorAll('[data-mode="eq"],#historyPanel,.mode-btn[data-mode="eq"]').forEach(el=>{
-    el.style.display='';
-  });
+  // Przywróć switchMode
+  if(window._origSwitchMode) window.switchMode=window._origSwitchMode;
   const b=document.getElementById('trialBanner');
   if(b) b.remove();
-  const la=document.getElementById('licenseActivateBox');
-  if(la) la.remove();
 }
 
 function showTrialBanner(){
@@ -6305,65 +6343,112 @@ function toggleStepsPanel() {
 // ── Dokładne wartości na wykresie ────────────────────────────
 // Wykrywa wielokrotności π, √2, √3, ułamki itp.
 function exactValue(v) {
-  if (!isFinite(v)) return null;
-  const abs = Math.abs(v), sign = v < 0 ? '-' : '';
+  if (!isFinite(v) || v !== v) return null;
+  const abs = Math.abs(v), S = v < 0 ? '-' : '';
 
-  // Zero
-  if (abs < 1e-10) return '0';
+  if (abs < 1e-12) return '0';
 
   // Liczba całkowita
-  const rounded = Math.round(v);
-  if (Math.abs(v - rounded) < 1e-9) return String(rounded);
+  const ri = Math.round(v);
+  if (Math.abs(v - ri) < 1e-9) return String(ri);
 
-  // Ułamki p/q (małe)
-  for (let q = 2; q <= 16; q++) {
-    for (let p = 1; p < q * 20; p++) {
-      if (Math.abs(abs - p/q) < 1e-9) return `${sign}${p}/${q}`;
+  // Ułamki p/q dla q <= 120
+  const bestFrac = (function(){
+    let bestErr=1e-8, bestStr=null;
+    for(let q=2;q<=120;q++){
+      const p=Math.round(abs*q);
+      if(p===0) continue;
+      const err=Math.abs(abs - p/q);
+      if(err < bestErr){ bestErr=err; bestStr=`${S}${p}/${q}`; }
     }
-  }
+    return bestStr;
+  })();
 
-  // Wielokrotności π
-  const piMults = [
-    [1,1,'\\pi'],[1,2,'\\frac{\\pi}{2}'],[1,3,'\\frac{\\pi}{3}'],
-    [1,4,'\\frac{\\pi}{4}'],[1,6,'\\frac{\\pi}{6}'],[2,3,'\\frac{2\\pi}{3}'],
-    [3,4,'\\frac{3\\pi}{4}'],[5,6,'\\frac{5\\pi}{6}'],[2,1,'2\\pi'],
-    [3,2,'\\frac{3\\pi}{2}'],[1,12,'\\frac{\\pi}{12}'],[5,4,'\\frac{5\\pi}{4}'],
+  // Helper: LaTeX frac
+  const frac=(n,d)=>d===1?`${n}`:`\\frac{${n}}{${d}}`;
+
+  // Baza stałych do sprawdzenia (wartość, LaTeX)
+  const PI=Math.PI, E=Math.E, S2=Math.SQRT2, S3=Math.sqrt(3), S5=Math.sqrt(5), S6=Math.sqrt(6);
+  const LN2=Math.LN2, PHI=(1+S5)/2;
+
+  const atoms = [
+    [PI,'\\pi'],[E,'e'],[S2,'\\sqrt{2}'],[S3,'\\sqrt{3}'],[S5,'\\sqrt{5}'],
+    [S6,'\\sqrt{6}'],[LN2,'\\ln 2'],[1/E,'\\frac{1}{e}'],[PHI,'\\varphi'],
+    [Math.log(3),'\\ln 3'],[Math.log(5),'\\ln 5'],[Math.log10(Math.E),'\\log e'],
   ];
-  for (const [num,den,tex] of piMults) {
-    const val = num * Math.PI / den;
-    if (Math.abs(abs - val) < 1e-8) return sign + tex;
-  }
 
-  // √2, √3, √5 i ich wielokrotności
-  const sqrts = [[Math.SQRT2,'\\sqrt{2}'],[Math.sqrt(3),'\\sqrt{3}'],[Math.sqrt(5),'\\sqrt{5}']];
-  for (const [sv, stex] of sqrts) {
-    for (let k = 1; k <= 6; k++) {
-      if (Math.abs(abs - k*sv) < 1e-8) return sign + (k===1?'':k) + stex;
-      if (Math.abs(abs - k*sv/2) < 1e-8) return `${sign}\\frac{${k===1?'':k}${stex}}{2}`;
+  // Sprawdź k*atom i k*atom/d dla małych k,d
+  let bestScore=1e-8, bestExact=null;
+  for(const [aval, atex] of atoms){
+    for(let k=1;k<=12;k++){
+      for(let d=1;d<=12;d++){
+        const candidate = k * aval / d;
+        const err = Math.abs(abs - candidate);
+        if(err < bestScore){
+          bestScore=err;
+          const num = k===1 ? atex : `${k}${atex}`;
+          bestExact = S + (d===1 ? num : `\\frac{${num}}{${d}}`);
+        }
+      }
+    }
+    // k*atom^2
+    for(let k=1;k<=6;k++){
+      for(let d=1;d<=6;d++){
+        const candidate = k * aval * aval / d;
+        const err = Math.abs(abs - candidate);
+        if(err < bestScore){
+          bestScore=err;
+          // simplify atom^2 if possible
+          const a2map={'\\pi':'\\pi^2','e':'e^2','\\sqrt{2}':'2','\\sqrt{3}':'3','\\sqrt{5}':'5','\\sqrt{6}':'6'};
+          const a2tex = a2map[atex]||`(${atex})^2`;
+          const num = k===1 ? a2tex : `${k}${a2tex}`;
+          bestExact = S + (d===1 ? num : `\\frac{${num}}{${d}}`);
+        }
+      }
     }
   }
 
-  // ln(2), e, 1/e
-  const consts = [[Math.LN2,'\\ln 2'],[Math.E,'e'],[1/Math.E,'\\frac{1}{e}'],[Math.LOG2E,'\\log_2 e']];
-  for (const [cv, ctex] of consts) {
-    if (Math.abs(abs - cv) < 1e-8) return sign + ctex;
+  // Kombinacje dwóch atomów: a*atom1 ± b*atom2 (np. sqrt(2)/2, pi+sqrt(3))
+  for(let i=0;i<atoms.length;i++){
+    for(let j=i+1;j<atoms.length;j++){
+      const [av,at]=atoms[i], [bv,bt]=atoms[j];
+      for(let ka=1;ka<=4;ka++) for(let kb=1;kb<=4;kb++){
+        for(const sgn of [1,-1]){
+          const candidate=(ka*av+sgn*kb*bv);
+          const err=Math.abs(abs-candidate);
+          if(err<bestScore){
+            bestScore=err;
+            const pt1=ka===1?at:`${ka}${at}`, pt2=kb===1?bt:`${kb}${bt}`;
+            bestExact=S+(sgn>0?`${pt1}+${pt2}`:`${pt1}-${pt2}`);
+          }
+        }
+      }
+    }
   }
 
-  return null; // nie znaleziono
+  if(bestExact) return bestExact;
+  if(bestFrac) return bestFrac;
+  return null;
 }
+
 
 // ── Ulepszone rysowanie tooltipa wykresu ──────────────────────
 function buildGraphTooltip(wx, wy_arr) {
-  // wx = x świata, wy_arr = [{label,y}]
-  let html = '';
-  const ex = exactValue(wx);
-  html += `<div class="tooltip-coord">x = ${ex ? `<span class="tooltip-exact">${ex.replace(/\\/g,'\\\\')}</span>` : parseFloat(wx.toPrecision(6))}</div>`;
-  wy_arr.forEach(({label, y}) => {
+  function fmt(val) {
+    const ex = exactValue(val);
+    const num = parseFloat(val.toPrecision(7));
+    if (!ex) return `<b>${num}</b>`;
+    // Render exact value with KaTeX inline
+    let katexHtml = '';
+    try { katexHtml = katex.renderToString(ex, {throwOnError:false, displayMode:false}); }
+    catch { katexHtml = ex; }
+    return `${katexHtml} <span style="color:var(--muted);font-size:.65rem">≈${num}</span>`;
+  }
+  let html = `<div class="tooltip-coord">x = ${fmt(wx)}</div>`;
+  wy_arr.forEach(({label, y, color}) => {
     if (!isFinite(y)) return;
-    const ey = exactValue(y);
-    html += `<div>${label} = ${ey
-      ? `<span class="tooltip-exact">${ey.replace(/\\/g,'\\\\')}</span> <span style="color:var(--muted);font-size:.65rem">(≈${parseFloat(y.toPrecision(4))})</span>`
-      : `<b>${parseFloat(y.toPrecision(6))}</b>`}</div>`;
+    const dot = color ? `<span style="color:${color};margin-right:.3rem">●</span>` : '';
+    html += `<div>${dot}${label} = ${fmt(y)}</div>`;
   });
   return html;
 }
