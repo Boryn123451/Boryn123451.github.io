@@ -234,7 +234,71 @@ E8 Prep
 <section class="screen" id="screen-stats" data-screen="stats"></section>
 
 <div class="screen" id="screen-calc" data-screen="calc">
-    <!-- ... calc content ... -->
+    <h1 class="section-title">🎓 Kalkulator Punktów do Liceum</h1>
+    <p class="section-desc" style="margin-bottom:20px">Przelicz swoje przewidywane wyniki E8 i oceny na świadectwie (Zasady z roku 2026).</p>
+    <div style="display:flex;flex-wrap:wrap;gap:20px;">
+        <div class="card" style="flex:2;min-width:280px;">
+            <h3 style="margin-bottom:10px;color:var(--accent)">📝 Egzamin Ósmoklasisty (max 100 pkt)</h3>
+            <div style="margin:10px 0;display:grid;grid-template-columns:repeat(auto-fit, minmax(100px, 1fr));gap:10px;">
+                <label>Polski (%) <input type="number" id="calc-e-pol" max="100" min="0" value="50" oninput="updateCalculator()"></label>
+                <label>Matematyka (%) <input type="number" id="calc-e-mat" max="100" min="0" value="50" oninput="updateCalculator()"></label>
+                <label>Angielski (%) <input type="number" id="calc-e-ang" max="100" min="0" value="50" oninput="updateCalculator()"></label>
+            </div>
+            
+            <h3 style="margin:25px 0 10px;color:var(--accent-blue)">📚 Oceny na świadectwie (max 72 pkt)</h3>
+            <div style="margin:10px 0;display:grid;grid-template-columns:repeat(auto-fit, minmax(120px, 1fr));gap:10px;">
+                <label>Język polski
+                    <select id="calc-g-pol" onchange="updateCalculator()">
+                        <option value="18">Celujący (6)</option><option value="17">Bardzo dobry (5)</option>
+                        <option value="14" selected>Dobry (4)</option><option value="8">Dostateczny (3)</option><option value="2">Dopuszczający (2)</option>
+                    </select>
+                </label>
+                <label>Matematyka
+                    <select id="calc-g-mat" onchange="updateCalculator()">
+                        <option value="18">Celujący (6)</option><option value="17">Bardzo dobry (5)</option>
+                        <option value="14" selected>Dobry (4)</option><option value="8">Dostateczny (3)</option><option value="2">Dopuszczający (2)</option>
+                    </select>
+                </label>
+                <label>Przedmiot I
+                    <select id="calc-g-p1" onchange="updateCalculator()">
+                        <option value="18">Celujący (6)</option><option value="17">Bardzo dobry (5)</option>
+                        <option value="14" selected>Dobry (4)</option><option value="8">Dostateczny (3)</option><option value="2">Dopuszczający (2)</option>
+                    </select>
+                </label>
+                <label>Przedmiot II
+                    <select id="calc-g-p2" onchange="updateCalculator()">
+                        <option value="18">Celujący (6)</option><option value="17">Bardzo dobry (5)</option>
+                        <option value="14" selected>Dobry (4)</option><option value="8">Dostateczny (3)</option><option value="2">Dopuszczający (2)</option>
+                    </select>
+                </label>
+            </div>
+
+            <h3 style="margin:25px 0 10px;color:var(--polish)">🏆 Osiągnięcia (max 28 pkt)</h3>
+            <div style="margin:10px 0;display:flex;flex-direction:column;gap:12px;">
+                <label style="display:flex;align-items:center;gap:10px;cursor:pointer">
+                    <input type="checkbox" id="calc-honors" style="width:20px;height:20px;margin-top:0" onchange="updateCalculator()"> Świadectwo z paskiem (+7 pkt)
+                </label>
+                <label style="display:flex;align-items:center;gap:10px;cursor:pointer">
+                    <input type="checkbox" id="calc-vol" style="width:20px;height:20px;margin-top:0" onchange="updateCalculator()"> Wolontariat (+3 pkt)
+                </label>
+                <label>Konkursy i olimpiady (max 18 pkt) 
+                    <input type="number" id="calc-comp" max="18" min="0" value="0" oninput="updateCalculator()">
+                </label>
+            </div>
+        </div>
+        
+        <div class="card" style="flex:1;min-width:250px;text-align:center;display:flex;flex-direction:column;justify-content:center;background:linear-gradient(135deg, rgba(34,197,94,0.1), rgba(59,130,246,0.1))">
+            <h2 style="color:var(--text2)">Twój wynik:</h2>
+            <div id="calc-total" style="font-size:5rem;font-weight:900;color:var(--accent);margin:10px 0;line-height:1;">106</div>
+            <div style="font-size:1.1rem;color:var(--text2);margin-bottom:20px">/ 200 punktów</div>
+            
+            <div style="text-align:left;font-size:0.9rem;color:var(--text2);border-top:1px solid var(--border);padding-top:15px">
+                <p style="margin-bottom:6px">Egzamin <strong id="calc-sum-exam" style="color:var(--accent);float:right">50 pkt</strong></p>
+                <p style="margin-bottom:6px">Oceny <strong id="calc-sum-grades" style="color:var(--accent-blue);float:right">56 pkt</strong></p>
+                <p>Osiągnięcia <strong id="calc-sum-achieve" style="color:var(--polish);float:right">0 pkt</strong></p>
+            </div>
+        </div>
+    </div>
 </div>
 
 <div class="screen" id="screen-essay" data-screen="essay">
@@ -250,7 +314,7 @@ E8 Prep
             <button class="btn btn-secondary" onclick="drawEssayTopic()">🎲 Losuj temat</button>
         </div>
         
-        <textarea id="essay-textarea" rows="15" style="width:100%; padding:15px; border-radius:12px; background:rgba(0,0,0,0.2); color:var(--text); border:1px solid var(--border); font-family:'Inter', sans-serif; font-size:1rem; line-height:1.6; resize:vertical;" placeholder="Zacznij pisać tutaj..." oninput="updateEssayStats()"></textarea>
+        <textarea id="essay-textarea" rows="12" style="width:100%; padding:15px; border-radius:12px; background:rgba(0,0,0,0.2); color:var(--text); border:1px solid var(--border); font-family:'Inter', sans-serif; font-size:1rem; line-height:1.6; resize:vertical;" placeholder="Zacznij pisać tutaj..." oninput="updateEssayStats()"></textarea>
         
         <div style="display:flex; justify-content:space-between; align-items:center; margin-top:15px; flex-wrap:wrap; gap:10px;">
             <div id="essay-word-count" style="font-weight:bold; font-size:1.1rem; color:var(--text2)">Słowa: 0 / 200</div>
@@ -260,8 +324,8 @@ E8 Prep
 
     <div class="card">
         <h3 style="margin-bottom:15px">📋 Checklista Arkusza</h3>
-        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:10px;">
-            <label style="display:flex; align-items:center; gap:10px; cursor:pointer"><input type="checkbox" style="width:18px; height:18px"> Wstęp z tezą / hipotezą</label>
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:10px;">
+            <label style="display:flex; align-items:center; gap:10px; cursor:pointer"><input type="checkbox" style="width:18px; height:18px"> Wstęp z tezą</label>
             <label style="display:flex; align-items:center; gap:10px; cursor:pointer"><input type="checkbox" style="width:18px; height:18px"> Argument I (Lektura)</label>
             <label style="display:flex; align-items:center; gap:10px; cursor:pointer"><input type="checkbox" style="width:18px; height:18px"> Argument II (Inny tekst)</label>
             <label style="display:flex; align-items:center; gap:10px; cursor:pointer"><input type="checkbox" style="width:18px; height:18px"> Argument III / Kontekst</label>
@@ -272,9 +336,10 @@ E8 Prep
 </div>
 
 <div class="screen" id="screen-shop" data-screen="shop">
-<h1 class="section-title">🛒 Sklepik z Motywami</h1>
-<p class="section-desc">Kupuj nowe style wizualne za monety (🪙) zdobyte w quizach i egzaminach próbnych!</p>
-<div id="shop-container" class="card-grid"></div>
+    <h1 class="section-title">🛒 Sklepik z Motywami</h1>
+    <p class="section-desc">Kupuj nowe style wizualne za monety (🪙) zdobyte w quizach i egzaminach próbnych!</p>
+    <div id="shop-grid" class="card-grid"></div>
+</div>
 </div>
 
 <div id="license-overlay" class="overlay" style="display:none; z-index:99999; background:var(--bg)">
@@ -2640,9 +2705,12 @@ polish: {
 </div>
 <h3>📌 Rozprawka i Formy Wypowiedzi</h3>
 <div class="formula"><b>Rozprawka:</b>
-1. <b>Wstęp:</b> Wprowadzenie w temat i postawienie jasnej TEZY (np. "Zgadzam się ze stwierdzeniem, że..."). Wstęp zamykamy zapowiedzią argumentacji. <br>
+1. <b>Wstęp:</b> Wprowadzenie w temat i postawienie jasnej TEZY (np. "Zgadzam się ze stwierdzeniem, że..."). <b>Ważne:</b> Na egzaminie ósmoklasisty nigdy nie stawiaj hipotezy – zawsze od razu Tezę! Wstęp zamykamy zapowiedzią argumentacji. <br>
 2. <b>Rozwinięcie:</b> Zazwyczaj 2-3 akapity. Każdy akapit = jeden ARGUMENT. Argument należy zilustrować PRZYKŁADEM z literatury (często przypisana lektura + wybrany przez siebie tekst kultury).<br>
-3. <b>Zakończenie:</b> Podsumowanie wywodów, przeformułowana teza jako jasny wniosek końcowy.<br><br>
+3. <b>Zakończenie:</b> Podsumowanie wywodów, przeformułowana teza jako jasny wniosek końcowy. <br><br>
+<div class="card" style="border-left: 4px solid var(--accent); background: rgba(var(--accent-rgb), 0.1); margin-top: 10px;">
+    <strong>💡 PRO-TIP CKE:</strong> Nigdy nie używaj sformułowań "spróbuję rozważyć", "zastanowię się". Napisz wprost: "Moim zdaniem...", "Uważam...", "Zgadzam się...". Egzaminator ocenia Twoją zdolność do argumentacji za konkretnym stanowiskiem!
+</div>
 <b>Opowiadanie twórcze:</b>
 Pisząc opowiadanie, pamiętaj o:
 - zastosowaniu retrospekcji, opisów i dialogów
@@ -3131,12 +3199,11 @@ l.classList.toggle('active',l.dataset.nav===id);
 });
 appState.currentScreen=id;
 if(id==='dashboard')renderDashboard();
-else if(id==='math')renderSubject('math');
-else if(id==='polish')renderSubject('polish');
-else if(id==='english')renderSubject('english');
+else if(['math','polish','english'].includes(id)) renderSubject(id);
 else if(id==='exam')renderExamScreen();
 else if(id==='stats')renderStats();
 else if(id==='calc')setTimeout(updateCalculator,50);
+else if(id==='shop')renderShop();
 }
 
 window.updateCalculator = function() {
