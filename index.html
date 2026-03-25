@@ -44,8 +44,10 @@ input:focus,textarea:focus{border-color:var(--accent);outline:none;box-shadow:0 
 @keyframes bounce{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
 @keyframes confettiFall{0%{transform:translateY(0) rotate(0);opacity:1}100%{transform:translateY(400px) rotate(720deg);opacity:0}}
 @keyframes flipIn{from{transform:rotateY(90deg);opacity:0}to{transform:rotateY(0);opacity:1}}
-.card{background:var(--card);border-radius:var(--radius);padding:20px;border:1px solid #2a2a4a;transition:all var(--transition)}
-.card:hover{transform:translateY(-4px);box-shadow:0 8px 32px rgba(0,0,0,0.3);border-color:#3a3a5a}
+@keyframes pulseGlow{0%{box-shadow:0 0 0 0 rgba(74,222,128,0.4)}70%{box-shadow:0 0 0 8px rgba(74,222,128,0)}100%{box-shadow:0 0 0 0 rgba(74,222,128,0)}}
+@keyframes floatAnim{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+.card{background:var(--card);border-radius:var(--radius);padding:20px;border:1px solid #2a2a4a;transition:all 0.3s cubic-bezier(0.4, 0, 0.2, 1)}
+.card:hover{transform:translateY(-6px) scale(1.01);box-shadow:0 12px 32px rgba(0,0,0,0.4);border-color:var(--accent-blue)}
 .card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px;margin-top:16px}
 .topic-card{cursor:pointer;position:relative;overflow:hidden}
 .topic-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
@@ -63,15 +65,17 @@ input:focus,textarea:focus{border-color:var(--accent);outline:none;box-shadow:0 
 .progress-bar-fill.english{background:linear-gradient(90deg,var(--english),#7dd3fc)}
 .btn{padding:10px 20px;border-radius:8px;font-weight:600;transition:all var(--transition)}
 .btn-primary{background:var(--accent);color:#0f0f1a}
-.btn-primary:hover{background:#22c55e;transform:translateY(-1px)}
+.btn-primary:hover{background:#22c55e;transform:translateY(-2px);animation:pulseGlow 1.5s infinite}
 .btn-secondary{background:transparent;color:var(--text);border:1px solid #444}
 .btn-secondary:hover{border-color:var(--accent);color:var(--accent)}
 .btn-danger{background:var(--error);color:#fff}
 .btn-sm{padding:6px 14px;font-size:0.85rem}
 .btn-lg{padding:14px 28px;font-size:1.1rem}
 .badge-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
-.badge{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:20px;font-size:0.8rem;background:rgba(255,255,255,0.06);border:1px solid #333}
-.badge.earned{border-color:var(--accent);background:rgba(74,222,128,0.1)}
+.badge{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:20px;font-size:0.8rem;background:rgba(255,255,255,0.06);border:1px solid #333;transition:all 0.3s cubic-bezier(0.4,0,0.2,1);cursor:default}
+.badge.locked{filter:grayscale(100%);opacity:0.5;background:rgba(0,0,0,0.2)}
+.badge:hover{transform:scale(1.08) rotate(3deg);box-shadow:0 4px 12px rgba(74,222,128,0.15)}
+.badge.earned{border-color:var(--accent);background:rgba(74,222,128,0.1);animation:floatAnim 4s ease-in-out infinite}
 .section-title{font-size:1.6rem;margin-bottom:8px}
 .section-desc{color:var(--text2);margin-bottom:20px;font-size:0.95rem}
 .subject-header{display:flex;align-items:center;gap:12px;margin-bottom:20px}
@@ -93,8 +97,8 @@ input:focus,textarea:focus{border-color:var(--accent);outline:none;box-shadow:0 
 .quiz-progress-text{color:var(--text2);font-size:0.9rem}
 .quiz-question{font-size:1.15rem;margin-bottom:20px;line-height:1.6}
 .quiz-options{display:flex;flex-direction:column;gap:10px}
-.quiz-option{padding:14px 18px;border:2px solid #444;border-radius:10px;background:var(--card);color:var(--text);cursor:pointer;transition:all var(--transition);text-align:left;font-size:0.95rem;display:flex;align-items:center;gap:12px}
-.quiz-option:hover:not(.disabled){border-color:#666;background:#2a2a4a}
+.quiz-option{padding:14px 18px;border:2px solid #444;border-radius:10px;background:var(--card);color:var(--text);cursor:pointer;transition:all 0.25s cubic-bezier(0.4,0,0.2,1);text-align:left;font-size:0.95rem;display:flex;align-items:center;gap:12px}
+.quiz-option:hover:not(.disabled){border-color:var(--accent-blue);background:#2a2a4a;transform:translateX(6px)}
 .quiz-option .opt-letter{font-weight:700;color:var(--accent-blue);min-width:24px}
 .quiz-option.correct{border-color:var(--success);background:rgba(74,222,128,0.1);animation:bounce 0.3s ease}
 .quiz-option.wrong{border-color:var(--error);background:rgba(248,113,113,0.1);animation:shake 0.4s ease}
@@ -490,7 +494,7 @@ function generateMathQuestions(topic, count = 15, selectedDiff = 'mix') {
                 let n = getRand(4, 12) + Math.floor(v/2);
                 let sq = n * n + getRand(1, 2 * n - 1);
                 let phrases = [
-                    `Między jakimi kolejnymi liczbami naturalnymi leży √${sq}?`, `Wskaż przedział dla pierwiastka: √${sq}.`, `Pomiędzy którymi liczbami całkowitymi znajduje się liczba √${sq}?`, `Liczba √${sq} na osi liczbowej leży między:`, `Szacując wartość √${sq}, wskaż najbliższe liczby całkowite:`, `W jakich granicach całkowitych mieści się √${sq}?`, `Między którymi wartościami naturalnymi leży pierwiastek kwadratowy z ${sq}?`, `Liczba √${sq} jest większa od pewnej liczby całkowitej i mniejsza od kolejnej. Jakich?`, `Dla √${sq} wskaż poprawny przedział liczb naturalnych:`, `Pomiedzy którymi kolejnymi liczbami (bez ułamków) leży √${sq}?`
+                    `Między jakimi kolejnymi liczbami naturalnymi leży \\( \\sqrt{${sq}} \\)?`, `Wskaż przedział dla pierwiastka: \\( \\sqrt{${sq}} \\).`, `Pomiędzy którymi liczbami całkowitymi znajduje się liczba \\( \\sqrt{${sq}} \\)?`, `Liczba \\( \\sqrt{${sq}} \\) na osi liczbowej leży między:`, `Szacując wartość \\( \\sqrt{${sq}} \\), wskaż najbliższe liczby całkowite:`, `W jakich granicach całkowitych mieści się \\( \\sqrt{${sq}} \\)?`, `Między którymi wartościami naturalnymi leży pierwiastek kwadratowy z \\( ${sq} \\)?`, `Liczba \\( \\sqrt{${sq}} \\) jest większa od pewnej liczby całkowitej i mniejsza od kolejnej. Jakich?`, `Dla \\( \\sqrt{${sq}} \\) wskaż poprawny przedział liczb naturalnych:`, `Pomiedzy którymi kolejnymi liczbami (bez ułamków) leży \\( \\sqrt{${sq}} \\)?`
                 ];
                 let ansStr = n + ' i ' + (n + 1);
                 q.question = phrases[v-1];
@@ -502,7 +506,7 @@ function generateMathQuestions(topic, count = 15, selectedDiff = 'mix') {
                 let base = getRand(2, 5); let e1 = getRand(2, 4)+v; let e2 = getRand(1, 3)+Math.floor(v/2);
                 let ans = e1 + e2;
                 let phrases = [
-                    `Uprość: ${base}^${e1} · ${base}^${e2}. Podaj wynikowy wykładnik potęgi o podstawie ${base}.`, `Zapisz ${base}^${e1} · ${base}^${e2} w postaci jednej potęgi. Jaki jest jej wykładnik?`, `Iloczyn ${base}^${e1} razy ${base}^${e2} zapisz jako ${base}^n. Ile wynosi n?`, `Oblicz wykładnik: ${base}^${e1} · ${base}^${e2} = ${base}^?`, `Stosując prawa działań na potęgach: ${base}^${e1} · ${base}^${e2} da potęgę o wykładniku równej:`, `Co powstanie w wykładniku, gdy pomnożysz ${base}^${e1} przez ${base}^${e2}?`, `Wynik mnożenia potęg ${base}^${e1} · ${base}^${e2} to ${base}^x. x=?`, `Do jakiej potęgi należy podnieść liczbę ${base}, by otrzymać ${base}^${e1} · ${base}^${e2}?`, `Uprość wyrażenie: ${base}^${e1} · ${base}^${e2} i wskaż nowy wykładnik.`, `Ile wynosi n w równaniu ${base}^${e1} · ${base}^${e2} = ${base}^n?`
+                    `Uprość: \\( ${base}^{${e1}} \\cdot ${base}^{${e2}} \\). Podaj wynikowy wykładnik potęgi o podstawie ${base}.`, `Zapisz \\( ${base}^{${e1}} \\cdot ${base}^{${e2}} \\) w postaci jednej potęgi. Jaki jest jej wykładnik?`, `Iloczyn \\( ${base}^{${e1}} \\) razy \\( ${base}^{${e2}} \\) zapisz jako \\( ${base}^n \\). Ile wynosi n?`, `Oblicz wykładnik: \\( ${base}^{${e1}} \\cdot ${base}^{${e2}} = ${base}^? \\)`, `Stosując prawa działań na potęgach: \\( ${base}^{${e1}} \\cdot ${base}^{${e2}} \\) da potęgę o wykładniku równej:`, `Co powstanie w wykładniku, gdy pomnożysz \\( ${base}^{${e1}} \\) przez \\( ${base}^{${e2}} \\)?`, `Wynik mnożenia potęg \\( ${base}^{${e1}} \\cdot ${base}^{${e2}} \\) to \\( ${base}^x \\). x=?`, `Do jakiej potęgi należy podnieść liczbę ${base}, by otrzymać \\( ${base}^{${e1}} \\cdot ${base}^{${e2}} \\)?`, `Uprość wyrażenie: \\( ${base}^{${e1}} \\cdot ${base}^{${e2}} \\) i wskaż nowy wykładnik.`, `Ile wynosi n w równaniu \\( ${base}^{${e1}} \\cdot ${base}^{${e2}} = ${base}^n \\)?`
                 ];
                 q.question = phrases[v-1];
                 q.options = shuffleArray(makeUniqueOptions(ans, [e1 * e2, Math.abs(e1 - e2), e1]));
@@ -520,7 +524,7 @@ function generateMathQuestions(topic, count = 15, selectedDiff = 'mix') {
                 let ansStr = (sum / g) + '/' + (commonD / g);
                 if (commonD / g === 1) ansStr = String(sum / g);
                 let noun = strN[v-1];
-                q.question = `W naczyniu zmieszano ${n1}/${d1} i ${n2}/${d2} ${noun}. Podaj wynik w postaci nieskracalnej.`;
+                q.question = `W naczyniu zmieszano \\( \\frac{${n1}}{${d1}} \\) i \\( \\frac{${n2}}{${d2}} \\) ${noun}. Podaj wynik w postaci nieskracalnej.`;
                 q.options = shuffleArray(makeUniqueOptions(ansStr, [(n1 + n2) + '/' + (d1 + d2), sum + '/' + commonD, (n1 * n2) + '/' + (d1 * d2)]));
                 q.correct = q.options.indexOf(ansStr);
                 q.explanation = 'Wspólny mianownik to ' + commonD + '. Suma = ' + ansStr + '.';
@@ -549,7 +553,7 @@ function generateMathQuestions(topic, count = 15, selectedDiff = 'mix') {
                 // Powers + Roots combined
                 let a = getRand(2, 5)+Math.floor(v/3); let s = a * a;
                 let forms = [
-                     `√(${s}³) = ${s}^n. Ile wynosi n?`, `Wartość √( ${s}³ ) można zapisać jako potęgę o podstawie ${s} i wykładniku n. Znajdź n.`, `Jeśli √(${s}^3) = ${s}^n, podaj n.`, `Ile to jest n dla równania √(${s} * ${s}^2) = ${s}^n ?`, `Oblicz wykładnik n: √(${s} podniesione do sześcianu) = ${s}^n.`, `Podstawą jest ${s}. Wyrażenie to √(${s}^3). Zapisz jako ułamek w potędze.`, `Kiedy pierwiastek kwadratowy spotka sześcian: √(${s}³) = ${s}^x. x=?`, `Znajdź n, gdzie √(${s}³) = ${s}^n.`, `Uprość z wykorzystaniem potęg wymiernych: √(${s}^3) = ${s}^n. Podaj n.`, `Wskaż potege n: √(${s}³) wynosi ${s} do potęgi. Ile?`
+                     `\\( \\sqrt{${s}^3} = ${s}^n \\). Ile wynosi n?`, `Wartość \\( \\sqrt{${s}^3} \\) można zapisać jako potęgę o podstawie ${s} i wykładniku n. Znajdź n.`, `Jeśli \\( \\sqrt{${s}^3} = ${s}^n \\), podaj n.`, `Ile to jest n dla równania \\( \\sqrt{${s} \\cdot ${s}^2} = ${s}^n \\) ?`, `Oblicz wykładnik n: \\( \\sqrt{${s}^3} = ${s}^n \\).`, `Podstawą jest ${s}. Wyrażenie to \\( \\sqrt{${s}^3} \\). Zapisz jako ułamek w potędze.`, `Kiedy pierwiastek kwadratowy spotka sześcian: \\( \\sqrt{${s}^3} = ${s}^x \\). x=?`, `Znajdź n, gdzie \\( \\sqrt{${s}^3} = ${s}^n \\).`, `Uprość z wykorzystaniem potęg wymiernych: \\( \\sqrt{${s}^3} = ${s}^n \\). Podaj n.`, `Wskaż potege n: \\( \\sqrt{${s}^3} \\) wynosi ${s} do potęgi. Ile?`
                 ];
                 let ansStr = '3/2';
                 q.question = forms[v-1];
@@ -685,7 +689,7 @@ function generateMathQuestions(topic, count = 15, selectedDiff = 'mix') {
                 let a = getRand(2, 4) + Math.floor(v/4); let b = getRand(1, 5) + Math.floor(v/3); let c = getRand(2, 5);
                 let rhs = a * (x - b) - c * (2*x + 1);
                 let phrases = [
-                    `Rozwiąż równanie: ${a}(x - ${b}) - ${c}(2x + 1) = ${rhs}`, `Oblicz x: ${a}(x - ${b}) - ${c}(2x + 1) = ${rhs}`, `Jaka liczba spełnia równanie ${a}(x - ${b}) - ${c}(2x + 1) = ${rhs}?`, `Wyznacz x: ${a}(x - ${b}) - ${c}(2x + 1) = ${rhs}`
+                    `Rozwiąż równanie: \\( ${a}(x - ${b}) - ${c}(2x + 1) = ${rhs} \\)`, `Oblicz x: \\( ${a}(x - ${b}) - ${c}(2x + 1) = ${rhs} \\)`, `Jaka liczba spełnia równanie \\( ${a}(x - ${b}) - ${c}(2x + 1) = ${rhs} \\)?`, `Wyznacz x: \\( ${a}(x - ${b}) - ${c}(2x + 1) = ${rhs} \\)`
                 ];
                 q.question = phrases[v % 4];
                 q.options = shuffleArray(makeUniqueOptions(x, [x + 2, -x, x - 3]));
@@ -814,7 +818,7 @@ function generateMathQuestions(topic, count = 15, selectedDiff = 'mix') {
                 let alpha = getRand(30, 70) + Math.floor(v/2)*2;
                 let beta = getRand(20, 50) + Math.floor(v/3)*2;
                 let ans = 180 - alpha - beta;
-                q.question = `Dwie proste równoległe przecięto sieczną. Kąt wewnętrzny wynosi ${alpha}°. Obok niego zbudowano trójkąt, w którym 1 kąt = ${alpha}°, drugi to ${beta}°. Ile wynosi 3-ci kąt wewnątrz trójkąta?`;
+                q.question = `Dwie proste równoległe przecięto sieczną. Kąt wewnętrzny wynosi \\( ${alpha}^\\circ \\). Obok niego zbudowano trójkąt, w którym 1 kąt = \\( ${alpha}^\\circ \\), drugi to \\( ${beta}^\\circ \\). Ile wynosi 3-ci kąt wewnątrz trójkąta?`;
                 q.options = shuffleArray(makeUniqueOptions(ans, [180 - alpha, 180 - beta, alpha + beta]));
                 q.correct = q.options.indexOf(String(ans));
                 q.explanation = `Suma kątów = 180°. Szukany kąt = 180° - ${alpha}° - ${beta}° = ${ans}°.`;
@@ -884,7 +888,7 @@ function generateMathQuestions(topic, count = 15, selectedDiff = 'mix') {
                 let a = getRand(4, 8)*2 + Math.floor(v/4)*2; let h_tri = getRand(3, 7); let h_gran = getRand(5, 12) + Math.floor(v/2);
                 let p_podst = a * h_tri / 2;
                 let vol = p_podst * h_gran;
-                q.question = `W podstawie graniastosłupa prostego znajduje się trójkąt o boku ${a} cm i wysokości opuszczonej na ten bok równej ${h_tri} cm. Wysokość graniastosłupa to ${h_gran} cm. Oblicz objętość graniastosłupa.`;
+                q.question = `W podstawie graniastosłupa prostego znajduje się trójkąt o boku \\( ${a} \\) cm i wysokości opuszczonej na ten bok równej \\( ${h_tri} \\) cm. Wysokość graniastosłupa to \\( ${h_gran} \\) cm. Oblicz objętość graniastosłupa.`;
                 q.correct = String(vol);
                 q.explanation = `Pp (trójkąt) = 1/2 · ${a} · ${h_tri} = ${p_podst}. V = Pp · H = ${p_podst} · ${h_gran} = ${vol} cm³.`;
             }
@@ -2740,9 +2744,13 @@ const MATH_TOPICS=['Liczby i działania','Proporcje, procenty i obliczenia prakt
 const POLISH_TOPICS=['Lektury obowiązkowe','Teoria literatury','Nauka o języku'];
 const ENGLISH_TOPICS=['Grammar','Vocabulary','Czytanie ze zrozumieniem'];
 const BADGES=[
+{id:'firstStep',icon:'🚀',name:'Pierwsze kroki',desc:'Ukończ pierwszy quiz',check:d=>['math','polish','english'].some(s=>Object.values(d[s].scores).some(sc=>sc.length>0))},
 {id:'streak3',icon:'🔥',name:'Seria 3 dni',desc:'3 dni nauki z rzędu',check:d=>d.streak>=3},
+{id:'streak7',icon:'🌟',name:'Tydzień nauki',desc:'7 dni nauki z rzędu',check:d=>d.streak>=7},
 {id:'mathPro',icon:'🧮',name:'Matematyczny umysł',desc:'80%+ w dziale Algebra',check:d=>{let s=d.math.scores['Wyrażenia algebraiczne i równania'];return s&&s.length>0&&s.reduce((a,b)=>a+b,0)/s.length>=80;}},
+{id:'polyglot',icon:'🇬🇧',name:'Poliglota',desc:'80%+ w dziale Grammar (Angielski)',check:d=>{let s=d.english.scores['Grammar'];return s&&s.length>0&&s.reduce((a,b)=>a+b,0)/s.length>=80;}},
 {id:'bookworm',icon:'📚',name:'Mól książkowy',desc:'Ukończone 5 quizów z Lektur',check:d=>{let s=d.polish.scores['Lektury obowiązkowe'];return s&&s.length>=5;}},
+{id:'flashMaster',icon:'🧠',name:'Mistrz pamięci',desc:'Opanowane 20 fiszek',check:d=>d.flashcards.know.length>=20},
 {id:'perfect',icon:'🎯',name:'Perfekcjonista',desc:'100% w jednym quizie (min. 10 zadań)',check:d=>d._perfectQuiz===true},
 {id:'examReady',icon:'🏆',name:'Gotowy na E8',desc:'75%+ w egzaminie próbnym',check:d=>d.examHistory&&d.examHistory.length>0&&d.examHistory.some(e=>e.score>=75)}
 ];
@@ -2879,6 +2887,19 @@ data.lastVisit=today;
 return data;
 }
 
+function checkNewBadges(data){
+    let newlyEarned = false;
+    data.earnedBadges = data.earnedBadges || [];
+    BADGES.forEach(b => {
+        if(b.check(data) && !data.earnedBadges.includes(b.id)) {
+            data.earnedBadges.push(b.id);
+            newlyEarned = true;
+        }
+    });
+    if(newlyEarned && typeof spawnConfetti === 'function') spawnConfetti();
+    return data;
+}
+
 function getSubjectProgress(data,subject){
 let subj=data[subject];
 let total = (subject === 'math') ? 1000 : 300;
@@ -2935,10 +2956,16 @@ else if(id==='stats')renderStats();
 
 function renderDashboard(){
 let data=updateStreak(getProgress());
+data=checkNewBadges(data);
 saveProgress(data);
 let mp=getSubjectProgress(data,'math'),pp=getSubjectProgress(data,'polish'),ep=getSubjectProgress(data,'english');
 let weak=getWeakAreas(data);
-let badges=BADGES.map(b=>`<span class="badge ${b.check(data)?'earned':''}" title="${b.desc}">${b.icon} ${b.name}</span>`).join('');
+let badges=BADGES.map(b=>{
+    let earned = b.check(data);
+    let icon = earned ? b.icon : '🔒';
+    let cls = earned ? 'earned' : 'locked';
+    return `<span class="badge ${cls}" title="${b.desc}">${icon} ${b.name}</span>`;
+}).join('');
 let weakHtml=weak.length?weak.map(w=>`<div class="weak-item" onclick="showScreen('${w.subject}');setTimeout(()=>openTopic('${w.subject}','${w.topic}'),100)"><span>${w.topic}</span><span style="color:var(--error)">${w.score}%</span></div>`).join(''):'<p style="color:var(--text2)">Rozwiąż kilka quizów, aby zobaczyć słabe strony.</p>';
 let daysLeft='';
 if(data.examDate){
