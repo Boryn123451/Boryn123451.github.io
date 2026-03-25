@@ -158,6 +158,21 @@ input:focus,textarea:focus{border-color:var(--accent);outline:none;box-shadow:0 
 .overlay-close:hover{color:var(--text)}
 .confetti-piece{position:fixed;width:8px;height:8px;border-radius:50%;z-index:300;pointer-events:none;animation:confettiFall 1.5s ease forwards}
 .notes-area{min-height:120px;resize:vertical}
+.badge-gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:20px;margin-top:20px}
+.badge-card{background:var(--card);border-radius:12px;padding:24px;text-align:center;border:1px solid var(--border);transition:all 0.3s ease;display:flex;flex-direction:column;align-items:center;position:relative;overflow:hidden}
+.badge-card.locked{opacity:0.6;filter:grayscale(0.8)}
+.badge-card.earned{border-color:var(--accent);box-shadow:0 0 15px rgba(34,197,94,0.1)}
+.badge-card .badge-icon-big{font-size:3.5rem;margin-bottom:15px;transition:transform 0.3s ease}
+.badge-card.earned:hover .badge-icon-big{transform:scale(1.1) rotate(5deg)}
+.badge-card .badge-date{font-size:0.75rem;color:var(--text2);margin-top:10px}
+.badge-card h4{margin:5px 0}
+.badge-progress{width:100%;height:6px;background:rgba(255,255,255,0.05);border-radius:3px;margin-top:15px;overflow:hidden}
+.badge-progress-fill{height:100%;background:var(--accent);transition:width 1s ease-out}
+.speak-btn{background:rgba(255,255,255,0.05);border:none;color:var(--text);padding:8px;border-radius:50%;cursor:pointer;transition:all 0.2s;display:inline-flex;align-items:center;justify-content:center;margin-left:8px}
+.speak-btn:hover{background:rgba(255,255,255,0.1);color:var(--accent)}
+.speak-btn.active{color:var(--accent);animation:pulse 1.5s infinite}
+@keyframes pulse{0%{transform:scale(1)}50%{transform:scale(1.1)}100%{transform:scale(1)}}
+.srs-tag{font-size:0.7rem;padding:2px 6px;border-radius:4px;background:var(--accent);color:var(--bg);font-weight:700;margin-left:8px;vertical-align:middle}
 .weak-areas{margin-top:20px}
 .flag-uk{display:inline-block;width:1.2em;height:0.85em;vertical-align:middle;background-size:contain;background-repeat:no-repeat;background-position:center;background-image:url("https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Flag_of_the_United_Kingdom_%281-2%29.svg/1280px-Flag_of_the_United_Kingdom_%281-2%29.svg.png")}
 .weak-item{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:var(--bg);border-radius:8px;margin-bottom:8px;border-left:3px solid var(--error);cursor:pointer;transition:all var(--transition)}
@@ -209,6 +224,7 @@ E8 Prep
 <a class="nav-link" data-nav="english" role="button" tabindex="0" aria-label="Język angielski"><span class="nav-icon"><span class="flag-uk"></span></span>Angielski</a>
 <a class="nav-link" data-nav="exam" role="button" tabindex="0" aria-label="Egzamin próbny"><span class="nav-icon">📝</span>Egzamin</a>
 <a class="nav-link" data-nav="calc" role="button" tabindex="0" aria-label="Kalkulator Punktów"><span class="nav-icon">🧮</span>Kalkulator</a>
+<a class="nav-link" data-nav="badges" role="button" tabindex="0" aria-label="Osiągnięcia"><span class="nav-icon">🏆</span>Osiągnięcia</a>
 <a class="nav-link" data-nav="stats" role="button" tabindex="0" aria-label="Statystyki"><span class="nav-icon">📊</span>Statystyki</a>
 <a class="nav-link" data-nav="shop" role="button" tabindex="0" aria-label="Sklepik"><span class="nav-icon">🛒</span>Sklepik</a>
 </nav>
@@ -220,6 +236,7 @@ E8 Prep
 <button class="bnav-link" data-nav="english" aria-label="Angielski"><span class="bnav-icon"><span class="flag-uk"></span></span>Ang.</button>
 <button class="bnav-link" data-nav="calc" aria-label="Kalkulator"><span class="bnav-icon">🧮</span>Kalk.</button>
 <button class="bnav-link" data-nav="exam" aria-label="Egzamin"><span class="bnav-icon">📝</span>Egzamin</button>
+<button class="bnav-link" data-nav="badges" aria-label="Osiągnięcia"><span class="bnav-icon">🏆</span>Trofea</button>
 <button class="bnav-link" data-nav="shop" aria-label="Sklepik"><span class="bnav-icon">🛒</span>Sklep</button>
 </div>
 </nav>
@@ -230,6 +247,7 @@ E8 Prep
 <section data-screen="english" class="screen" id="screen-english"></section>
 <section data-screen="exam" class="screen" id="screen-exam"></section>
 <section class="screen" id="screen-stats" data-screen="stats"></section>
+<section class="screen" id="screen-badges" data-screen="badges"></section>
 
 <div class="screen" id="screen-calc" data-screen="calc">
     <h1 class="section-title">🎓 Kalkulator Punktów do Liceum</h1>
@@ -3029,12 +3047,14 @@ if(!p.earnedBadges)p.earnedBadges=[];
 if(typeof p.coins==='undefined')p.coins=0;
 if(!p.unlockedThemes)p.unlockedThemes=['dark'];
 if(!p.activeTheme)p.activeTheme='dark';
+if(!p.srs) p.srs = {}; 
+if(!p.badgeDates) p.badgeDates = {};
 return p;
 }
 return {userName:'Uczeń',lastVisit:'',streak:0,examDate:'',
 math:{completed:[],scores:{}},polish:{completed:[],scores:{}},english:{completed:[],scores:{}},
 flashcards:{know:[],repeat:[]},examHistory:[],notes:{},_perfectQuiz:false,earnedBadges:[],
-coins:0,unlockedThemes:['dark'],activeTheme:'dark'};
+coins:0,unlockedThemes:['dark'],activeTheme:'dark', srs: {}, badgeDates: {}};
 }
 
 function saveProgress(data){
@@ -3060,11 +3080,55 @@ function checkNewBadges(data){
     BADGES.forEach(b => {
         if(b.check(data) && !data.earnedBadges.includes(b.id)) {
             data.earnedBadges.push(b.id);
+            data.badgeDates[b.id] = new Date().toLocaleDateString();
+            data.coins += 100; // Bonus for achievement
             newlyEarned = true;
+            setTimeout(() => alert(`🏆 Zdobyto osiągnięcie: ${b.name}! +100 monet 🪙`), 500);
         }
     });
     if(newlyEarned && typeof spawnConfetti === 'function') spawnConfetti();
     return data;
+}
+
+let speechSynth = window.speechSynthesis;
+let currentUtterance = null;
+
+function speakText(text) {
+    if (speechSynth.speaking) {
+        speechSynth.cancel();
+        if (currentUtterance && currentUtterance.text === text) {
+            currentUtterance = null;
+            updateSpeakButtons(false);
+            return;
+        }
+    }
+    
+    // Clean text from KaTeX/HTML tags
+    const cleanText = text.replace(/\\\[[\s\S]*?\\\]/g, '').replace(/\\([\s\S]*?\\)/g, '').replace(/<[^>]*>?/gm, '');
+    
+    currentUtterance = new SpeechSynthesisUtterance(cleanText);
+    currentUtterance.lang = 'pl-PL';
+    currentUtterance.rate = 0.9;
+    
+    currentUtterance.onstart = () => updateSpeakButtons(true);
+    currentUtterance.onend = () => {
+        updateSpeakButtons(false);
+        currentUtterance = null;
+    };
+    currentUtterance.onerror = () => updateSpeakButtons(false);
+    
+    speechSynth.speak(currentUtterance);
+}
+
+function updateSpeakButtons(active) {
+    document.querySelectorAll('.speak-btn').forEach(btn => {
+        btn.classList.toggle('active', active);
+    });
+}
+
+function stopSpeaking() {
+    if (speechSynth.speaking) speechSynth.cancel();
+    updateSpeakButtons(false);
 }
 
 function getSubjectProgress(data,subject){
@@ -3163,6 +3227,9 @@ function showScreen(id){
     else if(id==='calc')setTimeout(updateCalculator,50);
     else if(id==='shop')renderShop();
     else if(id==='exam')renderExamScreen();
+    else if(id==='badges')renderBadges();
+    
+    stopSpeaking(); 
 }
 
 function renderShop(){
@@ -3379,7 +3446,12 @@ document.getElementById('screen-'+subject).innerHTML=`
 ${topic === 'Zadania dowodowe i otwarte' ? '' : `<button class="tab-btn" onclick="switchTab(this,'flashcards','${subject}')">🃏 Fiszki</button>`}
 </div>
 <div class="tab-content active" id="tab-${subject}-theory">
-<div class="theory-card">${theoryHtml}</div>
+<div class="theory-card">
+    <div style="display:flex; justify-content:flex-end">
+        <button class="speak-btn" title="Czytaj teorię" onclick="speakText(this.closest('.theory-card').innerText)">🔊</button>
+    </div>
+    ${theoryHtml}
+</div>
 <div style="margin-top:16px"><button class="btn btn-sm btn-secondary" onclick="openNotes('${noteKey}')">📝 Notatki</button></div>
 </div>
 <div class="tab-content" id="tab-${subject}-exercises">
@@ -3441,7 +3513,10 @@ let body=document.getElementById('quiz-body');
 let html=`<div class="quiz-container">
 <div class="quiz-header"><span class="quiz-progress-text">Pytanie ${quizState.current+1} z ${quizState.questions.length}</span>
 <span class="quiz-progress-text">${'⭐'.repeat(q.difficulty)}</span></div>
-<div class="quiz-question">${q.question}</div>`;
+<div class="quiz-question">
+    ${q.question}
+    <button class="speak-btn" title="Czytaj pytanie" onclick="speakText('${q.question.replace(/'/g, "\\'")}')">🔊</button>
+</div>`;
 if(q.type==='mcq'){
 let letters=['A','B','C','D'];
 html+=`<div class="quiz-options">${q.options.map((o,i)=>`<button class="quiz-option" data-idx="${i}" onclick="checkMCQ(${i})"><span class="opt-letter">${letters[i]}</span><span>${o}</span></button>`).join('')}</div>`;
@@ -3675,8 +3750,11 @@ body.innerHTML=`<div class="flashcard-wrapper">
 <div class="flashcard-inner"><div class="flashcard-front"><h3>${f.term}</h3><p style="color:var(--text2);font-size:0.85rem">Kliknij, aby obrócić</p></div>
 <div class="flashcard-back"><p>${f.definition}</p></div></div></div>
 <div class="flashcard-btns" id="flash-btns" style="display:none">
-<button class="btn btn-primary" onclick="markFlash('know')">✅ Umiem</button>
-<button class="btn btn-danger" onclick="markFlash('repeat')">🔁 Powtórz</button></div></div>`;
+<button class="btn btn-primary" onclick="markFlash('easy')">✅ Łatwe (SRS+)</button>
+<button class="btn btn-secondary" onclick="markFlash('good')">👌 Dobre</button>
+<button class="btn btn-danger" onclick="markFlash('repeat')">🔁 Powtórz</button>
+<button class="speak-btn" onclick="speakText(flashState.deck[flashState.current].term + '... ' + flashState.deck[flashState.current].definition)">🔊</button>
+</div></div>`;
 renderMath(body);
 }
 
@@ -3687,19 +3765,23 @@ else{el.classList.remove('flipped');flashState.flipped=false;document.getElement
 }
 
 function markFlash(action){
-let f=flashState.deck[flashState.current];
-let data=getProgress();
-if(action==='know'){
-data.flashcards.know=data.flashcards.know.filter(id=>id!==f.id);
-data.flashcards.know.push(f.id);
-data.flashcards.repeat=data.flashcards.repeat.filter(id=>id!==f.id);
-}else{
-data.flashcards.repeat=data.flashcards.repeat.filter(id=>id!==f.id);
-data.flashcards.repeat.push(f.id);
-}
-saveProgress(data);
-flashState.current++;
-renderFlashcard();
+    const f = flashState.deck[flashState.current];
+    const data = getProgress();
+    
+    if (action === 'easy') {
+        markFlashSRS(f.id, 'easy');
+        if (!data.flashcards.know.includes(f.id)) data.flashcards.know.push(f.id);
+        data.flashcards.repeat = data.flashcards.repeat.filter(id => id !== f.id);
+    } else if (action === 'good') {
+        markFlashSRS(f.id, 'good');
+    } else {
+        markFlashSRS(f.id, 'hard');
+        if (!data.flashcards.repeat.includes(f.id)) data.flashcards.repeat.push(f.id);
+    }
+    
+    saveProgress(data);
+    flashState.current++;
+    renderFlashcard();
 }
 
 function renderExamScreen(){
@@ -3997,6 +4079,60 @@ ctx.fillText(b.label,x+barW/2,canvas.height-10);
 });
 }
 
+function renderBadges(){
+    const data = getProgress();
+    const container = document.getElementById('screen-badges');
+    if(!container) return;
+    
+    const badgeHtml = BADGES.map(b => {
+        const isEarned = data.earnedBadges.includes(b.id);
+        const date = data.badgeDates[b.id] || '';
+        
+        // Mock progress calculation for non-boolean badges
+        let progress = isEarned ? 100 : 0;
+        if (!isEarned) {
+             if (b.id === 'bookworm') progress = Math.min(95, (data.polish.scores['Lektury obowiązkowe']?.length || 0) / 5 * 100);
+             else if (b.id === 'flashMaster') progress = Math.min(95, (data.flashcards.know.length / 20) * 100);
+             else if (b.id === 'streak3') progress = Math.min(95, (data.streak / 3) * 100);
+             else if (b.id === 'streak7') progress = Math.min(95, (data.streak / 7) * 100);
+        }
+
+        return `
+            <div class="badge-card ${isEarned ? 'earned' : 'locked'}">
+                <div class="badge-icon-big">${isEarned ? b.icon : '🔒'}</div>
+                <h4>${b.name}</h4>
+                <p style="font-size:0.85rem; color:var(--text2); min-height:40px">${b.desc}</p>
+                <div class="badge-progress">
+                    <div class="badge-progress-fill" style="width: ${progress}%"></div>
+                </div>
+                ${isEarned ? `<div class="badge-date">Zdobyto: ${date}</div>` : ''}
+            </div>
+        `;
+    }).join('');
+
+    container.innerHTML = `
+        <h1 class="section-title">🏆 Galeria Osiągnięć</h1>
+        <p class="section-desc">Twoje postępy i zdobyte trofea. Za każde osiągnięcie otrzymujesz 100 monet! 🪙</p>
+        <div class="badge-gallery">${badgeHtml}</div>
+    `;
+}
+
+function markFlashSRS(cardId, difficulty) {
+    let data = getProgress();
+    if (!data.srs[cardId]) data.srs[cardId] = { level: 0, nextReview: 0 };
+    
+    const levels = [0, 1, 3, 7, 14, 30, 90]; // Days added per level
+    let s = data.srs[cardId];
+    
+    if (difficulty === 'easy') {
+        s.level = Math.min(levels.length - 1, s.level + 1);
+    } else {
+        s.level = Math.max(0, s.level - 1);
+    }
+    
+    s.nextReview = Date.now() + (levels[s.level] * 24 * 60 * 60 * 1000);
+    saveProgress(data);
+}
 function drawTopicChart(data){
 let canvas=document.getElementById('topic-canvas');
 if(!canvas)return;
