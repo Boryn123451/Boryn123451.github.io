@@ -208,7 +208,6 @@ E8 Prep
 <a class="nav-link" data-nav="polish" role="button" tabindex="0" aria-label="Język polski"><span class="nav-icon">📖</span>Polski</a>
 <a class="nav-link" data-nav="english" role="button" tabindex="0" aria-label="Język angielski"><span class="nav-icon"><span class="flag-uk"></span></span>Angielski</a>
 <a class="nav-link" data-nav="exam" role="button" tabindex="0" aria-label="Egzamin próbny"><span class="nav-icon">📝</span>Egzamin</a>
-<a class="nav-link" data-nav="essay" role="button" tabindex="0" aria-label="Trening Pisania"><span class="nav-icon">✍️</span>Pisanie</a>
 <a class="nav-link" data-nav="calc" role="button" tabindex="0" aria-label="Kalkulator Punktów"><span class="nav-icon">🧮</span>Kalkulator</a>
 <a class="nav-link" data-nav="stats" role="button" tabindex="0" aria-label="Statystyki"><span class="nav-icon">📊</span>Statystyki</a>
 <a class="nav-link" data-nav="shop" role="button" tabindex="0" aria-label="Sklepik"><span class="nav-icon">🛒</span>Sklepik</a>
@@ -220,7 +219,6 @@ E8 Prep
 <button class="bnav-link" data-nav="polish" aria-label="Polski"><span class="bnav-icon">📖</span>Polski</button>
 <button class="bnav-link" data-nav="english" aria-label="Angielski"><span class="bnav-icon"><span class="flag-uk"></span></span>Ang.</button>
 <button class="bnav-link" data-nav="calc" aria-label="Kalkulator"><span class="bnav-icon">🧮</span>Kalk.</button>
-<button class="bnav-link" data-nav="essay" aria-label="Pisanie"><span class="bnav-icon">✍️</span>Pisanie</button>
 <button class="bnav-link" data-nav="exam" aria-label="Egzamin"><span class="bnav-icon">📝</span>Egzamin</button>
 <button class="bnav-link" data-nav="shop" aria-label="Sklepik"><span class="bnav-icon">🛒</span>Sklep</button>
 </div>
@@ -281,9 +279,47 @@ E8 Prep
                 <label style="display:flex;align-items:center;gap:10px;cursor:pointer">
                     <input type="checkbox" id="calc-vol" style="width:20px;height:20px;margin-top:0" onchange="updateCalculator()"> Wolontariat (+3 pkt)
                 </label>
-                <label>Konkursy i olimpiady (max 18 pkt) 
-                    <input type="number" id="calc-comp" max="18" min="0" value="0" oninput="updateCalculator()">
-                </label>
+                
+                <div style="margin-top:10px; padding:10px; background:rgba(255,255,255,0.05); border-radius:8px; border:1px solid var(--border)">
+                    <p style="font-size:0.85rem; margin-bottom:8px; font-weight:bold; color:var(--text2)">Punkty za konkursy (max 18 pkt):</p>
+                    <div style="display:flex; flex-direction:column; gap:8px; font-size:0.85rem">
+                        <label>Konkursy przedmiotowe (Kurator/Ponadwoj.):
+                            <select id="calc-c1" onchange="updateCalculator()" style="width:100%">
+                                <option value="0">Brak</option>
+                                <option value="10">Finalista przedmiotowy (10)</option>
+                                <option value="7">Laureat tematyczny (7)</option>
+                                <option value="5">Finalista tematyczny (5)</option>
+                            </select>
+                        </label>
+                        <label>Konkursy międzynarodowe / ogólnopolskie:
+                            <select id="calc-c2" onchange="updateCalculator()" style="width:100%">
+                                <option value="0">Brak</option>
+                                <option value="10">Finalista przedmiotowy (10)</option>
+                                <option value="4">Laureat turnieju nieobjętego (4)</option>
+                                <option value="3">Finalista turnieju nieobjętego (3)</option>
+                            </select>
+                        </label>
+                        <label>Konkursy wojewódzkie (Kurator):
+                            <select id="calc-c3" onchange="updateCalculator()" style="width:100%">
+                                <option value="0">Brak</option>
+                                <option value="10">2x Finalista przedmiotowy (10)</option>
+                                <option value="7">2x Laureat tematyczny (7)</option>
+                                <option value="7">1x Finalista przedmiotowy (7)</option>
+                                <option value="5">1x Laureat tematyczny (5)</option>
+                                <option value="3">1x Finalista tematyczny (3)</option>
+                            </select>
+                        </label>
+                        <label>Osiągnięcia artystyczne i sportowe:
+                            <select id="calc-c4" onchange="updateCalculator()" style="width:100%">
+                                <option value="0">Brak</option>
+                                <option value="4">Zasięg międzynarodowy (4)</option>
+                                <option value="3">Zasięg krajowy (3)</option>
+                                <option value="2">Zasięg wojewódzki (2)</option>
+                                <option value="1">Zasięg powiatowy (1)</option>
+                            </select>
+                        </label>
+                    </div>
+                </div>
             </div>
         </div>
         
@@ -297,40 +333,6 @@ E8 Prep
                 <p style="margin-bottom:6px">Oceny <strong id="calc-sum-grades" style="color:var(--accent-blue);float:right">56 pkt</strong></p>
                 <p>Osiągnięcia <strong id="calc-sum-achieve" style="color:var(--polish);float:right">0 pkt</strong></p>
             </div>
-        </div>
-    </div>
-</div>
-
-<div class="screen" id="screen-essay" data-screen="essay">
-    <h1 class="section-title">✍️ Trening Pisania</h1>
-    <p class="section-desc">Doskonal formy wypisne (rozprawka, opowiadanie) na podstawie 100 tematów CKE.</p>
-    
-    <div class="card" style="margin-bottom:20px">
-        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:15px; flex-wrap:wrap; gap:10px;">
-            <div style="flex:1; min-width:280px">
-                <p style="color:var(--text2); font-size:0.85rem; margin-bottom:5px">Wylosowany temat:</p>
-                <h3 id="essay-topic-display" style="line-height:1.4">Kliknij "Losuj temat", aby zacząć...</h3>
-            </div>
-            <button class="btn btn-secondary" onclick="drawEssayTopic()">🎲 Losuj temat</button>
-        </div>
-        
-        <textarea id="essay-textarea" rows="12" style="width:100%; padding:15px; border-radius:12px; background:rgba(0,0,0,0.2); color:var(--text); border:1px solid var(--border); font-family:'Inter', sans-serif; font-size:1rem; line-height:1.6; resize:vertical;" placeholder="Zacznij pisać tutaj..." oninput="updateEssayStats()"></textarea>
-        
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:15px; flex-wrap:wrap; gap:10px;">
-            <div id="essay-word-count" style="font-weight:bold; font-size:1.1rem; color:var(--text2)">Słowa: 0 / 200</div>
-            <button class="btn btn-primary" onclick="finishEssay()">✅ Zapisz i odbierz 🪙 50</button>
-        </div>
-    </div>
-
-    <div class="card">
-        <h3 style="margin-bottom:15px">📋 Checklista Arkusza</h3>
-        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:10px;">
-            <label style="display:flex; align-items:center; gap:10px; cursor:pointer"><input type="checkbox" style="width:18px; height:18px"> Wstęp z tezą</label>
-            <label style="display:flex; align-items:center; gap:10px; cursor:pointer"><input type="checkbox" style="width:18px; height:18px"> Argument I (Lektura)</label>
-            <label style="display:flex; align-items:center; gap:10px; cursor:pointer"><input type="checkbox" style="width:18px; height:18px"> Argument II (Inny tekst)</label>
-            <label style="display:flex; align-items:center; gap:10px; cursor:pointer"><input type="checkbox" style="width:18px; height:18px"> Argument III / Kontekst</label>
-            <label style="display:flex; align-items:center; gap:10px; cursor:pointer"><input type="checkbox" style="width:18px; height:18px"> Podsumowanie i wnioski</label>
-            <label style="display:flex; align-items:center; gap:10px; cursor:pointer"><input type="checkbox" style="width:18px; height:18px"> Poprawność językowa</label>
         </div>
     </div>
 </div>
@@ -2672,7 +2674,7 @@ polish: {
 <div class="formula"><b>Gatunek:</b> Literatura faktu, opowieść-dokument.<br>
 <b>Czas i miejsce:</b> Warszawa, II wojna światowa (1939-1943).<br>
 <b>Bohaterowie ("Buki"):</b> Maciej Aleksy Dawidowski (Alek), Jan Bytnar (Rudy), Tadeusz Zawadzki (Zośka).<br>
-<b>Kluczowe akcje:</b> Mały Sabotaż (malowanie żółwi, zrywanie flag, gazowanie kin), Akcja pod Arsenałem ("Meksyk II") - odbicie "Rudego" z rąk Gestapo. Wszyscy trzej bohaterowie giną.</div>
+<b>Kluczowe akcje:</b> Mały Sabotaż (malowanie żółwi, zrywanie flag, gazowanie kin), Akcja pod Arsenałem ("Meksyk II") - odbicie Rudego z rąk Gestapo. Wszyscy trzej bohaterowie giną.</div>
 <h3>📕 Syzyfowe prace — Stefan Żeromski (1897)</h3>
 <div class="formula"><b>Motyw główny:</b> Rusyfikacja młodzieży polskiej w dobie zaboru rosyjskiego (Gimnazjum w Klerykowie). Tytuł oznacza nałożony przez Rosjan na siebie samych daremny trud – Polacy i tak zachowali swoją tożsamość.<br>
 <b>Bohaterowie:</b> Marcin Borowicz, Andrzej Radek, Bernard Zygier. Zygier recytuje "Redutę Ordona", co obudziło w klasie uczucia patriotyczne.</div>
@@ -2681,7 +2683,7 @@ polish: {
 <b>Wydarzenia:</b> Odwiedzają go 4 duchy: duch zmarłego wspólnika (Jakub Marley) i trzy duchy Bożego Narodzenia (Przeszłości, Teraźniejszości, Przyszłości). Scrooge przechodzi metamorfozę.</div>
 <h3>📕 Mały Książę — Antoine de Saint-Exupéry (1943)</h3>
 <div class="formula"><b>Gatunek:</b> Powiastka filozoficzna.<br>
-<b>Motywy:</b> Przyjaźń, miłość (do Róży), oswajanie (Lis), odpowiedzialność, dorastanie, absurd świata dorosłych (Krol, Próżny, Pijak, Bankier, Latarnik, Geograf). "Dobrze widzi się tylko sercem. Najważniejsze jest niewidoczne dla oczu."</div>`,
+<b>Motywy:</b> Przyjaźń, miłość (do Róży), oswajanie (Lis), odpowiedzialność, dorastanie, absurd świata dorosłych (Król, Próżny, Pijak, Bankier, Latarnik, Geograf). "Dobrze widzi się tylko sercem. Najważniejsze jest niewidoczne dla oczu."</div>`,
 'Teoria literatury': `<h3>📌 Rodzaje literackie</h3>
 <div class="formula"><b>1. EPIKA:</b> Posiada NARRATORA. Przeważa proza. Ukazuje świat przedstawiony, fabułę, postaci, wydarzenia.<br>
 👉 Gatunki: <i>Powieść (historyczna, fantasy), nowela, opowiadanie, epos (epopeja), baśń, legenda, pamiętnik.</i><br>
@@ -3138,100 +3140,109 @@ function startPersonalizedTraining() {
     renderQuizQuestion();
 }
 
-const SHOP_ITEMS = [
-    {id: 'dark', name: 'Ciemny (Domyślny)', price: 0, desc: 'Klasyczny, niemęczący oczu w nocy.'},
-    {id: 'light', name: 'Jasny (Książkowy)', price: 500, desc: 'Elegancki motyw przypominający kartkę papieru.'},
-    {id: 'cyber', name: 'Cyberpunk', price: 1000, desc: 'Neonowo-złoty styl prosto z przyszłości.'},
-    {id: 'retro', name: 'Retro / Pixel', price: 1000, desc: 'Stonowane kolory dla fanów starszych klimatów.'}
-];
+const THEMES = {
+    'dark': { name: 'Cyber Noc', accent: '#22c55e', price: 0 },
+    'light': { name: 'Dzień Arkusza', accent: '#2563eb', price: 500 },
+    'retro': { name: 'Stara Szkoła', accent: '#b45309', price: 1000 },
+    'cyber': { name: 'E8 Neon', accent: '#f43f5e', price: 2000 }
+};
 
-function renderShop() {
-    let data = getProgress();
-    let html = '';
-    SHOP_ITEMS.forEach(it => {
-        let isOwned = data.unlockedThemes.includes(it.id);
-        let isActive = data.activeTheme === it.id;
-        let btnHtml = '';
-        if(isActive) {
-            btnHtml = `<button class="btn btn-sm" disabled style="background:#555;color:white;width:100%">Aktywny</button>`;
-        } else if(isOwned) {
-            btnHtml = `<button class="btn btn-sm btn-secondary" style="width:100%" onclick="activateTheme('${it.id}')">Wybierz</button>`;
-        } else {
-            let canAfford = data.coins >= it.price;
-            btnHtml = `<button class="btn btn-sm btn-primary" style="width:100%;${!canAfford?'opacity:0.5':''}" onclick="buyTheme('${it.id}', ${it.price})" ${!canAfford?'disabled':''}>Kup za 🪙 ${it.price}</button>`;
-        }
-        html += `<div class="card" style="display:flex;flex-direction:column;justify-content:space-between">
-            <div>
-                <h3 style="margin-bottom:8px">${it.name}</h3>
-                <p style="color:var(--text2);font-size:0.9rem;margin-bottom:16px">${it.desc}</p>
-            </div>
-            ${btnHtml}
-        </div>`;
+function showScreen(id){
+    appState.currentScreen=id;
+    document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+    let scr = document.getElementById(`screen-${id}`);
+    if(scr) scr.classList.add('active');
+    document.querySelectorAll('.sidebar-nav li, .bottom-nav-item').forEach(el=>{
+        if(el.getAttribute('onclick')===`showScreen('${id}')`) el.classList.add('active');
+        else el.classList.remove('active');
     });
-    document.getElementById('shop-container').innerHTML = html;
+
+    if(id==='dashboard')renderDashboard();
+    else if(['math','polish','english'].includes(id)) renderSubject(id);
+    else if(id==='stats')renderStats();
+    else if(id==='calc')setTimeout(updateCalculator,50);
+    else if(id==='shop')renderShop();
+    else if(id==='exam')renderExamScreen();
 }
 
-function buyTheme(id, price) {
-    let data = getProgress();
-    if(data.coins >= price) {
-        data.coins -= price;
-        data.unlockedThemes.push(id);
-        data.activeTheme = id;
-        saveProgress(data);
-        spawnConfetti();
-        renderShop();
-    }
+function renderShop(){
+    const data = getProgress();
+    const container = document.getElementById('shop-grid');
+    if(!container) return;
+    container.innerHTML = Object.entries(THEMES).map(([id, theme]) => {
+        const isUnlocked = data.unlockedThemes.includes(id);
+        const isActive = data.activeTheme === id;
+        return `
+            <div class="card theme-card ${isActive ? 'active' : ''}" style="border-left: 4px solid ${theme.accent}">
+                <h3>${theme.name}</h3>
+                <p style="color:var(--text2); font-size:0.9rem; margin-bottom:15px">Zmień wygląd aplikacji na ${theme.name.toLowerCase()}.</p>
+                <div style="display:flex; align-items:center; gap:10px; margin-top:auto">
+                    ${isUnlocked ? 
+                        `<button class="btn ${isActive ? 'btn-secondary' : 'btn-primary'}" onclick="setTheme('${id}')" ${isActive ? 'disabled' : ''}>${isActive ? 'Aktywny' : 'Użyj'}</button>` :
+                        `<button class="btn btn-secondary" onclick="buyTheme('${id}')">🪙 ${theme.price}</button>`
+                    }
+                </div>
+            </div>
+        `;
+    }).join('');
 }
 
-function activateTheme(id) {
+function setTheme(id){
     let data = getProgress();
     data.activeTheme = id;
     saveProgress(data);
     renderShop();
+    renderDashboard();
 }
 
-function showScreen(id){
-document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-let screen=document.querySelector(`[data-screen="${id}"]`);
-if(screen)screen.classList.add('active');
-document.querySelectorAll('.nav-link,.bnav-link').forEach(l=>{
-l.classList.toggle('active',l.dataset.nav===id);
-});
-appState.currentScreen=id;
-if(id==='dashboard')renderDashboard();
-else if(['math','polish','english'].includes(id)) renderSubject(id);
-else if(id==='exam')renderExamScreen();
-else if(id==='stats')renderStats();
-else if(id==='calc')setTimeout(updateCalculator,50);
-else if(id==='shop')renderShop();
+function buyTheme(id){
+    let data = getProgress();
+    const theme = THEMES[id];
+    if(data.coins < theme.price){
+        alert("Brak monet! Rozwiązuj quizy, aby zarobić więcej.");
+        return;
+    }
+    data.coins -= theme.price;
+    data.unlockedThemes.push(id);
+    saveProgress(data);
+    spawnConfetti();
+    checkQuests('shop', 1);
+    alert(`Odblokowano motyw: ${theme.name}!`);
+    renderShop();
+    renderDashboard();
 }
+
 
 window.updateCalculator = function() {
-    let pEPol = parseInt(document.getElementById('calc-e-pol').value) || 0;
-    let pEMat = parseInt(document.getElementById('calc-e-mat').value) || 0;
-    let pEAng = parseInt(document.getElementById('calc-e-ang').value) || 0;
-    let sumExam = (pEPol * 0.35) + (pEMat * 0.35) + (pEAng * 0.3);
+    const epol = parseInt(document.getElementById('calc-e-pol').value)||0;
+    const emat = parseInt(document.getElementById('calc-e-mat').value)||0;
+    const eang = parseInt(document.getElementById('calc-e-ang').value)||0;
+    const ptsExam = (epol * 0.35) + (emat * 0.35) + (eang * 0.30);
     
-    let gPol = parseInt(document.getElementById('calc-g-pol').value) || 0;
-    let gMat = parseInt(document.getElementById('calc-g-mat').value) || 0;
-    let gP1 = parseInt(document.getElementById('calc-g-p1').value) || 0;
-    let gP2 = parseInt(document.getElementById('calc-g-p2').value) || 0;
-    let sumGrades = gPol + gMat + gP1 + gP2;
+    const gpol = parseInt(document.getElementById('calc-g-pol').value)||0;
+    const gmat = parseInt(document.getElementById('calc-g-mat').value)||0;
+    const gp1 = parseInt(document.getElementById('calc-g-p1').value)||0;
+    const gp2 = parseInt(document.getElementById('calc-g-p2').value)||0;
+    const ptsGrades = gpol + gmat + gp1 + gp2;
     
-    let hon = document.getElementById('calc-honors') && document.getElementById('calc-honors').checked ? 7 : 0;
-    let vol = document.getElementById('calc-vol') && document.getElementById('calc-vol').checked ? 3 : 0;
-    let comp = parseInt(document.getElementById('calc-comp').value) || 0;
-    if(comp > 18) { comp = 18; document.getElementById('calc-comp').value = 18; }
-    let sumAchieve = hon + vol + comp;
+    const honors = document.getElementById('calc-honors').checked ? 7 : 0;
+    const vol = document.getElementById('calc-vol').checked ? 3 : 0;
     
-    let total = sumExam + sumGrades + sumAchieve;
+    const c1 = parseInt(document.getElementById('calc-c1').value)||0;
+    const c2 = parseInt(document.getElementById('calc-c2').value)||0;
+    const c3 = parseInt(document.getElementById('calc-c3').value)||0;
+    const c4 = parseInt(document.getElementById('calc-c4').value)||0;
+    const ptsComp = Math.min(18, c1 + c2 + c3 + c4);
     
-    let domEx = document.getElementById('calc-sum-exam');
+    const ptsAchieve = honors + vol + ptsComp;
+    const total = Math.min(200, Math.round(ptsExam + ptsGrades + ptsAchieve));
+    
+    const domEx = document.getElementById('calc-sum-exam');
     if(domEx) {
-        domEx.innerText = sumExam.toFixed(1).replace('.0','') + ' pkt';
-        document.getElementById('calc-sum-grades').innerText = sumGrades + ' pkt';
-        document.getElementById('calc-sum-achieve').innerText = sumAchieve + ' pkt';
-        document.getElementById('calc-total').innerText = total.toFixed(0);
+        domEx.innerText = Math.round(ptsExam) + ' pkt';
+        document.getElementById('calc-sum-grades').innerText = ptsGrades + ' pkt';
+        document.getElementById('calc-sum-achieve').innerText = ptsAchieve + ' pkt';
+        document.getElementById('calc-total').innerText = total;
     }
 };
 
@@ -4049,134 +4060,11 @@ document.getElementById('notes-area').value=data.notes[key]||'';
 document.getElementById('notes-overlay').classList.add('active');
 }
 
-const ESSAY_TOPICS = [
-    "Czy warto marzyć? Rozprawka na podstawie 'Małego Księcia'.",
-    "Napisz opowiadanie o spotkaniu z bohaterem 'Kamieni na szaniec' w dzisiejszych czasach.",
-    "Czy miłość zawsze uszczęśliwia? Odwołaj się do 'Balladyny'.",
-    "Napisz rozprawkę: Czy patriotyzm jest dziś potrzebny? Przykład 'Pana Tadeusza'.",
-    "Opowiadanie: Twoja podróż z Ebenezerem Scroogem przez współczesne miasto.",
-    "Czy cierpienie uczy pokory? Rozważ na podstawie 'Dziadów cz. II'.",
-    "Napisz rozprawkę o tym, że warto pomagać innym. Odwołaj się do wybranej lektury.",
-    "Opowiadanie o tym, jak bohater 'Zemsty' uczył Cię negocjacji.",
-    "Czy zemsta przynosi ulgę? Analiza postaw bohaterów 'Zemsty' i 'Balladyny'.",
-    "Rozprawka: Czy technologia zabija relacje? Odwołaj się do wybranego tekstu literackiego.",
-    "Opowiadanie: Dzień w świecie 'Quo Vadis' – jak byś się tam odnalazł?",
-    "Czy odwaga to brak strachu? Rozważ na przykładzie Rudego z 'Kamieni na szaniec'.",
-    "Rozprawka: Czy warto wybaczać? Na podstawie 'Zemsty'.",
-    "Opowiadanie: Co by było, gdyby Skawiński z 'Latarnika' wrócił do Polski?",
-    "Czy pieniądze dają szczęście? Rozprawka na podstawie 'Opowieści wigilijnej'.",
-    "Napisz opowiadanie o przygodzie w ruinach zamku z 'Zemsty'.",
-    "Czy los człowieka zależy od niego samego? Przykład 'Balladyny'.",
-    "Rozprawka: Rola przyjaźni w trudnych chwilach. Na podstawie 'Kamieni na szaniec'.",
-    "Opowiadanie: Rozmowa z duchem przeszłości o Twoich wyborach.",
-    "Czy warto być uczciwym? Rozzprawka na podstawie wybranej lektury.",
-    // Adding more unique topics to reach ~100 or a significant representative set
-    "Opowiadanie: Spotkanie Małego Księcia na Twoim osiedlu.",
-    "Rozprawka: Czy literatura może zmieniać świat? Odwołaj się do 'Quo Vadis'.",
-    "Czy rodzina jest najważniejsza? Refleksja na podstawie 'Pana Tadeusza'.",
-    "Opowiadanie: Jak nauczyłeś/aś Stasia Tarkowskiego korzystać ze smartfona.",
-    "Rozprawka: Czy każdy zasługuje na drugą szansę? Przykład Jacka Soplicy.",
-    "Opowiadanie: Twoja wizyta w Soplicowie podczas uczty.",
-    "Czy tradycja jest więzieniem czy fundamentem? Na podstawie 'Pana Tadeusza'.",
-    "Rozprawka: Czy warto dążyć do celu za wszelką cenę? Przykład Balladyny.",
-    "Opowiadanie: Wspólna akcja z Alkiem i Zojdą na ulicach Warszawy.",
-    "Czy dobro zawsze zwycięża? Rozważ na podstawie dowolnej baśni.",
-    "Rozprawka: Czy praca może być pasją? Na podstawie 'Latarnika'.",
-    "Opowiadanie: Wieczór przy ognisku z bohaterami 'Syzyfowych prac'.",
-    "Czy szkoła uczy życia? Rozprawka z odwołaniem do 'Syzyfowych prac'.",
-    "Opowiadanie: Jak przekonałeś/aś Nemeczka, że jest prawdziwym bohaterem.",
-    "Rozprawka: Czy warto poświęcać się dla idei? Na podstawie 'Kamieni na szaniec'.",
-    "Opowiadanie: Co byś powiedział Petroniuszowi o dzisiejszej sztuce?",
-    "Rozprawka: Czy podróże kształcą? Odwołaj się do 'Małego Księcia'.",
-    "Opowiadanie: Wyprawa na pustynię i w puszczę we współczesnym sprzęcie.",
-    "Czy uroda pomaga w życiu? Rozważ na podstawie 'Balladyny'.",
-    "Rozprawka: Czy warto walczyć o wolność? Na podstawie 'Reduty Ordona'.",
-    "Opowiadanie: Spotkanie z duchem Złego Pana w ciemnym lesie.",
-    "Rozprawka: Czy poczucie winy może zniszczyć człowieka? Na podstawie 'Balladyny'.",
-    "Opowiadanie: Jak ugościłeś/aś Bilbo Bagginsa w swoim domu.",
-    "Rozprawka: Czy warto ufać własnej intuicji? Wybrana lektura.",
-    "Opowiadanie: Przygoda z Panem Kleksem w Twojej szkole.",
-    "Rozprawka: Czy empatia jest cechą słabych? Na podstawie 'Opowieści wigilijnej'.",
-    "Opowiadanie: Dzień z życia rycerza w czasach 'Krzyżaków'.",
-    "Rozprawka: Czy honor jest cenniejszy niż życie? Na podstawie 'Krzyżaków'.",
-    "Opowiadanie: Co by było, gdyby Romeo i Julia żyli w XXI wieku?",
-    "Rozprawka: Czy kłamstwo może mieć dobre intencje? Wybrana lektura.",
-    "Opowiadanie: Twoja rozmowa z latarnikiem o samotności.",
-    "Rozprawka: Czy los bywa sprawiedliwy? Na podstawie 'Balladyny'.",
-    "Opowiadanie: Wizyta w Nieborowie z bohaterami 'Akademii Pana Kleksa'.",
-    "Rozprawka: Czy warto wierzyć w cuda? Na podstawie 'Opowieści wigilijnej'.",
-    "Opowiadanie: Wspólne czytanie listów ze Skawińskim.",
-    "Rozprawka: Czy egoizm prowadzi do zguby? Na podstawie 'Balladyny'.",
-    "Opowiadanie: Jak uratowałeś/aś Nel z opresji.",
-    "Rozprawka: Czy warto pielęgnować wspomnienia? 'Latarnik'.",
-    "Opowiadanie: Tajna misja z Szarymi Szeregami.",
-    "Rozprawka: Czy gniew jest złym doradcą? 'Zemsta'.",
-    "Opowiadanie: Bal u Nerona – Twoje wrażenia.",
-    "Rozprawka: Czy marzenia się spełniają? 'Mały Książę'.",
-    "Opowiadanie: Jak nauczyłeś/aś Scrooge'a cieszyć się z małych rzeczy.",
-    "Rozprawka: Czy siła charakteru wystarczy, by przetrwać? 'Kamienie na szaniec'.",
-    "Opowiadanie: Dzień z Winicjuszem i Ligią w Rzymie.",
-    "Rozprawka: Czy zazdrość niszczy więzi? 'Zemsta'.",
-    "Opowiadanie: Rozmowa z Różą o miłości i obowiązku.",
-    "Rozprawka: Czy warto być odważnym w codziennym życiu? Wybrana lektura.",
-    "Opowiadanie: Twoja rola w sporze o mur.",
-    "Rozprawka: Czy przeznaczenie istnieje? 'Balladyna'.",
-    "Opowiadanie: Spotkanie z Lisem na Ziemi.",
-    "Rozprawka: Czy patriotyzm to tylko walka zbrojna? 'Syzyfowe prace'.",
-    "Opowiadanie: Jak pomogłeś/aś Marcinowi Borowiczowi w nauce polskiego.",
-    "Rozprawka: Czy przyjaźń może przetrwać śmierć? 'Kamienie na szaniec'.",
-    "Opowiadanie: Ucieczka z płonącego Rzymu.",
-    "Rozprawka: Czy pokuta przynosi ukojenie? Jacek Soplica.",
-    "Opowiadanie: Polowanie w Soplicowie – Twój udział.",
-    "Rozprawka: Czy warto być innym niż wszyscy? 'Mały Książę'.",
-    "Opowiadanie: Jak zaprzyjaźniłeś/aś się z psem, który jeździł koleją.",
-    "Rozprawka: Czy wierność zasadom jest trudna? 'Kamienie na szaniec'.",
-    "Opowiadanie: Wizyta w biurze Scrooge'a po jego przemianie.",
-    "Rozprawka: Czy miłość jest silniejsza niż śmierć? 'Quo Vadis'.",
-    "Opowiadanie: Podróż między planetami z Małym Księciem.",
-    "Rozprawka: Czy zawiść to najgorsza wada? 'Zemsta'.",
-    "Opowiadanie: Budowa zamku z Cześnikiem i Rejentem.",
-    "Rozprawka: Czy warto wybaczać wrogom? 'Zemsta'.",
-    "Opowiadanie: Jak Staś Tarkowski odnalazłby się w dżungli z GPSem.",
-    "Rozprawka: Czy poświęcenie dla innych ma sens? 'Kamienie na szaniec'.",
-    "Opowiadanie: Twoja własna przygoda w świecie wybranej lektury.",
-    "Rozprawka: Czy warto słuchać rad starszych? Wybrana lektura.",
-    "Opowiadanie: Rozmowa z Gerwazym o historii zamku.",
-    "Rozprawka: Czy ambicja może być zgubna? 'Balladyna'.",
-    "Opowiadanie: Jak pomogłeś/aś Skawińskiemu odnaleźć drogę do domu.",
-    "Rozprawka: Czy warto uczyć się na błędach innych? Wybrana lektura.",
-    "Opowiadanie: Wieczór wigilijny u Boba Cratchita.",
-    "Rozprawka: Czy honor jest najważniejszy? 'Krzyżacy'.",
-    "Opowiadanie: Spotkanie z Tadeuszem i Zosią po latach.",
-    "Rozprawka: Czy warto marzyć o wielkich rzeczach? 'Mały Książę'.",
-    "Opowiadanie: Twoja pomoc w ratowaniu zabytków z Rudym.",
-    "Rozprawka: Czy literatura pomaga zrozumieć historię? Wybrana lektura."
-];
-
-let activeEssayTopic = "";
-
-function drawEssayTopic() {
-    activeEssayTopic = ESSAY_TOPICS[Math.floor(Math.random() * ESSAY_TOPICS.length)];
-    document.getElementById('essay-topic-display').innerText = activeEssayTopic;
-    document.getElementById('essay-textarea').value = "";
-    updateEssayStats();
-}
-
-function updateEssayStats() {
-    let text = document.getElementById('essay-textarea').value.trim();
-    let words = text ? text.split(/\s+/).length : 0;
-    let counter = document.getElementById('essay-word-count');
-    counter.innerText = `Słowa: ${words} / 200`;
-    if (words >= 200) counter.style.color = "var(--success)";
-    else counter.style.color = "var(--text2)";
-}
-
 function generateDailyQuests() {
     let pool = [
         { id: 'q1', text: "Rozwiąż 10 pytań (dowolne)", target: 10, type: 'questions' },
         { id: 'q2', text: "Zdobądź 100% w dowolnym quizie", target: 1, type: 'perfect' },
         { id: 'q3', text: "Rozwiąż egzamin próbny", target: 1, type: 'exam' },
-        { id: 'q4', text: "Napisz treningowe wypracowanie", target: 1, type: 'essay' },
         { id: 'q5', text: "Kup coś w sklepiku", target: 1, type: 'shop' },
         { id: 'q6', text: "Zdobądź 30 monet w jednej sesji", target: 30, type: 'coins_gain' }
     ];
@@ -4202,33 +4090,49 @@ function checkQuests(type, amount = 1) {
 }
 
 function shuffleArray(arr){
-for(let i=arr.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}
-return arr;
+    for(let i=arr.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}
+    return arr;
 }
 
 function spawnConfetti(){
-let colors=['#4ade80','#f59e0b','#e879f9','#38bdf8','#f87171','#fbbf24'];
-for(let i=0;i<30;i++){
-let el=document.createElement('div');
-el.className='confetti-piece';
-el.style.left=Math.random()*100+'vw';
-el.style.top='-10px';
-el.style.background=colors[Math.floor(Math.random()*colors.length)];
-el.style.animationDelay=Math.random()*0.5+'s';
-el.style.animationDuration=(1+Math.random())+'s';
-document.body.appendChild(el);
-setTimeout(()=>el.remove(),2000);
+    let colors=['#4ade80','#f59e0b','#e879f9','#38bdf8','#f87171','#fbbf24'];
+    for(let i=0;i<30;i++){
+        let el=document.createElement('div');
+        el.className='confetti-piece';
+        el.style.left=Math.random()*100+'vw';
+        el.style.top='-10px';
+        el.style.background=colors[Math.floor(Math.random()*colors.length)];
+        el.style.animationDelay=Math.random()*0.5+'s';
+        el.style.animationDuration=(1+Math.random())+'s';
+        document.body.appendChild(el);
+        setTimeout(()=>el.remove(),2000);
+    }
 }
+
+function saveNotes(){
+    if(!appState.notesKey) return;
+    let data = getProgress();
+    data.notes[appState.notesKey] = document.getElementById('notes-area').value;
+    saveProgress(data);
+    document.getElementById('notes-overlay').classList.remove('active');
+}
+
+function closeQuiz(){
+    if(confirm('Na pewno chcesz zakończyć quiz? Twój postęp nie zostanie zapisany.')){
+        document.getElementById('quiz-overlay').classList.remove('active');
+        quizState.active = false;
+    }
 }
 
 document.querySelectorAll('.nav-link,.bnav-link').forEach(link=>{
-link.addEventListener('click',()=>showScreen(link.dataset.nav));
+    link.addEventListener('click',()=>showScreen(link.dataset.nav));
 });
-document.getElementById('quiz-close-btn').addEventListener('click',closeQuiz);
-document.getElementById('notes-close-btn').addEventListener('click',()=>document.getElementById('notes-overlay').classList.remove('active'));
-document.getElementById('notes-save-btn').addEventListener('click',saveNotes);
+if(document.getElementById('quiz-close-btn')) document.getElementById('quiz-close-btn').addEventListener('click',closeQuiz);
+if(document.getElementById('notes-close-btn')) document.getElementById('notes-close-btn').addEventListener('click',()=>document.getElementById('notes-overlay').classList.remove('active'));
+if(document.getElementById('notes-save-btn')) document.getElementById('notes-save-btn').addEventListener('click',saveNotes);
 
 showScreen('dashboard');
+
 
 </script>
 </body>
