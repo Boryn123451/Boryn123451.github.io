@@ -1089,6 +1089,26 @@ function generateMathQuestions(topic, count = 15, selectedDiff = 'mix') {
     return questions;
 }
 
+// ======== CKE EXAM GENERATOR ========
+function generateMathExam() {
+    let closed = [];
+    let topics = ['Liczby i działania', 'Procenty', 'Równania i wyrażenia', 'Geometria płaska', 'Geometria przestrzenna', 'Statystyka i rachunek prawdopodobieństwa', 'Oś liczbowa i układ współrzędnych'];
+    topics.forEach(t => {
+        try {
+            closed.push(...generateMathQuestions(t, 6, 'mix').filter(q => q.type === 'mcq' || q.type === 'gap'));
+        } catch(e){}
+    });
+    if(typeof shuffleArray === 'function') closed = shuffleArray(closed);
+    closed = closed.slice(0, 15);
+    
+    let openQs = generateMathQuestions('Zadania dowodowe i otwarte', 30, 'mix');
+    let open = openQs.filter(q => q.type === 'open');
+    if(typeof shuffleArray === 'function') open = shuffleArray(open);
+    open = open.slice(0, 4);
+    
+    return [...closed, ...open];
+}
+
 const ENG_WORDS = [
     // 1. Człowiek (20)
     { cat: '1. Człowiek', pl: 'blady', en: 'pale' }, { cat: '1. Człowiek', pl: 'broda', en: 'beard' }, { cat: '1. Człowiek', pl: 'cecha', en: 'feature' },
@@ -1597,6 +1617,28 @@ function generateEnglishQuestions(topic, count = 15, selectedDiff = 'mix') {
         questions.push(q);
     }
     return questions;
+}
+
+// ======== CKE EXAM GENERATOR ========
+function generateEnglishExam() {
+    let closed = [];
+    let topics = ['Gramatyka - Czasy', 'Gramatyka - Struktury', 'Słownictwo', 'Sytuacje komunikacyjne', 'Czytanie ze zrozumieniem'];
+    topics.forEach(t => {
+        try {
+            closed.push(...generateEnglishQuestions(t, 10, 'mix').filter(q => q.type === 'mcq' || q.type === 'gap'));
+        } catch(e){}
+    });
+    if(typeof shuffleArray === 'function') closed = shuffleArray(closed);
+    closed = closed.slice(0, 11);
+    
+    let openQs = [];
+    try {
+        openQs.push(...generateEnglishQuestions('Tworzenie wypowiedzi', 10, 'mix').filter(q => q.type === 'open'));
+    } catch(e){}
+    if(typeof shuffleArray === 'function') openQs = shuffleArray(openQs);
+    let open = openQs.slice(0, 3);
+    
+    return [...closed, ...open];
 }
 
 // ===== POLISH GENERATORS =====
@@ -2908,6 +2950,7 @@ document.getElementById('screen-dashboard').innerHTML=`
 <div class="name-edit" style="margin-bottom:20px"><input id="name-input" value="${data.userName}" placeholder="Twoje imię" style="max-width:180px;padding:6px 10px"><button class="btn btn-sm btn-secondary" onclick="let d=getProgress();d.userName=document.getElementById('name-input').value||'Uczeń';saveProgress(d);renderDashboard()">Zapisz</button>
 <input id="exam-date-input" type="date" value="${data.examDate||''}" style="max-width:160px;padding:6px 10px;margin-left:12px" placeholder="Data egzaminu"><button class="btn btn-sm btn-secondary" onclick="let d=getProgress();d.examDate=document.getElementById('exam-date-input').value;saveProgress(d);renderDashboard()">Ustaw</button>
 <button class="btn btn-sm" style="margin-left:auto;background:var(--error);color:white" onclick="if(confirm('Na pewno chcesz zresetować cały postęp? Tej akcji nie można cofnąć.')){localStorage.removeItem('e8progress');location.reload();}">Resetuj progres</button>
+<button class="btn btn-sm" style="margin-left:8px;background:#334155;color:white" onclick="document.getElementById('admin-overlay').classList.add('active'); if(document.getElementById('admin-auth-section')) document.getElementById('admin-auth-section').style.display='block'; if(document.getElementById('admin-generator-section')) document.getElementById('admin-generator-section').style.display='none'; if(document.getElementById('admin-password-input')) document.getElementById('admin-password-input').value='';">🛠 Panel</button>
 </div>
 ${daysLeft}
 <div class="dashboard-grid">
@@ -3353,7 +3396,12 @@ if (questions.length === 0) {
         } catch(e) {}
     });
     questions = shuffleArray(allGenerated).slice(0, config.questions);
-}
+    }
+    
+    questions.sort((a,b) => {
+       let order = {mcq: 1, gap: 2, open: 3};
+       return (order[a.type] || 2) - (order[b.type] || 2);
+    });
 
 examState={subject:subject,questions:questions,answers:{},current:0,timeLeft:config.time * 60,active:true,timer:null};
 examState.timer=setInterval(examTick,1000);
