@@ -963,7 +963,7 @@ function generateMathQuestions(topic, count = 15, selectedDiff = 'mix') {
                 let b = bases[variant - 1];
                 let p = getRand(3, 7);
                 let coeff = b - 1;
-                q.question = 'Uzasadnij, że liczba wygenerowana z wyrażenia: ' + b + '^' + p + ' + ' + b + '^' + (p+1) + ' jest podzielna przez ' + (b+1) + '. Zapisz obliczenia.';
+                q.question = 'Uzasadnij, że wartość wyrażenia ' + b + '^' + p + ' + ' + b + '^' + (p+1) + ' jest podzielna przez ' + (b+1) + '. Zapisz obliczenia.';
                 q.correct = 'Podzielne przez ' + (b+1);
                 q.explanation = 'Wyciągamy przed nawias mniejszą potęgę: ' + b + '^' + p + '(1 + ' + b + ') = ' + b + '^' + p + ' · ' + (b+1) + '. Jeden z czynników to ' + (b+1) + ', więc cała liczba jest podzielna przez ' + (b+1) + '.';
             } else if (domain === 2) {
@@ -1135,7 +1135,7 @@ const ENG_WORDS = [
     // 5. Praca (15)
     { cat: '5. Praca', pl: 'bezrobotny', en: 'unemployed' }, { cat: '5. Praca', pl: 'emerytura', en: 'retirement' },
     { cat: '5. Praca', pl: 'fryzjer', en: 'hairdresser' }, { cat: '5. Praca', pl: 'kucharz', en: 'cook' },
-    { cat: '5. Praca', pl: 'lekarz', en: 'doctor' }, { cat: '5. Praca', pl: 'nauczyciel', en: 'teacher' },
+    { cat: '5. Praca', pl: 'lekarz', en: 'doctor' }, { cat: '5. Praca', pl: 'inżynier', en: 'engineer' },
     { cat: '5. Praca', pl: 'płaca', en: 'salary' }, { cat: '5. Praca', pl: 'prawnik', en: 'lawyer' },
     { cat: '5. Praca', pl: 'pracodawca', en: 'employer' }, { cat: '5. Praca', pl: 'pracownik', en: 'employee' },
     { cat: '5. Praca', pl: 'szef', en: 'boss' }, { cat: '5. Praca', pl: 'strażak', en: 'firefighter' },
@@ -1556,7 +1556,7 @@ function generateEnglishQuestions(topic, count = 15, selectedDiff = 'mix') {
                     {situation:'Chcesz poczęstować koleżankę ciastkiem. Co powiesz?', correct:'Help yourself.', wrongs:['Thanks a lot.','The same to you.']},
                     {situation:'Rozmawiasz z przyjacielem o koncercie, na którym niedawno byłeś. Wyrażasz opinię.', correct:'I really enjoyed it.', wrongs:['That would be great.','I have no idea.']},
                     {situation:'Ktoś proponuje Ci herbatę. Grzecznie odmawiasz.', correct:"No thanks, I'm fine.", wrongs:["Yes, I'd love some cake.","I don't like you."]},
-                    {situation:'Przepraszasz nauczyciela za spóźnienie.', correct:"I'm sorry I'm late.", wrongs:["You're welcome.","That's not my problem."]},
+                    {situation:'Przepraszasz dyrektora za spóźnienie.', correct:"I'm sorry I'm late.", wrongs:["You're welcome.","That's not my problem."]},
                     {situation:'Twój przyjaciel zdał trudny egzamin. Gratulujesz mu.', correct:'Well done! I knew you could do it!', wrongs:['Better luck next time.','That sounds terrible.']},
                     {situation:'W restauracji chcesz poprosić o rachunek.', correct:'Could I have the bill, please?', wrongs:["I'd like a table for two.","The food was terrible."]},
                     {situation:'Kolega z klasy proponuje Ci wspólną naukę. Zgadzasz się.', correct:"That's a great idea! Let's do it.", wrongs:["I can't stand studying.","Leave me alone."]},
@@ -1618,7 +1618,7 @@ const POLISH_LEKTURY_DB = [
     {type:'author', book:'Kamienie na szaniec', answer:'Aleksander Kamiński', wrongs:['Jan Brzechwa','Arkady Fiedler','Janusz Korczak']},
 
     // === CHARACTERS ===
-    {type:'character', book:'Akademia Pana Kleksa', name:'Pan Kleks', desc:'ekscentryczny nauczyciel, prowadzący niezwykłą akademię', wrongs:['Pan Twardowski','Doktor Dolittle','Profesor Filutek']},
+    {type:'character', book:'Akademia Pana Kleksa', name:'Pan Kleks', desc:'ekscentryczny profesor, prowadzący niezwykłą akademię', wrongs:['Pan Twardowski','Doktor Dolittle','Profesor Filutek']},
     {type:'character', book:'Akademia Pana Kleksa', name:'Adaś Niezgódka', desc:'uczeń Akademii, jedyny chłopiec bez piega', wrongs:['Tomek Sawyer','Mikołajek','Staś Tarkowski']},
     {type:'character', book:'Chłopcy z Placu Broni', name:'Nemecsek', desc:'najsłabszy i najodważniejszy chłopiec, umiera z powodu przeziębienia', wrongs:['Boka','Kolnay','Geréb']},
     {type:'character', book:'Chłopcy z Placu Broni', name:'Boka', desc:'przywódca chłopców z Placu Broni, sprawiedliwy i mądry', wrongs:['Nemecsek','Ats Feri','Geréb']},
@@ -1915,7 +1915,7 @@ function generatePolishQuestions(topic, count = 15, selectedDiff = 'mix') {
                 // CKE-style: Synonym / dictionary type (zad.8 pattern)
                 let synonymDB = [
                     {word:'szyderstwa', contextSent:'Prześcigano się w szyderstwach', dict:'frazeologicznym', dictWrong:'języka polskiego', synonym:'drwinach', synWrong:'napominaniach'},
-                    {word:'zuchwałość', contextSent:'Wykazał się zuchwałością wobec nauczyciela', dict:'języka polskiego', dictWrong:'frazeologicznym', synonym:'bezczelnością', synWrong:'odwagą'},
+                    {word:'zuchwałość', contextSent:'Wykazał się zuchwałością wobec trenera', dict:'języka polskiego', dictWrong:'frazeologicznym', synonym:'bezczelnością', synWrong:'odwagą'},
                     {word:'gderać', contextSent:'Babcia lubiła gderać na wnuki', dict:'języka polskiego', dictWrong:'wyrazów obcych', synonym:'narzekać', synWrong:'krzyczeć'},
                     {word:'frasować się', contextSent:'Matka frasowała się o dzieci', dict:'frazeologicznym', dictWrong:'ortograficznym', synonym:'martwić się', synWrong:'cieszyć się'},
                     {word:'skąpiec', contextSent:'Sąsiad okazał się prawdziwym skąpcem', dict:'języka polskiego', dictWrong:'frazeologicznym', synonym:'kutwa', synWrong:'bogacz'},
@@ -2003,7 +2003,7 @@ function generatePolishQuestions(topic, count = 15, selectedDiff = 'mix') {
                 let sent = [
                     {q:'Jakim typem zdania jest: „Idź do domu!"?', a:'zdanie rozkazujące', w:['zdanie pytające','zdanie oznajmujące','zdanie wykrzyknikowe']},
                     {q:'Jakim jest zdanie: „Czy lubisz czekoladę?"?', a:'zdanie pytające', w:['zdanie rozkazujące','zdanie oznajmujące','zdanie wykrzyknikowe']},
-                    {q:'Wskaż zdanie z orzeczeniem imiennym:', a:'Mama jest nauczycielką.', w:['Mama uczy.','Mama gotuje.','Mama czyta.']},
+                    {q:'Wskaż zdanie z orzeczeniem imiennym:', a:'Mama jest lekarką.', w:['Mama uczy.','Mama gotuje.','Mama czyta.']},
                     {q:'Które zdanie jest w stronie biernej?', a:'Obiad został ugotowany.', w:['Mama gotuje obiad.','Gotuję obiad.','Ugotowałem obiad.']},
                     {q:'Wskaż zdanie z podmiotem domyślnym:', a:'Lubię czekoladę.', w:['Piotr lubi czekoladę.','Czekolada jest smaczna.','Dzieci jedzą czekoladę.']},
                 ];
@@ -2044,7 +2044,7 @@ function generatePolishQuestions(topic, count = 15, selectedDiff = 'mix') {
                 let compDB = [
                     {task:'Zredaguj ogłoszenie informujące o spotkaniu uczniów chętnych do udziału w szkolnym przedstawieniu pt. „Spotkanie z przyjacielem". Zachęć do przyjścia, używając dwóch argumentów, z których co najmniej jeden będzie nawiązywał do tematyki spotkania.', hint:'Pamiętaj o: nagłówku, zwrocie do adresata, treści z argumentami, podpisie organizatora.'},
                     {task:'Zredaguj zaproszenie na szkolny festyn z okazji Dnia Dziecka. Podaj datę, miejsce, godzinę i opisz dwie atrakcje, które zachęcą uczniów do udziału.', hint:'Zaproszenie powinno zawierać: nagłówek, informacje organizacyjne (kto, gdzie, kiedy), opis atrakcji, zwrot grzecznościowy.'},
-                    {task:'Napisz krótki e-mail do kolegi/koleżanki z zagranicy, w którym opowiesz o swoim ulubionym nauczycielu. Podaj dwa powody, dlaczego go cenisz.', hint:'Pamiętaj o formule powitalnej, treści z argumentami, pożegnaniu. Zachowaj odpowiedni styl.'},
+                    {task:'Napisz krótki e-mail do kolegi/koleżanki z zagranicy, w którym opowiesz o swoim ulubionym pisarzu. Podaj dwa powody, dlaczego go cenisz.', hint:'Pamiętaj o formule powitalnej, treści z argumentami, pożegnaniu. Zachowaj odpowiedni styl.'},
                     {task:'Napisz krótki list do dyrektora szkoły, w którym proponujesz zorganizowanie dnia tematycznego (np. Dzień Sportu, Dzień Nauki). Uzasadnij swoją propozycję dwoma argumentami.', hint:'List powinien zawierać: datę, zwrot do adresata, treść z argumentami, grzeczne zakończenie, podpis.'},
                 ];
                 let pick = compDB[getRand(0, compDB.length - 1)];
@@ -2219,7 +2219,7 @@ const ENG_WORDS_EXTENDED = [
     { cat: '4. Edukacja', pl: 'geografia', en: 'geography' }, { cat: '4. Edukacja', pl: 'gumka', en: 'eraser' },
     { cat: '4. Edukacja', pl: 'kalkulator', en: 'calculator' }, { cat: '4. Edukacja', pl: 'klasa', en: 'class' },
     { cat: '4. Edukacja', pl: 'książka', en: 'book' }, { cat: '4. Edukacja', pl: 'kurs', en: 'course' },
-    { cat: '4. Edukacja', pl: 'linijka', en: 'ruler' }, { cat: '4. Edukacja', pl: 'nauczyciel', en: 'teacher' },
+    { cat: '4. Edukacja', pl: 'linijka', en: 'ruler' }, { cat: '4. Edukacja', pl: 'korepetytor', en: 'tutor' },
     { cat: '4. Edukacja', pl: 'notatnik', en: 'notebook' }, { cat: '4. Edukacja', pl: 'ołówek', en: 'pencil' },
     { cat: '4. Edukacja', pl: 'piórnik', en: 'pencil case' }, { cat: '4. Edukacja', pl: 'podręcznik', en: 'textbook' },
     { cat: '4. Edukacja', pl: 'uczeń', en: 'pupil' }, { cat: '4. Edukacja', pl: 'zeszyt', en: 'exercise book' },
@@ -3026,6 +3026,11 @@ qs=qAll;
 }
 qs=shuffleArray([...qs]).slice(0, 15);
 }
+// Sort explicitly: MCQ first, then GAP, then OPEN at the very end
+qs.sort((a,b) => {
+   let order = {mcq: 1, gap: 2, open: 3};
+   return (order[a.type] || 2) - (order[b.type] || 2);
+});
 quizState={questions:qs,current:0,score:0,answers:[],active:true,subject:subject,topic:topic};
 document.getElementById('quiz-overlay-title').textContent=topic;
 document.getElementById('quiz-overlay').classList.add('active');
@@ -3046,7 +3051,7 @@ html+=`<div class="quiz-options">${q.options.map((o,i)=>`<button class="quiz-opt
 }else if(q.type==='gap'){
 html+=`<div class="quiz-gap-input"><input type="text" id="gap-input" placeholder="Twoja odpowiedź..." onkeydown="if(event.key==='Enter')checkGap()"><button class="btn btn-primary btn-sm" onclick="checkGap()">Sprawdź</button></div>`;
 }else if(q.type==='open'){
-html+=`<div><textarea id="open-input" rows="3" placeholder="Twoja odpowiedź..."></textarea><div style="margin-top:10px"><button class="btn btn-primary btn-sm" onclick="checkOpen()">Sprawdź</button></div></div>`;
+html+=`<div style="margin-top:15px"><textarea id="open-input" rows="6" style="width:100%; padding:12px; border:2px solid var(--border); border-radius:8px; background:rgba(0,0,0,0.1); color:var(--text); font-size:1rem; resize:vertical; font-family:monospace;" placeholder="Pole na obliczenia i brudnopis...\n(To, co tu wpiszesz, zostanie zapisane jako Twoja odpowiedź)"></textarea><div style="margin-top:10px"><button class="btn btn-primary btn-sm" onclick="checkOpen()">Sprawdź</button></div></div>`;
 }
 html+=`<div id="quiz-feedback"></div><div id="quiz-next" style="display:none;margin-top:16px"><button class="btn btn-primary quiz-next-btn" onclick="nextQuizQuestion()">Następne →</button></div></div>`;
 body.innerHTML=html;
@@ -3381,9 +3386,12 @@ if(q.type==='mcq'){
 let letters=['A','B','C','D'];
 let sel=examState.answers[examState.current];
 qHtml=`<div class="quiz-options">${q.options.map((o,i)=>`<button class="quiz-option ${sel===i?'selected':''}" style="${sel===i?'border-color:var(--accent-blue);background:rgba(96,165,250,0.1)':''}" onclick="examAnswer(${i})"><span class="opt-letter">${letters[i]}</span><span>${o}</span></button>`).join('')}</div>`;
-}else{
+}else if(q.type==='gap'){
 let val=examState.answers[examState.current]||'';
 qHtml=`<div class="quiz-gap-input"><input type="text" id="exam-gap-input" value="${val}" placeholder="Twoja odpowiedź..." oninput="examState.answers[examState.current]=this.value"></div>`;
+}else if(q.type==='open'){
+let val=examState.answers[examState.current]||'';
+qHtml=`<div style="margin-top:15px"><textarea id="exam-open-input" rows="6" style="width:100%; padding:12px; border:2px solid var(--border); border-radius:8px; background:rgba(0,0,0,0.1); color:var(--text); font-size:1rem; resize:vertical; font-family:monospace;" placeholder="Pole na obliczenia i brudnopis...\n(To, co tu wpiszesz, zostanie zapisane jako Twoja odpowiedź)" oninput="examState.answers[examState.current]=this.value">${val}</textarea></div>`;
 }
 let subjectLabel=q.subject==='math'?'📐 Matematyka':q.subject==='polish'?'📖 Polski':'<span class="flag-uk"></span> Angielski';
 document.getElementById('screen-exam').innerHTML=`<div class="exam-wrapper">
@@ -3421,19 +3429,24 @@ let results={math:{correct:0,total:0},polish:{correct:0,total:0},english:{correc
 let details=examState.questions.map((q,i)=>{
 let ans=examState.answers[i];
 let correct=false;
-results[q.subject].total++;
-if(q.type==='mcq'){correct=ans===q.correct;}
-else{
-let a=(ans||'').toString().trim().toLowerCase();
-let c=q.correct.toString().trim().toLowerCase();
-correct=a===c;
-if(q.subject==='math'){let na=parseFloat(a.replace(',','.'));let nc=parseFloat(c.replace(',','.'));if(!isNaN(na)&&!isNaN(nc)&&Math.abs(na-nc)<0.02)correct=true;}
+if(q.type==='mcq'){
+    results[q.subject].total++;
+    correct=ans===q.correct;
+}else if(q.type==='gap'){
+    results[q.subject].total++;
+    let a=(ans||'').toString().trim().toLowerCase();
+    let c=q.correct.toString().trim().toLowerCase();
+    correct=a===c;
+    if(q.subject==='math'){let na=parseFloat(a.replace(',','.'));let nc=parseFloat(c.replace(',','.'));if(!isNaN(na)&&!isNaN(nc)&&Math.abs(na-nc)<0.02)correct=true;}
+}else if(q.type==='open'){
+    correct='self';
 }
-if(correct)results[q.subject].correct++;
+if(correct===true)results[q.subject].correct++;
 return{q:q,answer:ans,correct:correct};
 });
-let totalCorrect=details.filter(d=>d.correct).length;
-let totalPct=Math.round(totalCorrect/examState.questions.length*100);
+let totalCorrect=details.filter(d=>d.correct===true).length;
+let totalAutoQuestions=details.filter(d=>d.q.type!=='open').length;
+let totalPct=totalAutoQuestions>0?Math.round(totalCorrect/totalAutoQuestions*100):0;
 let data=getProgress();
 data.examHistory=data.examHistory||[];
 data.examHistory.push({date:new Date().toISOString().split('T')[0],subject:examState.subject,score:totalPct,breakdown:{math:results.math,polish:results.polish,english:results.english}});
@@ -3442,19 +3455,31 @@ let detailHtml=details.map((d,i)=>{
 let letters=['A','B','C','D'];
 let userAns=d.q.type==='mcq'?(d.answer!==undefined?letters[d.answer]:'Brak'):d.answer||'Brak';
 let correctAns=d.q.type==='mcq'?letters[d.q.correct]:d.q.correct;
-return`<div class="exam-result-item ${d.correct?'correct-result':'wrong-result'}">
+if(d.q.type==='open'){
+    return`<div class="exam-result-item pending-result" style="border-left:4px solid var(--accent); background:rgba(255,255,255,0.03);">
+<div style="display:flex;justify-content:space-between;margin-bottom:6px"><strong>Pytanie ${i+1} (Otwarte)</strong><span>✍️ Do oceny zadanej</span></div>
+<p style="margin-bottom:6px">${d.q.question}</p>
+<div style="font-size:0.85rem;color:var(--text2);margin-top:10px;">Twoje obliczenia / brudnopis:<div style="background:rgba(0,0,0,0.2);padding:10px;border-radius:6px;margin-top:4px;white-space:pre-wrap;font-family:monospace;">${userAns}</div></div>
+<div style="font-size:0.85rem;margin-top:10px;">Klucz odpowiedzi CKE:<div style="color:var(--success);background:rgba(0,0,0,0.2);padding:10px;border-radius:6px;margin-top:4px;">${correctAns}</div></div>
+${d.q.explanation?`<p style="font-size:0.85rem;color:var(--accent-blue);margin-top:8px"><em>Wskazówka: ${d.q.explanation}</em></p>`:''}
+</div>`;
+}else{
+    return`<div class="exam-result-item ${d.correct?'correct-result':'wrong-result'}">
 <div style="display:flex;justify-content:space-between;margin-bottom:6px"><strong>Pytanie ${i+1}</strong><span>${d.correct?'✅':'❌'}</span></div>
 <p style="margin-bottom:6px">${d.q.question}</p>
 <p style="font-size:0.85rem;color:var(--text2)">Twoja: <strong>${userAns}</strong> | Poprawna: <strong style="color:var(--success)">${correctAns}</strong></p>
 ${d.q.explanation?`<p style="font-size:0.85rem;color:var(--accent-blue);margin-top:4px">${d.q.explanation}</p>`:''}
-</div>`;}).join('');
+</div>`;
+}
+}).join('');
 let mPct=results.math.total?Math.round(results.math.correct/results.math.total*100):0;
 let pPct=results.polish.total?Math.round(results.polish.correct/results.polish.total*100):0;
 let ePct=results.english.total?Math.round(results.english.correct/results.english.total*100):0;
 document.getElementById('screen-exam').innerHTML=`<div class="exam-wrapper">
 <div class="quiz-results"><h2>📊 Wynik egzaminu próbnego</h2>
 <div class="score-big ${totalPct>=75?'great':totalPct>=50?'ok':'bad'}">${totalPct}%</div>
-<p>${totalCorrect} z ${examState.questions.length} poprawnych</p></div>
+<p>${totalCorrect} z ${totalAutoQuestions} poprawnych zadań zamkniętych/krótkich</p>
+<p style="font-size:0.9rem; color:var(--text2); margin-top:8px;">(Zadania otwarte nie są wliczane do wyniku automatycznego i wymagają Twojej samooceny poniżej)</p></div>
 <div class="stats-row" style="margin:20px 0">
 <div class="stat-card"><div class="stat-value" style="color:var(--math)">${mPct}%</div><div class="stat-label">📐 Matematyka (${results.math.correct}/${results.math.total})</div></div>
 <div class="stat-card"><div class="stat-value" style="color:var(--polish)">${pPct}%</div><div class="stat-label">📖 Polski (${results.polish.correct}/${results.polish.total})</div></div>
@@ -3462,9 +3487,30 @@ document.getElementById('screen-exam').innerHTML=`<div class="exam-wrapper">
 </div>
 <h3 style="margin-bottom:12px">Szczegółowe wyniki</h3>
 <div class="exam-results-grid">${detailHtml}</div>
+${totalAutoQuestions < examState.questions.length ? `
+<div style="margin-top:30px; padding:20px; background:rgba(0,0,0,0.2); border-radius:8px; border:1px solid var(--border); text-align:center;">
+<h3 style="margin-bottom:10px;">📤 Wyślij zadania otwarte do sprawdzenia</h3>
+<p style="font-size:0.9rem; color:var(--text2); margin-bottom:15px;">Podaj e-mail osoby sprawdzającej, aby automatycznie przygotować wiadomość z Twoimi odpowiedziami.</p>
+<div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
+<input type="email" id="exam-export-email" value="noobeknoobowski36@gmail.com" style="padding:10px; border-radius:6px; border:1px solid var(--border); background:rgba(255,255,255,0.05); color:white; width:100%; max-width:300px;">
+<button class="btn btn-secondary" onclick="if(window.sendExamEmail) window.sendExamEmail();">Wyślij gotowy e-mail</button>
+</div>
+</div>
+` : ''}
 <div style="margin-top:24px;text-align:center"><button class="btn btn-primary btn-lg" onclick="renderExamScreen()">Powrót</button></div></div>`;
 if(totalPct>=75)spawnConfetti();
 }
+
+window.sendExamEmail = function() {
+    let email = document.getElementById('exam-export-email').value || 'noobeknoobowski36@gmail.com';
+    let body = "Wyniki Egzaminu Próbnego - Zadania Otwarte\\n\\n";
+    examState.questions.forEach((q,i) => {
+        if(q.type === 'open') {
+            body += `Pytanie ${i+1}:\\n${q.question}\\n\\nMoja odpowiedź / obliczenia:\\n${examState.answers[i] || 'Brak'}\\n\\n------------------------\\n\\n`;
+        }
+    });
+    window.location.href = `mailto:${email}?subject=Zadania Otwarte - Egzamin Probny E8&body=${encodeURIComponent(body)}`;
+};
 
 function renderStats(){
 let data=getProgress();
