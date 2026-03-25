@@ -2938,6 +2938,41 @@ areas.sort((a,b)=>a.score-b.score);
 return areas.slice(0,3);
 }
 
+function getStrongAreas(data){
+let areas=[];
+['math','polish','english'].forEach(s=>{
+let topics=s==='math'?MATH_TOPICS:s==='polish'?POLISH_TOPICS:ENGLISH_TOPICS;
+topics.forEach(t=>{
+let sc=getTopicScore(data,s,t);
+if(sc!==null&&sc>=80)areas.push({subject:s,topic:t,score:sc});
+});
+});
+areas.sort((a,b)=>b.score-a.score);
+return areas.slice(0,3);
+}
+
+function startPersonalizedTraining() {
+    let data = getProgress();
+    let weak = getWeakAreas(data);
+    let qs = [];
+    if (weak.length === 0) {
+        quickQuiz(); return;
+    }
+    weak.forEach(w => {
+        try{
+        if(w.subject === 'math') qs.push(...generateMathQuestions(w.topic, 5, 'mix'));
+        else if(w.subject === 'english') qs.push(...generateEnglishQuestions(w.topic, 5, 'mix'));
+        else if(w.subject === 'polish') qs.push(...generatePolishQuestions(w.topic, 5, 'mix'));
+        }catch(e){}
+    });
+    qs = shuffleArray(qs).slice(0, 10);
+    qs.sort((a,b) => { let order = {mcq: 1, gap: 2, open: 3}; return (order[a.type] || 2) - (order[b.type] || 2); });
+    quizState = {questions:qs, current:0, score:0, answers:[], active:true, subject:'mix', topic:'Trening Personalizowany'};
+    document.getElementById('quiz-overlay-title').textContent = 'Trening Personalizowany';
+    document.getElementById('quiz-overlay').classList.add('active');
+    renderQuizQuestion();
+}
+
 function showScreen(id){
 document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
 let screen=document.querySelector(`[data-screen="${id}"]`);
@@ -2964,13 +2999,21 @@ let badges=BADGES.map(b=>{
     let earned = b.check(data);
     let icon = earned ? b.icon : '🔒';
     let cls = earned ? 'earned' : 'locked';
-    return `<span class="badge ${cls}" title="${b.desc}">${icon} ${b.name}</span>`;
+    return `<span class="badge ${cls}" style="cursor:pointer" onclick="alert('${b.name}\\n\\nWarunek odblokowania:\\n${b.desc}')" title="${b.desc}">${icon} ${b.name}</span>`;
 }).join('');
 let weakHtml=weak.length?weak.map(w=>`<div class="weak-item" onclick="showScreen('${w.subject}');setTimeout(()=>openTopic('${w.subject}','${w.topic}'),100)"><span>${w.topic}</span><span style="color:var(--error)">${w.score}%</span></div>`).join(''):'<p style="color:var(--text2)">Rozwiąż kilka quizów, aby zobaczyć słabe strony.</p>';
+let strong=getStrongAreas(data);
+let strongHtml=strong.length?strong.map(s=>`<div class="weak-item" style="border-left:3px solid var(--success)" onclick="showScreen('${s.subject}');setTimeout(()=>openTopic('${s.subject}','${s.topic}'),100)"><span>${s.topic}</span><span style="color:var(--success)">${s.score}%</span></div>`).join(''):'<p style="color:var(--text2)">Rozwiązuj quizy na co najmniej 80%, aby tu trafić!</p>';
 let daysLeft='';
 if(data.examDate){
-let diff=Math.ceil((new Date(data.examDate)-new Date())/(1000*60*60*24));
-daysLeft=diff>0?`<div class="exam-date-info">📅 Do egzaminu: <strong>${diff} dni</strong></div>`:`<div class="exam-date-info">📅 Egzamin już się odbył!</div>`;
+let bDate=new Date(data.examDate);
+let dP=Math.ceil((bDate-new Date())/(1000*60*60*24));
+let dM=dP+1; let dE=dP+2;
+daysLeft=`<div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;">
+<div class="exam-date-info" style="flex:1;min-width:140px;margin-top:0;justify-content:center">📖 Polski: ${dP>0?`<strong>${dP} dni</strong>`:'odbył się'}</div>
+<div class="exam-date-info" style="flex:1;min-width:140px;margin-top:0;justify-content:center">📐 Matma: ${dM>0?`<strong>${dM} dni</strong>`:'odbył się'}</div>
+<div class="exam-date-info" style="flex:1;min-width:140px;margin-top:0;justify-content:center"><span class="flag-uk"></span> Ang: ${dE>0?`<strong>${dE} dni</strong>`:'odbył się'}</div>
+</div>`;
 }
 document.getElementById('screen-dashboard').innerHTML=`
 <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:24px">
@@ -2978,7 +3021,7 @@ document.getElementById('screen-dashboard').innerHTML=`
 <div class="streak-display"><span class="streak-fire">🔥</span><strong>${data.streak}</strong> ${data.streak===1?'dzień':'dni'} z rzędu</div>
 </div>
 <div class="name-edit" style="margin-bottom:20px"><input id="name-input" value="${data.userName}" placeholder="Twoje imię" style="max-width:180px;padding:6px 10px"><button class="btn btn-sm btn-secondary" onclick="let d=getProgress();d.userName=document.getElementById('name-input').value||'Uczeń';saveProgress(d);renderDashboard()">Zapisz</button>
-<input id="exam-date-input" type="date" value="${data.examDate||''}" style="max-width:160px;padding:6px 10px;margin-left:12px" placeholder="Data egzaminu"><button class="btn btn-sm btn-secondary" onclick="let d=getProgress();d.examDate=document.getElementById('exam-date-input').value;saveProgress(d);renderDashboard()">Ustaw</button>
+<input id="exam-date-input" title="Podaj datę pierwszego egzaminu (Polski)" type="date" value="${data.examDate||''}" style="max-width:160px;padding:6px 10px;margin-left:12px" placeholder="Data 1. egzaminu"><button class="btn btn-sm btn-secondary" onclick="let d=getProgress();d.examDate=document.getElementById('exam-date-input').value;saveProgress(d);renderDashboard()">Ustaw</button>
 <button class="btn btn-sm" style="margin-left:auto;background:var(--error);color:white" onclick="if(confirm('Na pewno chcesz zresetować cały postęp? Tej akcji nie można cofnąć.')){localStorage.removeItem('e8progress');location.reload();}">Resetuj progres</button>
 <button class="btn btn-sm" style="margin-left:8px;background:#334155;color:white" onclick="document.getElementById('admin-overlay').classList.add('active'); if(document.getElementById('admin-auth-section')) document.getElementById('admin-auth-section').style.display='block'; if(document.getElementById('admin-generator-section')) document.getElementById('admin-generator-section').style.display='none'; if(document.getElementById('admin-password-input')) document.getElementById('admin-password-input').value='';">🛠 Panel</button>
 </div>
@@ -2996,8 +3039,11 @@ ${daysLeft}
 <button class="btn btn-sm" style="background:var(--english);color:#0f0f1a" onclick="quickQuiz('english')"><span class="flag-uk"></span> Angielski</button>
 <button class="btn btn-sm btn-primary" onclick="quickQuiz()">🎲 Losuj</button>
 </div></div>
+<div class="dash-card"><h3>🎯 Inteligentny Trening</h3><p style="color:var(--text2);margin-bottom:12px">Algorytm personalizuje pytania pod Twoje Słabe strony.</p>
+<button class="btn btn-primary" style="width:100%" onclick="startPersonalizedTraining()">Rozpocznij (10 pytań)</button></div>
 <div class="dash-card"><h3>🏅 Osiągnięcia</h3><div class="badge-row">${badges}</div></div>
 <div class="dash-card"><h3>⚠️ Słabe strony</h3>${weakHtml}</div>
+<div class="dash-card"><h3>💪 Mocne strony</h3>${strongHtml}</div>
 </div>`;
 }
 
