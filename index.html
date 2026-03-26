@@ -448,8 +448,9 @@ E8 Prep
 
         <div id="admin-generator-section" style="display:none;">
             <div style="display:flex;gap:8px;margin-bottom:20px;">
-                <button class="btn btn-primary" id="admin-tab-gen" onclick="showAdminTab('gen')" style="flex:1">🔑 Generuj licencję</button>
-                <button class="btn btn-secondary" id="admin-tab-block" onclick="showAdminTab('block')" style="flex:1">🚫 Zarządzaj blokadami</button>
+                <button class="btn btn-primary" id="admin-tab-gen" onclick="showAdminTab('gen')" style="flex:1">🔑 Licencje</button>
+                <button class="btn btn-secondary" id="admin-tab-block" onclick="showAdminTab('block')" style="flex:1">🚫 Blokady</button>
+                <button class="btn btn-secondary" id="admin-tab-rank" onclick="showAdminTab('rank')" style="flex:1">🏆 Ranking</button>
             </div>
             <div id="admin-gen-panel">
                 <p style="margin-bottom:15px; color:var(--text2)">Wygeneruj nielimitowaną licencję przypisaną na stałe do jednego urządzenia.</p>
@@ -466,6 +467,12 @@ E8 Prep
                 <button class="btn btn-danger" style="width:100%; margin-bottom:20px;" onclick="if(window.blockHWID) blockHWID();">🚫 Zablokuj licencję</button>
                 <h4 style="margin-bottom:10px; color:var(--error)">Zablokowane urządzenia:</h4>
                 <div id="blocked-list" style="max-height:200px; overflow-y:auto; font-family:monospace; font-size:0.9rem;"></div>
+            </div>
+            <div id="admin-rank-panel" style="display:none;">
+                <p style="margin-bottom:15px; color:var(--text2)">Zarządzaj rankingiem globalnym — usuwaj wpisy lub zresetuj całość.</p>
+                <button class="btn btn-danger" id="admin-reset-rank-btn" style="width:100%; margin-bottom:20px;" onclick="if(window.resetLeaderboard) resetLeaderboard();">⚠️ RESETUJ CAŁY RANKING</button>
+                <h4 style="margin-bottom:10px; color:var(--accent)">Aktywne wpisy:</h4>
+                <div id="admin-leaderboard-list" style="max-height:250px; overflow-y:auto; font-size:0.9rem;"></div>
             </div>
         </div>
     </div>
@@ -670,6 +677,151 @@ function toRoman(num) {
     return roman;
 }
 
+// 1.1 ROMAN COMPARISON GENERATOR (CKE 2026: L1..L4 vs X)
+function generateRomanComp() {
+    let X = getRand(100, 2900);
+    // Generate 4 Roman numbers near X
+    let diffs = [-50, -20, 10, 30, -100, 100, 5, -5];
+    shuffleArray(diffs);
+    let vals = diffs.slice(0, 4).map(d => X + d).filter(v => v > 0 && v <= 3000);
+    // Ensure one is closest
+    let closestVal = vals.reduce((prev, curr) => Math.abs(curr - X) < Math.abs(prev - X) ? curr : prev);
+    let roms = vals.map(v => toRoman(v));
+    
+    return {
+        question: `Zestawiono cztery liczby zapisane w systemie rzymskim: ${roms.join(', ')}. Która z nich na osi liczbowej znajduje się <strong>najbliżej</strong> liczby dziesiętnej ${X}?`,
+        options: shuffleArray(roms),
+        correct: toRoman(closestVal),
+        explanation: `Liczby to: ${vals.map((v, i) => roms[i] + '=' + v).join(', ')}. Najbliżej ${X} jest ${toRoman(closestVal)}.`
+    };
+}
+
+// 1.2 FRACTION CUP COMPARISON (CKE 2026: A, B, C capacities)
+function generateFractionCupComp() {
+    let denoms = [3, 4, 5, 7, 8, 9, 10, 12];
+    shuffleArray(denoms);
+    let d1 = denoms[0], d2 = denoms[1], d3 = denoms[2];
+    let n1 = getRand(1, d1-1), n2 = getRand(1, d2-1), n3 = getRand(1, d3-1);
+    
+    let f1 = n1/d1, f2 = n2/d2, f3 = n3/d3;
+    let vals = [{n:`pierwszym`, v:f1, s:`${n1}/${d1}`}, {n:`drugim`, v:f2, s:`${n2}/${d2}`}, {n:`trzecim`, v:f3, s:`${n3}/${d3}`}];
+    vals.sort((a,b) => b.v - a.v); // sort desc
+    
+    let qType = getRand(1, 2);
+    if (qType === 1) {
+        return {
+            question: `Do trzech identycznych naczyń wlano sok. W pierwszym zajmował on ${n1}/${d1} pojemności, w drugim ${n2}/${d2}, a w trzecim ${n3}/${d3}. W którym naczyniu jest <strong>najwięcej</strong> soku?`,
+            options: shuffleArray(['W pierwszym', 'W drugim', 'W trzecim', 'W każdym tyle samo']),
+            correct: `W ${vals[0].n}`,
+            explanation: `Porównując ułamki: ${n1}/${d1} ≈ ${f1.toFixed(2)}, ${n2}/${d2} ≈ ${f2.toFixed(2)}, ${n3}/${d3} ≈ ${f3.toFixed(2)}. Największy to ${vals[0].s}.`
+        };
+    } else {
+        let isTrue = f1 + f2 > 1;
+        return {
+            question: `Do trzech naczyń wlano płyn: A=${n1}/${d1}, B=${n2}/${d2}, C=${n3}/${d3}. Oceń prawdziwość zdania: "Suma płynu w naczyniach A i B wystarczy do całkowitego napełnienia naczynia o identycznej pojemności (czyli A+B > 1)".`,
+            options: shuffleArray(['Prawda', 'Fałsz']),
+            correct: isTrue ? 'Prawda' : 'Fałsz',
+            explanation: `${n1}/${d1} + ${n2}/${d2} = ${(f1+f2).toFixed(2)}. Jest to ${isTrue ? 'więcej' : 'mniej'} niż 1.`
+        };
+    }
+}
+
+// 2.1 CLOCK DELAY (CKE 2026: M min/hr)
+function generateClockDelay() {
+    let M = getRand(2, 6); // minutes late per hour
+    let startH = getRand(6, 10);
+    let elapsedH = getRand(2, 4);
+    let elapsedM = [0, 15, 30, 45][getRand(0, 3)];
+    
+    let totalRealMinutes = elapsedH * 60 + elapsedM;
+    let totalDelayMinutes = Math.floor((elapsedH + elapsedM/60) * M);
+    
+    let endH = startH + elapsedH;
+    let endM = elapsedM - totalDelayMinutes;
+    if (endM < 0) { endH--; endM += 60; }
+    
+    let startStr = `${startH}:00`;
+    let durationStr = `${elapsedH}h ${elapsedM > 0 ? elapsedM + 'min' : ''}`;
+    let resultStr = `${endH}:${endM < 10 ? '0'+endM : endM}`;
+    
+    return {
+        question: `Zegar ścienny spóźnia się o ${M} minut na każdą godzinę pracy. Ustawiono go poprawnie o godzinie ${startStr}. Którą godzinę wskaże ten zegar po upływie dokładnie ${durationStr} czasu rzeczywistego?`,
+        options: shuffleArray([resultStr, `${endH}:${elapsedM}`, `${endH+1}:${endM}`, `${startH+elapsedH}:00`]),
+        correct: resultStr,
+        explanation: `W czasie ${durationStr} zegar spóźnił się o ${totalDelayMinutes} minut (${elapsedH + (elapsedM/60).toFixed(2)}h * ${M} min). Zamiast ${startH+elapsedH}:${elapsedM < 10 ? '0'+elapsedM : elapsedM}, pokaże ${resultStr}.`
+    };
+}
+
+// 2.2 DOUBLE CURRENCY (GBP -> PLN -> USD)
+function generateDoubleCurrency() {
+    let amount = getRand(2, 6) * 100;
+    let currencies = [
+        {n:'GBP', buy:5.10, sell:5.25},
+        {n:'EUR', buy:4.30, sell:4.45},
+        {n:'USD', buy:4.00, sell:4.15},
+        {n:'CHF', buy:4.50, sell:4.65}
+    ];
+    shuffleArray(currencies);
+    let c1 = currencies[0], c2 = currencies[1];
+    
+    let pln = amount * c1.buy;
+    let finalAmount = Math.floor(pln / c2.sell);
+    
+    return {
+        question: `Turysta wymienił ${amount} ${c1.n} na polskie złote (kurs kupna: 1 ${c1.n} = ${c1.buy.toFixed(2)} PLN). Następnie całą otrzymaną kwotę przeznaczył na zakup waluty ${c2.n} (kurs sprzedaży: 1 ${c2.n} = ${c2.sell.toFixed(2)} PLN). Ile jednostek waluty ${c2.n} otrzymał (wynik zaokrąglij w dół)?`,
+        options: shuffleArray([String(finalAmount), String(Math.floor(amount * (c1.buy/c2.buy))), String(Math.floor(pln)), String(finalAmount + 50)]),
+        correct: String(finalAmount),
+        explanation: `Krok 1: ${amount} * ${c1.buy} = ${pln.toFixed(2)} PLN. Krok 2: ${pln.toFixed(2)} / ${c2.sell} = ${finalAmount} ${c2.n}.`
+    };
+}
+
+// 2.3 MIXTURE PERCENTAGE (Add X to reach P%)
+function generateMixturePct() {
+    let total = [20, 30, 40, 50, 60, 100][getRand(0, 5)];
+    let current = getRand(2, Math.floor(total/4));
+    let targetPct = [20, 25, 30, 40, 50][getRand(0, 4)];
+    
+    // Formula: (current + x) / (total + x) = targetPct / 100
+    // 100(current + x) = targetPct(total + x)
+    // 100current + 100x = targetPct*total + targetPct*x
+    // x(100 - targetPct) = targetPct*total - 100current
+    let x = (targetPct * total - 100 * current) / (100 - targetPct);
+    
+    if (x <= 0 || x % 1 !== 0) {
+        // Fallback to simpler: how many to add to double the current?
+        x = current;
+        targetPct = Math.round(((current + x) / (total + x)) * 100);
+    }
+    
+    return {
+        question: `W pudełku jest ${total} klocków, w tym ${current} czerwone. Ile czerwonych klocków należy <strong>dołożyć</strong> do pudełka, aby stanowiły one dokładnie ${targetPct}% wszystkich klocków?`,
+        options: shuffleArray([String(x), String(x+2), String(Math.round(total * targetPct/100)), String(current * 2)]),
+        correct: String(x),
+        explanation: `Po dołożeniu ${x} klocków będziemy mieć ${current+x} czerwonych na ${total+x} wszystkich. ${current+x}/${total+x} = ${targetPct/100}.`
+    };
+}
+
+// 3.1 ALGEBRAIC PERIMETER (Triangles/Quadrilaterals)
+function generateAlgebraicPerimeter() {
+    let type = getRand(1, 4);
+    if (type === 1) {
+        let x = getRand(5, 15);
+        return {
+            question: `Obwód trójkąta o bokach \\( a, a+4, a-2 \\) wynosi ${3*x+2}. Wyznacz długość najdłuższego boku tego trójkąta.`,
+            options: shuffleArray([String(x+4), String(x), String(x-2), String(3*x+2)]),
+            correct: String(x+4),
+            explanation: `Równanie: a + (a+4) + (a-2) = ${3*x+2} => 3a + 2 = ${3*x+2} => a = ${x}. Boki to ${x}, ${x+4}, ${x-2}. Najdłuższy to ${x+4}.`
+        };
+    } else {
+        return {
+            question: `Prostokąt ma boki o długościach \\( x \\) oraz \\( 2x-5 \\). Które wyrażenie opisuje obwód tego prostokąta?`,
+            options: shuffleArray(['6x - 10', '3x - 5', '2x^2 - 5x', '4x - 10']),
+            correct: '6x - 10',
+            explanation: `Obwód prostokąta to 2 * (a + b) = 2 * (x + 2x - 5) = 2 * (3x - 5) = 6x - 10.`
+        };
+    }
+}
+
 function generateMathQuestions(topic, count = 15, selectedDiff = 'mix') {
     let questions = [];
     for (let i = 0; i < count; i++) {
@@ -680,27 +832,16 @@ function generateMathQuestions(topic, count = 15, selectedDiff = 'mix') {
         };
 
         if (topic === 'Liczby i działania') {
-            let baseType = getRand(1, 6);
-            if (baseType === 1) {
-                // Rzymskie (Nowy rygor do 3000)
-                let num = getRand(100, 2999);
-                let rom = toRoman(num);
-                let w1 = num + getRand(1, 9);
-                let w2 = num - 10 > 0 ? num - 10 : num + 20;
-                let w3 = num + 100 <= 2999 ? num + 100 : num - 100;
-                
-                if (Math.random() > 0.5) {
-                    q.question = `Liczbę ${num} zapisano w systemie rzymskim. Wskaż poprawny zapis.`;
-                    q.options = shuffleArray([rom, toRoman(w1), toRoman(w2), toRoman(w3)]);
-                    q.correct = q.options.indexOf(rom);
-                    q.explanation = `${num} w systemie rzymskim to ${rom}.`;
-                } else {
-                    q.question = `Jaką liczbę zapisaną w systemie arabskim przedstawia znak rzymski ${rom}?`;
-                    q.options = shuffleArray(makeUniqueOptions(num, [num+10, num-10, num+100]));
-                    q.correct = q.options.indexOf(String(num));
-                    q.explanation = `${rom} = ${num}.`;
-                }
-            } else if (baseType === 2) {
+            let baseType = getRand(1, 10);
+            if (baseType <= 2) {
+                // New Roman Comp
+                let res = generateRomanComp();
+                Object.assign(q, res);
+            } else if (baseType <= 4) {
+                // New Fraction Cup Comp
+                let res = generateFractionCupComp();
+                Object.assign(q, res);
+            } else if (baseType === 5) {
                 // NWD / NWW wg ograniczonych wymogów (NWD(600, 720) itp.)
                 let a = getRand(2, 5) * 10;
                 let b = getRand(3, 8) * 10;
@@ -709,7 +850,7 @@ function generateMathQuestions(topic, count = 15, selectedDiff = 'mix') {
                 q.options = shuffleArray(makeUniqueOptions(ans, [ans*2, lcm(a,b), 10]));
                 q.correct = q.options.indexOf(String(ans));
                 q.explanation = `NWD(${a}, ${b}) = ${ans}.`;
-            } else if (baseType === 3) {
+            } else if (baseType === 6) {
                 // Szacowanie pierwiastków między liczbami naturalnymi
                 let n = getRand(4, 12);
                 let rootInner = n * n + getRand(1, 2*n - 1);
@@ -718,7 +859,7 @@ function generateMathQuestions(topic, count = 15, selectedDiff = 'mix') {
                 q.options = shuffleArray([ansStr, `${n-1} i ${n}`, `${n+1} i ${n+2}`, `${n} i ${n+2}`]);
                 q.correct = q.options.indexOf(ansStr);
                 q.explanation = `Ponieważ ${n}^2 = ${n*n} oraz ${(n+1)}^2 = ${(n+1)*(n+1)}, a ${n*n} < ${rootInner} < ${(n+1)*(n+1)}.`;
-            } else if (baseType === 4) {
+            } else if (baseType === 7) {
                 // Potęgi - Prawa działań
                 let base = getRand(2, 5); 
                 let p1 = getRand(3, 7); 
@@ -728,16 +869,14 @@ function generateMathQuestions(topic, count = 15, selectedDiff = 'mix') {
                 q.options = shuffleArray(makeUniqueOptions(ans, [p1+p2, p1*p2, base]));
                 q.correct = q.options.indexOf(String(ans));
                 q.explanation = `Przy dzieleniu potęg wykładniki odejmujemy: ${p1} - ${p2} = ${ans}.`;
-            } else if (baseType === 5) {
+            } else if (baseType === 8) {
                 // Ułamki z ujemnymi (Ograniczone zagnieżdżenie, z ułamkiem dziesiętnym)
-                let c = getRand(1, 5) * 2; // parzyste
-                let ans = -c;
-                // e.g. -c = -x / 0.5 + 2
-                // We format -x/0.25
+                let c = getRand(1, 5) * 2; 
+                let ans = -c-2;
                 q.question = `Oblicz wartość wyrażenia: \\( -${c/2} : 0{,}5 + 2 \\cdot (-1) \\)`;
-                q.options = shuffleArray(makeUniqueOptions(-c - 2, [-c + 2, c - 2, c + 2]));
-                q.correct = q.options.indexOf(String(-c-2));
-                q.explanation = `-${c/2} : 1/2 = -${c}. Dalej -${c} + (-2) = ${-c-2}.`;
+                q.options = shuffleArray(makeUniqueOptions(ans, [ans+2, ans-2, -ans]));
+                q.correct = q.options.indexOf(String(ans));
+                q.explanation = `-${c/2} : 1/2 = -${c}. Dalej -${c} + (-2) = ${ans}.`;
             } else {
                 // Nieskończone rozwinięcia dziesiętne z kropkami
                 let r = getRand(1, 8);
@@ -748,107 +887,57 @@ function generateMathQuestions(topic, count = 15, selectedDiff = 'mix') {
             }
         }
         else if (topic === 'Proporcje, procenty i obliczenia praktyczne') {
-            let baseType = getRand(1, 4);
-            if (baseType === 1) {
-                // Podwójna obniżka
-                let p = getRand(35, 85) * 10;
-                let per1 = getRand(15, 25); let per2 = getRand(5, 15);
-                let ans = Math.round(p * (1 - per1/100) * (1 - per2/100));
-                q.question = `Rower kosztował ${p} zł. Najpierw obniżono jego cenę o ${per1}%, a po miesiącu nową cenę obniżono o kolejne ${per2}%. Ile wynosi ostateczna cena roweru (zaokrąglona do pełnych złotych)?`;
-                let wrongAdd = Math.round(p * (1 - (per1 + per2) / 100));
-                let wrong2 = Math.round(p * (1 - per1/100));
-                let wrong3 = Math.round(p * 0.75);
-                q.options = shuffleArray(makeUniqueOptions(ans, [wrongAdd, wrong2, wrong3]));
-                q.correct = q.options.indexOf(String(ans));
-                q.explanation = `Obniżka 20% to cena 80% (${p*0.8} zł). Druga obniżka 10% jest liczona od NOWEJ kwoty, czyli 90% z ${p*0.8} = ${ans} zł.`;
-            } else if (baseType === 2) {
-                // v = s/t (tylko km/h, m/s)
-                let v_s = getRand(10, 30); // m/s
-                let t = getRand(2, 5); // sekundy
-                let ans = v_s * t;
+            let baseType = getRand(1, 8);
+            if (baseType <= 2) {
+                Object.assign(q, generateClockDelay());
+            } else if (baseType <= 4) {
+                Object.assign(q, generateDoubleCurrency());
+            } else if (baseType <= 6) {
+                Object.assign(q, generateMixturePct());
+            } else if (baseType === 7) {
+                // v = s/t
+                let v_s = getRand(10, 30); let t = getRand(2, 5); let ans = v_s * t;
                 q.question = `Gepard porusza się ze średnią prędkością ${v_s} m/s. Jaką drogę pokona w czasie ${t} sekund?`;
                 q.options = shuffleArray(makeUniqueOptions(ans, [Math.round(v_s/t), Math.round(v_s*t*0.5), Math.round(v_s*t*1.5)]));
                 q.correct = q.options.indexOf(String(ans));
                 q.explanation = `Droga to prędkość razy czas: ${v_s} m/s · ${t} s = ${ans} metrów.`;
-            } else if (baseType === 3) {
-                // Lokaty, tylko 10 i 20%
-                let k = getRand(2, 5) * 1000;
-                let pct = getRand(1, 2) * 10; 
-                let ans = k * (1 + pct/100);
-                q.question = `Klient wpłacił na roczną lokatę ${k} zł oprocentowaną na ${pct}% w skali roku. Jaki będzie stan konta po upływie roku (podatki pomijamy)?`;
-                let w1 = Math.round(k * (pct/100));
-                let w2 = k + pct;
-                let w3 = Math.round(k * (1 - pct/100));
-                q.options = shuffleArray(makeUniqueOptions(ans, [w1, w2, w3]));
-                q.correct = q.options.indexOf(String(ans));
-                q.explanation = `Stan to 100% kapitału + ${pct}% odsetek = ${100+pct}%. ${k} · ${(100+pct)/100} = ${ans} zł.`;
             } else {
                 // Proporcje w przepisach (Skala praktyczna)
-                let porcjeT = getRand(12, 24);
-                let startT = 4;
-                let multi = porcjeT / startT;
-                let mleko = getRand(1, 3);
-                let mlekoAns = mleko * multi;
-                q.question = `Przepis domowy na 4 małe pizzertki wymaga użycia ${mleko} szklanek mąki. Kasia organizuje imprezę dla klasy i chce upiec ${porcjeT} pizzerek. Ile szklanek mąki musi użyć?`;
-                let w1 = Math.round(mlekoAns - 1);
-                let w2 = Math.round(mlekoAns + mleko);
-                let w3 = Math.round(mlekoAns * 0.5);
-                q.options = shuffleArray(makeUniqueOptions(mlekoAns, [w1, w2, w3]));
+                let porcjeT = getRand(12, 24); let startT = 4; let multi = porcjeT / startT;
+                let mleko = getRand(1, 3); let mlekoAns = mleko * multi;
+                q.question = `Przepis domowy na 4 małe pizzertki wymaga użycia ${mleko} szklanek mąki. Kasia chce upiec ${porcjeT} pizzerek. Ile szklanek mąki musi użyć?`;
+                q.options = shuffleArray(makeUniqueOptions(mlekoAns, [mlekoAns-1, mlekoAns+mleko, mlekoAns*0.5]));
                 q.correct = q.options.indexOf(String(mlekoAns));
-                q.explanation = `Stosunek to ${porcjeT}/4 = ${multi}. Potrzebujemy ${multi} razy więcej składników. ${multi} · ${mleko} = ${mlekoAns}.`;
+                q.explanation = `Stosunek to ${porcjeT}/4 = ${multi}. ${multi} · ${mleko} = ${mlekoAns}.`;
             }
         }
         else if (topic === 'Wyrażenia algebraiczne i równania') {
-            let baseType = getRand(1, 4);
-            if (baseType === 1) {
-                // Redukcja wyrazów i wartość wyrażenia "najpierw uprość"
-                let k = getRand(2, 5);
-                let x = getRand(-3, 3); if(x===0) x=2;
+            let baseType = getRand(1, 8);
+            if (baseType <= 3) {
+                Object.assign(q, generateAlgebraicPerimeter());
+            } else if (baseType === 4) {
+                // Redukcja wyrazów
+                let k = getRand(2, 5); let x = getRand(-3, 3); if(x===0) x=2;
                 let ans = k * x;
                 q.question = `Wiesz, że x = ${x}. Oblicz wartość liczbową uproszczonego wyrażenia: \\( ${k+2}x - 2(x + 1) + 2 \\).`;
                 q.options = shuffleArray(makeUniqueOptions(ans, [ans+1, ans-1, -ans]));
                 q.correct = q.options.indexOf(String(ans));
                 q.explanation = `Uproszczenie: ${(k+2)}x - 2x - 2 + 2 = ${k}x. Podstawiamy x=${x}: ${k} · ${x} = ${ans}.`;
-            } else if (baseType === 2) {
-                // Mnożenie dwóch dwumianów (każdy z każdym)
-                let a = getRand(2, 4); let b = getRand(1, 5);
-                q.question = `Po przekształceniu (wymnożeniu i redukcji) wyrażenia \\((x + ${a})(x - ${b})\\) otrzymamy wielomian w postaci:`;
-                let term1 = `x^2 ${a-b >= 0 ? '+'+(a-b) : a-b}x - ${a*b}`;
-                if(a-b === 1) term1 = `x^2 + x - ${a*b}`;
-                if(a-b === -1) term1 = `x^2 - x - ${a*b}`;
-                if(a-b === 0) term1 = `x^2 - ${a*b}`;
-                let w1 = `x^2 - ${a*b}`;
-                let w2 = `x^2 + ${(a+b)}x - ${a*b}`;
-                let w3 = `2x - ${a*b}`;
-                let opts = [term1, w1, w2, w3];
-                // remove duplicates
-                opts = [...new Set(opts)];
-                while(opts.length < 4) opts.push(`x^2 + ${getRand(5, 10)}x + ${a*b}`);
-                q.options = shuffleArray(opts);
-                q.correct = q.options.indexOf(term1);
-                q.explanation = `Mnożenie każdy z każdym: x·x + x·(-${b}) + ${a}·x + ${a}·(-${b}) = x² - ${b}x + ${a}x - ${a*b} = ${term1}.`;
-            } else if (baseType === 3) {
-                // Typowe "równanie z treścią" - wiek
-                let years = getRand(4, 8);
-                let currAge = getRand(10, 15);
-                let curr2 = currAge * getRand(2,3);
-                q.question = `Mama ma obecnie ${curr2} lat, a jej córka ma ${currAge} lat. Które równanie pozwoli poprawnie udowodnić, po ilu (x) latach mama będzie dokładnie dwa razy starsza od córki?`;
-                let ans = `${curr2} + x = 2(${currAge} + x)`;
-                let w1 = `${curr2} = 2(${currAge} + x)`;
-                let w2 = `${curr2} + x = 2·${currAge} + x`;
-                let w3 = `${curr2} + x = ${currAge} + 2x`;
-                q.options = shuffleArray([ans, w1, w2, w3]);
-                q.correct = q.options.indexOf(ans);
-                q.explanation = `Upływ czasu dotyka obydwie osoby, więc do ich bazy wieku dodajemy x. 2 razy większa jest wtedy strona dzieci, czyli 2(wiek + x).`;
+            } else if (baseType === 5) {
+                // Równanie z treścią
+                let years = getRand(4, 8); let currAge = getRand(10, 15); let curr2 = currAge * getRand(2,3);
+                q.question = `Mama ma ${curr2} lat, a córka ${currAge} lat. Które równanie pozwoli udowodnić, po ilu (x) latach mama będzie dwa razy starsza od córki?`;
+                let ansStr = `${curr2} + x = 2(${currAge} + x)`;
+                q.options = shuffleArray([ansStr, `${curr2} = 2(${currAge} + x)`, `${curr2} + x = 2·${currAge} + x`, `${curr2} + x = ${currAge} + 2x`]);
+                q.correct = q.options.indexOf(ansStr);
+                q.explanation = `Do wieku obu osób dodajemy x. 2 razy większa jest wtedy strona córki, czyli 2(wiek + x).`;
             } else {
-                // Wyliczanie x z ułamkiem
-                let c = getRand(2, 4);
-                let x = getRand(2, 6);
-                let rhs = (x+c);
-                q.question = `Znajdź rozwiązanie równania: \\( \\frac{x}{${c}} + ${c} = ${(x/c + c).toFixed(1).replace('.0','')} \\)`;
+                // Wyliczanie x
+                let c = getRand(2, 4); let x = getRand(2, 6); let val = x/c + c;
+                q.question = `Znajdź rozwiązanie równania: \\( \\frac{x}{${c}} + ${c} = ${val.toFixed(1).replace('.0','')} \\)`;
                 q.options = shuffleArray(makeUniqueOptions(x, [x*c, x+c, x-c]));
                 q.correct = q.options.indexOf(String(x));
-                q.explanation = `Odejmujemy ${c} od prawej strony, a następnie mnożymy obie strony przez ${c}.`;
+                q.explanation = `Odejmujemy ${c} i mnożymy przez ${c}.`;
             }
         }
         else if (topic === 'Geometria płaska') {
@@ -1305,6 +1394,61 @@ const REACTION_PHRASES = [
     { q: "I'm so sorry I'm late.", opts: ["Don't worry about it.", "Yes, you are late.", "I would like to complain."], ans: "Don't worry about it." }
 ];
 
+const WORD_FORMATION_DB = [
+    {root:'BEAUTY', ans:'beautiful', sentence:'The view from the top of the mountain was [...............].'},
+    {root:'COMPLAIN', ans:'complaint', sentence:'I would like to make a formal [...............] about the service.'},
+    {root:'HEALTH', ans:'healthy', sentence:'Eating lots of fruit and vegetables is very [...............].'},
+    {root:'SUCCESS', ans:'successful', sentence:'The project was very [...............] and everyone was happy.'},
+    {root:'DANGER', ans:'dangerous', sentence:'It is [...............] to swim in this river because of the current.'},
+    {root:'FRIEND', ans:'friendly', sentence:'Our new neighbors are very [...............] and helpful.'},
+    {root:'IMPOSSIBLE', ans:'impossible', sentence:'It is [...............] to finish all this work in one hour.'},
+    {root:'COMFORT', ans:'comfortable', sentence:'This sofa is so [...............] that I could sleep on it.'},
+    {root:'PROBABLE', ans:'probably', sentence:'I will [...............] go to the cinema tomorrow evening.'},
+    {root:'SCIENCE', ans:'scientific', sentence:'They are doing [...............] research on global warming.'}
+];
+
+const PHRASAL_VERBS_DB = [
+    {v:'get up', def:'wstawać', ex:'I usually [...............] at 7 AM.', part:'get up'},
+    {v:'look for', def:'szukać', ex:'Can you help me [...............] my keys?', part:'look for'},
+    {v:'give up', def:'poddawać się', ex:'Never [...............] on your dreams!', part:'give up'},
+    {v:'break down', def:'zepsuć się', ex:'Our car [...............] on the way to the airport.', part:'broke down'},
+    {v:'turn off', def:'wyłączać', ex:'Please [...............] the TV before you go to bed.', part:'turn off'},
+    {v:'carry on', def:'kontynuować', ex:'Please [...............] with your work.', part:'carry on'},
+    {v:'find out', def:'dowiedzieć się', ex:'I need to [...............] what time the bus leaves.', part:'find out'},
+    {v:'put on', def:'zakładać (ubranie)', ex:'[...............] your coat, it is cold outside.', part:'Put on'}
+];
+
+function generateEnglishWordFormation() {
+    let pick = WORD_FORMATION_DB[getRand(0, WORD_FORMATION_DB.length - 1)];
+    return {
+        type: 'open',
+        question: `Uzupełnij lukę, przekształcając wyraz w nawiasie tak, aby otrzymać tchnicznie i logicznie poprawne zdanie:<br><i>${pick.sentence} (${pick.root})</i>`,
+        correct: pick.ans,
+        explanation: `Poprawna forma wyrazu '${pick.root}' w tym kontekście to '${pick.ans}'.`
+    };
+}
+
+function generateEnglishPhrasals() {
+    let pick = PHRASAL_VERBS_DB[getRand(0, PHRASAL_VERBS_DB.length - 1)];
+    let type = getRand(1, 2);
+    if (type === 1) {
+        return {
+            type: 'mcq',
+            question: `Co oznacza phrasal verb <strong>"${pick.v}"</strong>?`,
+            options: shuffleArray([pick.def, 'biegać', 'dzwonić do kogoś', 'cieszyć się']),
+            correct: pick.def,
+            explanation: `"${pick.v}" oznacza po polsku "${pick.def}".`
+        };
+    } else {
+        return {
+            type: 'open',
+            question: `Uzupełnij lukę odpowiednim czasownikiem frazowym (phrasal verb):<br><i>${pick.ex}</i>`,
+            correct: pick.part,
+            explanation: `W tym kontekście używamy "${pick.part}".`
+        };
+    }
+}
+
 function generateEnglishQuestions(topic, count = 15, selectedDiff = 'mix') {
     let questions = [];
     const catKeys = Object.keys(ENG_CATEGORIES);
@@ -1317,64 +1461,36 @@ function generateEnglishQuestions(topic, count = 15, selectedDiff = 'mix') {
         };
 
         if (topic === 'Vocabulary') {
-            q.type = 'mcq';
-            let vT = getRand(1, 4);
-            
-            if (vT === 1 || vT === 2) {
-                // Tłumaczenie logiczne z TEJ SAMEJ kategorii aby dystraktory były trudne
+            let choice = getRand(1, 10);
+            if (choice <= 3) {
+                // Translation MCQ
                 let catKey = catKeys[getRand(0, catKeys.length - 1)];
                 let catWords = ENG_CATEGORIES[catKey];
-                
                 let idxs = [];
                 while(idxs.length < 4) {
                     let r = getRand(0, catWords.length - 1);
                     if(!idxs.includes(r)) idxs.push(r);
                 }
-                
                 let target = catWords[idxs[0]];
-                let w1 = catWords[idxs[1]];
-                let w2 = catWords[idxs[2]];
-                let w3 = catWords[idxs[3]];
-                
-                if (vT === 1) {
+                let w1 = catWords[idxs[1]], w2 = catWords[idxs[2]], w3 = catWords[idxs[3]];
+                if (getRand(1, 2) === 1) {
+                    q.type = 'mcq';
                     q.question = `Przetłumacz na język polski: <strong>${target.en}</strong>`;
-                    let opts = [target.pl, w1.pl, w2.pl, w3.pl];
-                    q.options = shuffleArray(opts);
+                    q.options = shuffleArray([target.pl, w1.pl, w2.pl, w3.pl]);
                     q.correct = q.options.indexOf(target.pl);
-                    q.explanation = `Słowo '${target.en}' oznacza '${target.pl}'. Inne podane opcje to również pojęcia z tego samego działu (np. ${w1.en} to ${w1.pl}).`;
                 } else {
+                    q.type = 'mcq';
                     q.question = `Przetłumacz na język angielski: <strong>${target.pl}</strong>`;
-                    let opts = [target.en, w1.en, w2.en, w3.en];
-                    q.options = shuffleArray(opts);
+                    q.options = shuffleArray([target.en, w1.en, w2.en, w3.en]);
                     q.correct = q.options.indexOf(target.en);
-                    q.explanation = `Słowo '${target.pl}' to w języku angielskim '${target.en}'. Zmyliły cię prawdopodobnie inne pojęcia z tego samego słowniczka tematycznego.`;
                 }
-            } else if (vT === 3) {
-                // Kontekstowe uzupełnianie przymiotników
-                let formations = [
-                    {s: "It was a very [.....] day, so we went for a walk. (BEAUTY)", ans: "beautiful"},
-                    {s: "I would like to [.....] about the service in your restaurant. (COMPLAIN)", ans: "complain"},
-                    {s: "Tom is the [.....] player in our football team. (GOOD)", ans: "best"},
-                    {s: "Eating too much sugar is [.....] for your health. (HARM)", ans: "harmful"},
-                    {s: "The weather was [.....] yesterday. (WIND)", ans: "windy"}
-                ];
-                let f = formations[getRand(0, formations.length - 1)];
-                q.type = 'open';
-                q.question = `Uzupełnij lukę w poniższym zdaniu, przekształcając wyraz w nawiasie: <br><i>${f.s}</i>`;
-                q.correct = f.ans;
-                q.explanation = `Utworzenie poprawnej części mowy lub wariantu to '${f.ans}'.`;
+                q.explanation = `Słowo '${target.en}' oznacza '${target.pl}'.`;
+            } else if (choice <= 6) {
+                // Word Formation
+                Object.assign(q, generateEnglishWordFormation());
             } else {
-                // Reagowanie
-                let r = REACTION_PHRASES[getRand(0, REACTION_PHRASES.length - 1)];
-                q.type = 'mcq';
-                q.question = `Wybierz właściwą reakcję lub uzupełnij dialog:<br>Osoba A: <strong>"${r.q}"</strong><br>Osoba B: ?`;
-                let opts = [...r.opts];
-                while(opts.length < 4) {
-                    opts.push(["Yes, I am.", "No, thank you.", "See you tomorrow!"][getRand(0,2)]);
-                }
-                q.options = shuffleArray(opts.slice(0, 4));
-                q.correct = q.options.indexOf(r.ans);
-                q.explanation = `Na zdanie "${r.q}" tradycyjnie i naturalnie w j. angielskim odpowiemy: "${r.ans}". Dystraktory to częste kalki z polskiego.`;
+                // Phrasals
+                Object.assign(q, generateEnglishPhrasals());
             }
         }
         else if (topic === 'Grammar') {
@@ -1500,6 +1616,12 @@ const POLISH_LEKTURY_DB = [
     {type:'character', book:'Zemsta', name:'Cześnik', desc:'porywczy szlachcic (Maciej Raptusiewicz), skłócony z sąsiadem', wrongs:['Rejent','Papkin','Wacław']},
     {type:'character', book:'Zemsta', name:'Rejent', desc:'spokojny, ale fałszywy i uparty sąsiad Cześnika (Milczek)', wrongs:['Cześnik','Dyndalski','Śmigalski']},
     {type:'character', book:'Kamienie na szaniec', name:'Rudy (Jan Bytnar)', desc:'harcerz odbity podczas „Akcji pod Arsenałem” po brutalnych torturach Gestapo', wrongs:['Zośka','Alek','Anoda']},
+    {type:'character', book:'Zemsta', name:'Papkin', desc:'tchórzliwy samochwała, który uważał się za lwa i poetę', wrongs:['Wacław','Rejent','Dyndalski']},
+    {type:'character', book:'Pan Tadeusz', name:'Gerwazy', desc:'Klucznik, wierny sługa Horeszków, pałał nienawiścią do Sopliców', wrongs:['Protazy','Sędzia','Wojski']},
+    {type:'character', book:'Pan Tadeusz', name:'Telimena', desc:'opiekunka Zosi, kobieta światowa, szukająca męża', wrongs:['Zosia','Tekla','Podkomorzyna']},
+    {type:'character', book:'Balladyna', name:'Alina', desc:'siostra głównej bohaterki, dobra i pracowita, zginęła za dzban malin', wrongs:['Balladyna','Goplana','Wdowa']},
+    {type:'character', book:'Kamienie na szaniec', name:'Alek (Maciej Dawidowski)', desc:'harcerz znany z odwagi, zdjął niemiecką płytę z pomnika Kopernika', wrongs:['Rudy','Zośka','Anoda']},
+    {type:'character', book:'Mały Książę', name:'Król', desc:'mieszkaniec pierwszej asteroidy, który uważał, że wszyscy są jego poddanymi', wrongs:['Pijak','Latarnik','Bankier']},
 
     // === GENRES ===
     {type:'genre', book:'Akademia Pana Kleksa', answer:'powieść fantastyczna dla dzieci', wrongs:['baśń','komiks','nowela']},
@@ -1517,12 +1639,25 @@ const POLISH_LEKTURY_DB = [
     {type:'setting', book:'Quo vadis', answer:'Rzym za panowania Nerona', wrongs:['Grecja za Homera','Egipt za faraonów','Jerozolima']},
     {type:'setting', book:'Opowieść wigilijna', answer:'Londyn, XIX wiek', wrongs:['Paryż','Nowy Jork','Berlin']},
 
-    // === FACTS & SYMBOLS ===
-    {type:'fact', book:'Dziady cz. II', q:'O co prosiły Józio i Rózia i jaki morał wygłosiły?', answer:'Prosiły o ziarenko gorczycy; "Kto nie doznał goryczy ni razu, ten nie dozna słodyczy w niebie".', wrongs:[]},
-    {type:'fact', book:'Dziady cz. II', q:'Jaką karę cierpiał Widmo Złego Pana?', answer:'Jego ciało było rozszarpywane przez ptaki (żarłoczne sowy i kruki) symbolizujące skrzywdzonych chłopów.', wrongs:[]},
-    {type:'fact', book:'Quo vadis', q:'Co oznacza tytuł utworu "Quo vadis, Domine?"', answer:'Tłumaczy się to jako „Dokąd idziesz, Panie?” (słowa Piotra rzekomo uciekającego z Rzymu do napotkanego Chrystusa).', wrongs:[]},
-    {type:'fact', book:'Opowieść wigilijna', q:'Wymień trzy duchy, które odwiedziły Scrooge’a.', answer:'Duch Dawnych Świąt, Duch Obecnych Świąt oraz milczący Duch Przeszłych Świąt.', wrongs:[]},
-    {type:'fact', book:'Latarnik', q:'Dlaczego weteran stracił posadę na latarni?', answer:'Zaczytał się w egzemplarzu Pana Tadeusza i zapomniał rano zapalić światło.', wrongs:[]}
+    // === DEEP DETAILS / QUOTES ===
+    {type:'fact', book:'Pan Tadeusz', q:'Kto w utworze wygłosił słynną "Naukę o grzeczności"?', answer:'Sędzia Soplica.', wrongs:['Podkomorzy','Jacek Soplica','Wojski']},
+    {type:'fact', book:'Pan Tadeusz', q:'Na jakim instrumencie grał Wojski podczas polowania?', answer:'Na rogu (bawolim).', wrongs:['Na cymbałach','Na skrzypcach','Na flecie']},
+    {type:'fact', book:'Pan Tadeusz', q:'Kto zagrał słynny koncert na cymbałach?', answer:'Jankiel.', wrongs:['Gerwazy','Wojski','Hrabia']},
+    {type:'fact', book:'Pan Tadeusz', q:'Jakie było ulubione zajęcie Telimeny w świątyni dumania?', answer:'Czytanie książek (lub uciekanie przed mrówkami).', wrongs:['Haftowanie','Pisanie listów','Zbieranie grzybów']},
+    {type:'fact', book:'Zemsta', q:'W jaki sposób Rejent chciał zemścić się na Cześniku?', answer:'Chciał ożenić Wacława z Podstoliną (narzeczoną Cześnika).', wrongs:['Chciał go otruć','Chciał wyburzyć mur','Chciał go pozwać do sądu']},
+    {type:'fact', book:'Zemsta', q:'Czego symbolem jest "krokodyl" w utworze?', answer:'Nierealnego warunku, jaki Klara postawiła Papkinowi (miał mu go dostarczyć).', wrongs:['Podarunku od Rejenta','Pojazdu Cześnika','Nazwiska Papkina']},
+    {type:'fact', book:'Balladyna', q:'Jaki znak na czoła Balladyny był dowodem zbrodni?', answer:'Krwawe znamię (plama od malin), której nie dało się zmyć.', wrongs:['Blizna od noża','Tatuaż koronny','Oparzenie']},
+    {type:'fact', book:'Balladyna', q:'Jak zginęła Balladyna w finale utworu?', answer:'Została rażona piorunem (wyrok boży).', wrongs:['Została ścięta','Popełniła samobójstwo','Zmarła z głodu']},
+    {type:'fact', book:'Dziady cz. II', q:'Jaki ptak towarzyszył Widmu Złego Pana w scenie obrzędu?', answer:'Kruk oraz Sowa.', wrongs:['Orzeł','Jastrząb','Bażant']},
+    {type:'fact', book:'Dziady cz. II', q:'Czego nie zaznał za życia Widmo Złego Pana, przez co nie mógł trafić do nieba?', answer:'Ludzkiego współczucia i miłosierdzia (nie był ludzki dla poddanych).', wrongs:['Głodu','Bólu','Miłości']},
+    {type:'fact', book:'Kamienie na szaniec', q:'Jaką nazwę nosiła organizacja, do której należeli Rudy, Alek i Zośka?', answer:'Mały Sabotaż (później Grupy Szturmowe).', wrongs:['Szare Szeregi (całość)','Wawer (część Sabotażu)','Armia Krajowa']},
+    {type:'fact', book:'Kamienie na szaniec', q:'Gdzie odbyła się akcja odbicia Rudego z rąk Gestapo?', answer:'Pod Arsenałem w Warszawie.', wrongs:['Na Pawiaku','Na Al. Szucha','W getcie']},
+    {type:'fact', book:'Latarnik', q:'W jakiej miejscowości pracował Skawiński jako latarnik?', answer:'W Aspinwall (niedaleko Panamy).', wrongs:['W Nowym Jorku','W Paryżu','W Soplicowie']},
+    {type:'fact', book:'Mały Książę', q:'Co według Lisa jest "najważniejsze", choć "niewidoczne dla oczu"?', answer:'To, co czujemy sercem (istota rzeczy, przywiązanie).', wrongs:['Prawda','Władza','Pieniądze']},
+    {type:'fact', book:'Opowieść wigilijna', q:'Jak nazywał się wspólnik Scrooge’a, który nawiedził go jako pierwszy duch?', answer:'Jakub Marley.', wrongs:['Bob Cratchit','Fred','Tiny Tim']},
+    {type:'fact', book:'Quo vadis', q:'Kto był autorem "Pieśni o pożarze Troi", którą śpiewał Neron?', answer:'Sam Neron (przypisywał sobie boski talent).', wrongs:['Homer','Petroniusz','Chilon Chilonides']},
+    {type:'fact', book:'Quo vadis', q:'W jaki sposób zginął Petroniusz?', answer:'Popełnił samobójstwo (przeciął sobie żyły podczas uczty).', wrongs:['Został zabity przez Nerona','Zginął na arenie','Umarł ze starości']},
+    {type:'fact', book:'Syzyfowe prace', q:'Kto wyrecytował "Redutę Ordona" w klasie, co stało się punktem zwrotnym?', answer:'Bernard Zygier.', wrongs:['Marcin Borowicz','Andrzej Radek','Nogacki']}
 ];
 
 const POLISH_TEORIA_DB = [
@@ -1559,6 +1694,43 @@ const POLISH_GRAMMAR_DB = [
     {q:'W wyrazie "kotem" wskaż oboczność tematową:', a:'brak oboczności (tylko t)', w:['t:d','k:c','o:ó']}
 ];
 
+const MOTIFS_DB = [
+    {motif: 'Wina i kara', books: ['Balladyna', 'Dziady cz. II', 'Pan Tadeusz (Jacek Soplica)'], desc: 'Bohater popełnia zbrodnię, która rzutuje na jego dalsze losy i wymaga odkupienia lub ściąga na niego klęskę.'},
+    {motif: 'Patriotyzm / Walka o wolność', books: ['Pan Tadeusz', 'Kamienie na szaniec', 'Latarnik', 'Reduta Ordona', 'Syzyfowe prace'], desc: 'Poświęcenie dla ojczyzny, walka z rusyfikacją lub tęsknota za krajem.'},
+    {motif: 'Przemiana wewnętrzna', books: ['Opowieść wigilijna', 'Pan Tadeusz (Jacek Soplica)', 'Quo vadis (Marek Winicjusz)', 'Mały Książę'], desc: 'Bohater pod wpływem wydarzeń zmienia swój system wartości.'},
+    {motif: 'Przyjaźń', books: ['Kamienie na szaniec', 'Chłopcy z Placu Broni', 'Mały Książę (oswajanie)', 'Hobbit'], desc: 'Więź między bohaterami, która pozwala im przetrwać najcięższe próby.'},
+    {motif: 'Przyroda', books: ['Pan Tadeusz', 'Balladyna (Goplana)', 'Opowieści z Narnii', 'Latarnik'], desc: 'Przyroda jako tło wydarzeń, siła magiczna lub element budujący tożsamość narodową.'}
+];
+
+function generatePolishMotifs() {
+    let pick = MOTIFS_DB[getRand(0, MOTIFS_DB.length - 1)];
+    let type = getRand(1, 2);
+    if (type === 1) {
+        return {
+            question: `Wskaż grupę utworów obowiązkowych, w których wyraźnie występuje <strong>motyw: ${pick.motif}</strong>.`,
+            options: shuffleArray([
+                pick.books.join(', '),
+                'Akademia Pana Kleksa, Opowieści z Narnii, Zemsta',
+                'Quo vadis, Syzyfowe prace, Mały Książę',
+                'Zemsta, Pan Tadeusz, Chłopcy z Placu Broni'
+            ]),
+            correct: pick.books.join(', '),
+            explanation: `${pick.desc}`
+        };
+    } else {
+        let isTrue = Math.random() > 0.5;
+        let book = isTrue ? pick.books[0] : 'Akademia Pana Kleksa';
+        if (!isTrue && pick.books.includes(book)) book = 'Zemsta';
+        
+        return {
+            question: `Oceń prawdziwość zdania: "W utworze <i>${book}</i> kluczowe znaczenie ma <strong>motyw: ${pick.motif}</strong>".`,
+            options: shuffleArray(['Prawda', 'Fałsz']),
+            correct: isTrue ? 'Prawda' : 'Fałsz',
+            explanation: isTrue ? `${pick.desc}` : `Głównym motywem tego utworu są inne zagadnienia.`
+        };
+    }
+}
+
 function generatePolishQuestions(topic, count = 15, selectedDiff = 'mix') {
     let questions = [];
     
@@ -1570,7 +1742,7 @@ function generatePolishQuestions(topic, count = 15, selectedDiff = 'mix') {
         };
 
         if (topic === 'Lektury obowiązkowe') {
-            let choice = getRand(1, 6);
+            let choice = getRand(1, 10);
             if (choice <= 2) {
                 // Author
                 let facts = POLISH_LEKTURY_DB.filter(x => x.type === 'author');
@@ -1580,34 +1752,36 @@ function generatePolishQuestions(topic, count = 15, selectedDiff = 'mix') {
                 q.options = shuffleArray([pick.answer, ...shuffleArray(pick.wrongs).slice(0, 3)]);
                 q.correct = q.options.indexOf(pick.answer);
                 q.explanation = `Autorem dzieła <i>${pick.book}</i> jest ${pick.answer}.`;
-            } else if (choice <= 4) {
-                // Character
-                let facts = POLISH_LEKTURY_DB.filter(x => x.type === 'character');
+            } else if (choice <= 5) {
+                // Character & Context Deep
+                let facts = POLISH_LEKTURY_DB.filter(x => x.type === 'character' || x.type === 'fact');
                 let pick = facts[getRand(0, facts.length - 1)];
-                q.type = 'mcq';
-                q.question = `W utworze <i>${pick.book}</i> występuje postać o imieniu: <strong>${pick.name}</strong>. Kto to jest? (Wybierz najlepszy opis)`;
-                let sameBookDescs = facts.filter(f => f.book === pick.book && f.name !== pick.name).map(f => f.desc);
-                let otherBookDescs = facts.filter(f => f.book !== pick.book).map(f => f.desc);
-                let wrongDescs = [...shuffleArray(sameBookDescs), ...shuffleArray(otherBookDescs)].slice(0, 3);
-                q.options = shuffleArray([pick.desc, ...wrongDescs]);
-                q.correct = q.options.indexOf(pick.desc);
-                q.explanation = `Opis pasujący do: ${pick.name} to: "${pick.desc}".`;
-            } else {
-                // Genre or Open Fact
-                let facts = POLISH_LEKTURY_DB.filter(x => x.type === 'genre' || x.type === 'fact');
-                let pick = facts[getRand(0, facts.length - 1)];
-                if (pick.type === 'genre') {
+                if (pick.type === 'character') {
                     q.type = 'mcq';
-                    q.question = `Jaki gatunek literacki reprezentuje <i>${pick.book}</i>?`;
+                    q.question = `W utworze <i>${pick.book}</i> występuje postać o imieniu: <strong>${pick.name}</strong>. Kim ona jest?`;
+                    q.options = shuffleArray([pick.desc, ...shuffleArray(facts.filter(f => f.desc !== pick.desc).map(f => f.desc)).slice(0, 3)]);
+                    q.correct = q.options.indexOf(pick.desc);
+                } else {
+                    q.type = 'mcq';
+                    q.question = `Zadanie dotyczące lektury <i>${pick.book}</i>: ${pick.q}`;
                     q.options = shuffleArray([pick.answer, ...pick.wrongs]);
                     q.correct = q.options.indexOf(pick.answer);
-                    q.explanation = `Gatunek tego dzieła to: ${pick.answer}.`;
-                } else {
-                    q.type = 'open';
-                    q.question = `Odpowiedz na pytanie dotyczące lektury <i>${pick.book}</i>:<br>${pick.q}`;
-                    q.correct = pick.answer;
-                    q.explanation = `Uznaje się odpowiedzi oddające sens: ${pick.answer}.`;
                 }
+                q.explanation = `Poprawna odpowiedź: ${pick.answer || pick.desc}.`;
+            } else if (choice <= 8) {
+                // Motifs logic
+                let res = generatePolishMotifs();
+                Object.assign(q, res);
+                if (!q.type) q.type = 'mcq';
+            } else {
+                // Genre
+                let facts = POLISH_LEKTURY_DB.filter(x => x.type === 'genre');
+                let pick = facts[getRand(0, facts.length - 1)];
+                q.type = 'mcq';
+                q.question = `Jaki gatunek literacki reprezentuje <i>${pick.book}</i>?`;
+                q.options = shuffleArray([pick.answer, ...pick.wrongs]);
+                q.correct = q.options.indexOf(pick.answer);
+                q.explanation = `Gatunek tego dzieła to: ${pick.answer}.`;
             }
         }
         else if (topic === 'Teoria literatury') {
@@ -2846,8 +3020,35 @@ const AI_DATABASE = [
         correct: 0,
         explanation: '"Must" expresses obligation.',
         difficulty: 1
-    }
+    },
+    // --- FINAL MASSIVE OPEN TASK INJECTION ---
+    { subject: 'math', topic: 'Algebra', type: 'open', question: 'Rozwiąż równanie: 3(x - 2) = 4 - (x + 2). Podaj wartość x.', correct: '2', explanation: '3x - 6 = 4 - x - 2 => 3x - 6 = 2 - x => 4x = 8 => x = 2.' },
+    { subject: 'math', topic: 'Procenty', type: 'open', question: 'Cenę roweru obniżono o 20%, a następnie nową cenę podwyższono o 10%. Rower kosztuje teraz 880 zł. Jaka była cena początkowa?', correct: '1000', explanation: 'x * 0.8 * 1.1 = 880 => 0.88x = 880 => x = 1000 zł.' },
+    { subject: 'math', topic: 'Geometria', type: 'open', question: 'Trójkąt równoramienny ma obwód 24 cm. Podstawa jest o 3 cm krótsza od ramienia. Podaj długość podstawy (cm).', correct: '6', explanation: '2b + a = 24 i a = b - 3. 2b + b - 3 = 24 => 3b = 27 => b = 9. a = 9 - 3 = 6 cm.' },
+    { subject: 'math', topic: 'Prędkość', type: 'open', question: 'Pociąg jedzie z prędkością 90 km/h. Ile metrów przejedzie w ciągu 10 sekund?', correct: '250', explanation: '90 km/h = 90000 m / 3600 s = 25 m/s. 25 m/s * 10 s = 250 m.' },
+    { subject: 'math', topic: 'Statystyka', type: 'open', question: 'Średnia ocen z pięciu testów Ani to 4.2. Jaką ocenę musi otrzymać z szóstego testu, aby średnia wzrosła do 4.5?', correct: '6', explanation: '(5 * 4.2 + x) / 6 = 4.5 => 21 + x = 27 => x = 6.' },
+    { subject: 'math', topic: 'Potęgi', type: 'open', question: 'Ile wynosi połowa liczby 2 do potęgi 10?', correct: '512', explanation: '2^10 / 2 = 2^9 = 512.' },
+    { subject: 'math', topic: 'Geometria', type: 'open', question: 'Przekątna kwadratu o boku 4 cm ma długość:', correct: '4√2', explanation: 'd = a√2.' },
+
+    { subject: 'polish', topic: 'Lektury obowiązkowe', type: 'open', question: 'W której lekturze występuje postać Chilona Chilonidesa?', correct: 'Quo vadis', explanation: 'Chilon to kluczowa postać w "Quo vadis", cynik i zdrajca, który przechodzi przemianę.' },
+    { subject: 'polish', topic: 'Gramatyka', type: 'open', question: 'Podaj formę 1. osoby liczby pojedynczej czasu przeszłego trybu oznajmującego od czasownika "móc" (rodzaj męski).', correct: 'mogłem', explanation: 'Ja mogłem (wczoraj).' },
+    { subject: 'polish', topic: 'Lektury obowiązkowe', type: 'open', question: 'Kto zabił Alinę w dramacie Słowackiego?', correct: 'Balladyna', explanation: 'Balladyna zabija siostrę z zazdrości o dzban malin i Kirkora.' },
+    { subject: 'polish', topic: 'Teoria literatury', type: 'open', question: 'Jak nazywa się utwór liryczny o charakterze żałobnym, poświęcony zmarłej osobie?', correct: 'Tren', explanation: 'Jan Kochanowski napisał cykl Trenów po śmierci córki Urszulki.' },
+    { subject: 'polish', topic: 'Lektury', type: 'open', question: 'Kto był klucznikiem w zamku Horeszków?', correct: 'Gerwazy', explanation: 'Gerwazy Rembajło to wierny sługa Horeszków.' },
+    { subject: 'polish', topic: 'Lektury', type: 'open', question: 'Jak brzmiało nazwisko rodowe Jacka Soplicy przed wstąpieniem do zakonu?', correct: 'Soplica', explanation: 'Jacek Soplica, ojciec Tadeusza.' },
+
+    { subject: 'english', topic: 'Vocabulary', type: 'open', question: 'What is the English word for "environment"?', correct: 'environment', explanation: 'The natural world is our environment.' },
+    { subject: 'english', topic: 'Grammar', type: 'open', question: 'Change to Passive Voice: "They clean the room every day." -> "The room [...............] every day."', correct: 'is cleaned', explanation: 'Present Simple Passive: am/is/are + V3.' },
+    { subject: 'english', topic: 'Vocabulary', type: 'open', question: 'English word for "disabled":', correct: 'disabled', explanation: 'Building access for disabled people is important.' },
+    { subject: 'english', topic: 'Grammar', type: 'open', question: 'Provide the missing word: "If I [...............] rich, I would buy a boat."', correct: 'were', explanation: 'Second Conditional - "were" is used for all persons.' },
+    { subject: 'english', topic: 'Vocabulary', type: 'open', question: 'Opposite of "cheap"?', correct: 'expensive', explanation: 'Something that costs a lot of money is expensive.' },
+    { subject: 'english', topic: 'Phrasals', type: 'open', question: 'Phrasal verb for "wstawać":', correct: 'get up', explanation: 'I get up at 7.' },
+    { subject: 'english', topic: 'Grammar', type: 'open', question: 'Past tense of "buy"?', correct: 'bought', explanation: 'Buy-bought-bought.' }
 ];
+
+if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
+    module.exports = { AI_DATABASE };
+}
 
 const THEORY = {
 math: {
@@ -3554,21 +3755,90 @@ window.adminLogin = async function() {
 function showAdminTab(tab) {
     let genPanel = document.getElementById('admin-gen-panel');
     let blockPanel = document.getElementById('admin-block-panel');
+    let rankPanel = document.getElementById('admin-rank-panel');
     let genBtn = document.getElementById('admin-tab-gen');
     let blockBtn = document.getElementById('admin-tab-block');
+    let rankBtn = document.getElementById('admin-tab-rank');
+    
     if(tab === 'gen') {
         if(genPanel) genPanel.style.display = 'block';
         if(blockPanel) blockPanel.style.display = 'none';
+        if(rankPanel) rankPanel.style.display = 'none';
         if(genBtn) { genBtn.className = 'btn btn-primary'; genBtn.style.flex = '1'; }
         if(blockBtn) { blockBtn.className = 'btn btn-secondary'; blockBtn.style.flex = '1'; }
-    } else {
+        if(rankBtn) { rankBtn.className = 'btn btn-secondary'; rankBtn.style.flex = '1'; }
+    } else if(tab === 'block') {
         if(genPanel) genPanel.style.display = 'none';
         if(blockPanel) blockPanel.style.display = 'block';
+        if(rankPanel) rankPanel.style.display = 'none';
         if(genBtn) { genBtn.className = 'btn btn-secondary'; genBtn.style.flex = '1'; }
         if(blockBtn) { blockBtn.className = 'btn btn-primary'; blockBtn.style.flex = '1'; }
+        if(rankBtn) { rankBtn.className = 'btn btn-secondary'; rankBtn.style.flex = '1'; }
         renderBlockedList();
+    } else if(tab === 'rank') {
+        if(genPanel) genPanel.style.display = 'none';
+        if(blockPanel) blockPanel.style.display = 'none';
+        if(rankPanel) rankPanel.style.display = 'block';
+        if(genBtn) { genBtn.className = 'btn btn-secondary'; genBtn.style.flex = '1'; }
+        if(blockBtn) { blockBtn.className = 'btn btn-secondary'; blockBtn.style.flex = '1'; }
+        if(rankBtn) { rankBtn.className = 'btn btn-primary'; rankBtn.style.flex = '1'; }
+        renderAdminLeaderboard();
     }
 }
+
+window.renderAdminLeaderboard = async function() {
+    let container = document.getElementById('admin-leaderboard-list');
+    if(!container) return;
+    container.innerHTML = '<p style="color:var(--text2)">Ładowanie rankingu...</p>';
+    
+    await fetchRemoteBlocks();
+    let board = window.REMOTE_LEADERBOARD || [];
+    
+    if(board.length === 0) {
+        container.innerHTML = '<p style="color:var(--text2)">Ranking jest pusty.</p>';
+        return;
+    }
+    
+    container.innerHTML = board.map((entry, idx) => `
+        <div style="display:flex; justify-content:space-between; align-items:center; padding:10px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.1); border-radius:8px; margin-bottom:6px;">
+            <div style="display:flex; flex-direction:column">
+                <span style="font-weight:bold; color:var(--accent)">${entry.name}</span>
+                <span style="font-size:0.75rem; color:var(--text2)">Monety: ${entry.coins} | HWID: ${entry.hwid || 'BRAK'}</span>
+            </div>
+            <button class="btn btn-danger btn-sm" onclick="removeLeaderboardEntry(${idx})" style="padding:4px 8px; font-size:0.7rem">Usuń</button>
+        </div>
+    `).join('');
+};
+
+window.removeLeaderboardEntry = async function(idx) {
+    if(!confirm('Na pewno usunąć ten wpis z rankingu?')) return;
+    let board = [...window.REMOTE_LEADERBOARD];
+    board.splice(idx, 1);
+    
+    let btn = document.getElementById('admin-tab-rank');
+    if(btn) btn.innerHTML = "⏳ Usuwanie...";
+    
+    await updateRemoteBlocks(null, board);
+    
+    if(btn) btn.innerHTML = "🏆 Ranking";
+    renderAdminLeaderboard();
+};
+
+window.resetLeaderboard = async function() {
+    if(!confirm('⚠️ UWAGA! To spowoduje całkowite wyczyszczenie rankingu dla wszystkich użytkowników. Kontynuować?')) return;
+    
+    let btn = document.getElementById('admin-reset-rank-btn');
+    let oldTxt = btn.innerHTML;
+    btn.innerHTML = "⏳ Resetowanie w chmurze...";
+    btn.disabled = true;
+    
+    await updateRemoteBlocks(null, []);
+    
+    btn.innerHTML = oldTxt;
+    btn.disabled = false;
+    alert('Ranking został zresetowany.');
+    renderAdminLeaderboard();
+};
 
 // ====== BLOCKED HWID MANAGEMENT ======
 const JSONBIN_ID = "69c56e93aa77b81da921dec9";
