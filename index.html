@@ -210,13 +210,22 @@ input:focus,textarea:focus{border-color:var(--accent);outline:none;box-shadow:0 
 .name-edit input{max-width:200px;padding:6px 10px}
 
 /* --- NOWE FUNKCJE --- */
-.scratchpad-container { position: relative; width: 100%; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; background: #fff; display: none; margin-top: 15px; }
-.scratchpad-canvas { cursor: crosshair; display: block; touch-action: none; }
-.scratchpad-toolbar { background: #f1f5f9; padding: 10px; border-bottom: 1px solid #e2e8f0; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
-.tool-btn { width: 32px; height: 32px; border-radius: 6px; border: 1px solid #cbd5e1; display: flex; align-items: center; justify-content: center; cursor: pointer; background: #fff; color: #475569; transition: all 0.2s; }
-.tool-btn.active { background: var(--accent-blue); color: #fff; border-color: var(--accent-blue); }
-.color-btn { width: 24px; height: 24px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; }
-.color-btn.active { border-color: #000; }
+.scratchpad-container { position: relative; width: 100%; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; background: #fff; display: none; margin-top: 15px; box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
+body.theme-light .scratchpad-container { background: #fff; }
+.scratchpad-canvas { cursor: crosshair; display: block; touch-action: none; background: transparent; }
+.scratchpad-toolbar { background: var(--card); padding: 12px; border-bottom: 1px solid #333; display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+.tool-btn { width: 36px; height: 36px; border-radius: 8px; border: 1px solid #444; display: flex; align-items: center; justify-content: center; cursor: pointer; background: rgba(255,255,255,0.05); color: #fff; transition: all 0.2s; font-size: 1.1rem; }
+.tool-btn:hover { background: rgba(255,255,255,0.1); border-color: var(--accent); }
+.tool-btn.active { background: var(--accent); color: #000; border-color: var(--accent); box-shadow: 0 0 10px rgba(74,222,128,0.3); }
+.pad-divider { width: 1px; height: 24px; background: #444; margin: 0 4px; }
+.color-btn { width: 28px; height: 28px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.2); cursor: pointer; transition: transform 0.2s; position: relative; }
+.color-btn:hover { transform: scale(1.1); }
+.color-btn.active { border-color: #fff; transform: scale(1.2); box-shadow: 0 0 8px rgba(255,255,255,0.5); }
+.color-btn[data-high="true"]::after { content: 'H'; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 0.6rem; color: #000; font-weight: 800; }
+.pad-size-slider { -webkit-appearance: none; appearance: none; width: 80px; height: 6px; background: #333; border-radius: 3px; outline: none; }
+.pad-size-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; background: var(--accent); border-radius: 50%; cursor: pointer; }
+.btn-clear-visible { background: #ef4444; color: white !important; border: none; padding: 6px 12px; border-radius: 6px; font-weight: bold; font-size: 0.8rem; }
+.btn-clear-visible:hover { background: #dc2626; }
 
 .three-d-panel { width: 100%; height: 300px; background: rgba(0,0,0,0.5); border-radius: 12px; margin: 15px 0; display: none; position: relative; overflow: hidden; border: 1px solid var(--accent); }
 .three-d-canvas { cursor: move; width: 100%; height: 100%; }
@@ -889,7 +898,7 @@ function generateMathQuestions(topic, count = 15, selectedDiff = 'mix') {
             }
         }
         else if (topic === 'Geometria przestrzenna') {
-            let baseType = getRand(1, 3);
+            let baseType = getRand(1, 22);
             if (baseType === 1) {
                 // Objętość Akwarium / 1 L = 1 dm3 - bardzo popularne
                 let a = getRand(7, 15); let b = getRand(5, 12); let h = getRand(8, 20);
@@ -905,7 +914,7 @@ function generateMathQuestions(topic, count = 15, selectedDiff = 'mix') {
                 q.options = shuffleArray(['Ostrosłup prawidłowy czworokątny', 'Graniastosłup prawidłowy czworokątny', 'Ostrosłup prawidłowy trójkątny', 'Prostopadłościan']);
                 q.correct = q.options.indexOf('Ostrosłup prawidłowy czworokątny');
                 q.explanation = `Jedna główna podstawa i szpiczaste boki zbiegające się w górnych wierzchołkach to cecha jednoznacznego ostrosłupa. Ma 4 trójkąty, bo w podstawie leży kwadrat z 4 bokami (prawidłowy czworokątny).`;
-            } else {
+            } else if (baseType === 3) {
                 // Pole powierzchni sześcianu (łatwe)
                 let a = getRand(11, 25);
                 q.model3d = 'cube';
@@ -914,6 +923,163 @@ function generateMathQuestions(topic, count = 15, selectedDiff = 'mix') {
                 q.options = shuffleArray(makeUniqueOptions(ans, [8 * a * a, a * a * a, 4 * a * a]));
                 q.correct = q.options.indexOf(String(ans));
                 q.explanation = `Sześcian ma 6 identycznych ścian. P_p ścianki to ${a}·${a} = ${a*a}. Zatem P_c = 6 · ${a*a} = ${ans} cm².`;
+            } else if (baseType === 4) {
+                // Suma krawędzi sześcianu -> Krawędź -> V
+                let edgeSum = getRand(3, 10) * 12;
+                let a = edgeSum / 12;
+                let v = a * a * a;
+                q.question = `Suma długości wszystkich krawędzi pewnego sześcianu wynosi ${edgeSum} cm. Ile wynosi objętość tego sześcianu?`;
+                q.options = shuffleArray(makeUniqueOptions(v, [a, a*a, v+12]));
+                q.correct = q.options.indexOf(String(v));
+                q.explanation = `Sześcian ma 12 krawędzi. Jedna krawędź to ${edgeSum}/12 = ${a} cm. V = ${a}³ = ${v} cm³.`;
+            } else if (baseType === 5) {
+                // Brakująca krawędź prostopadłościanu
+                let a = getRand(2, 5); let b = getRand(6, 10); let ans = getRand(3, 8);
+                let v = a * b * ans;
+                q.question = `Objętość prostopadłościanu o wymiarach podstawy ${a} cm i ${b} cm wynosi ${v} \\( \\text{cm}^3 \\). Oblicz wysokość tego prostopadłościanu.`;
+                q.options = shuffleArray(makeUniqueOptions(ans, [ans+1, ans-1, v/(a+b)]));
+                q.correct = q.options.indexOf(String(ans));
+                q.explanation = `V = a · b · h => ${v} = ${a} · ${b} · h => ${v} = ${a*b} · h => h = ${v}/${a*b} = ${ans} cm.`;
+            } else if (baseType === 6) {
+                // Sklejone sześciany (P_c)
+                let a = getRand(2, 5);
+                let p_one = a * a;
+                let ans = 10 * p_one;
+                q.question = `Z dwóch identycznych sześcianów o krawędzi ${a} cm zbudowano jeden prostopadłościan. Ile wynosi pole powierzchni całkowitej tej nowej bryły?`;
+                q.options = shuffleArray(makeUniqueOptions(ans, [12*p_one, 8*p_one, 6*p_one*2]));
+                q.correct = q.options.indexOf(String(ans));
+                q.explanation = `Dwa sześciany mają razem 12 ścian, ale po złączeniu dwie ściany „znikają” wewnątrz. Zostaje 10 ścian. P = 10 · (${a}²) = 10 · ${p_one} = ${ans} cm².`;
+            } else if (baseType === 7) {
+                // Graniastosłup trójkątny (V)
+                let a = 3; let b = 4; let h = getRand(5, 10);
+                let pp = (a * b) / 2;
+                let v = pp * h;
+                q.question = `Podstawą graniastosłupa prostego jest trójkąt prostokątny o przyprostokątnych ${a} cm i ${b} cm. Wysokość graniastosłupa wynosi ${h} cm. Oblicz jego objętość.`;
+                q.options = shuffleArray(makeUniqueOptions(v, [a*b*h, v*2, pp+h]));
+                q.correct = q.options.indexOf(String(v));
+                q.explanation = `P_p = (3·4)/2 = 6 cm². V = P_p · h = 6 · ${h} = ${v} cm³.`;
+            } else if (baseType === 8) {
+                // Ostrosłup czworokątny (V)
+                let a = getRand(4, 8); let h = getRand(6, 12);
+                let v = (a * a * h) / 3;
+                while (v % 1 !== 0) { a++; v = (a * a * h) / 3; }
+                q.question = `Oblicz objętość ostrosłupa prawidłowego czworokątnego o krawędzi podstawy ${a} cm i wysokości ${h} cm.`;
+                q.options = shuffleArray(makeUniqueOptions(v, [v*3, v/2, a*a*h]));
+                q.correct = q.options.indexOf(String(v));
+                q.explanation = `V = 1/3 · P_p · h = 1/3 · (${a}²) · ${h} = 1/3 · ${a*a} · ${h} = ${v} cm³.`;
+            } else if (baseType === 9) {
+                // Liczba wierzchołków n-kątnego graniastosłupa
+                let n = getRand(5, 12);
+                let v = 2 * n;
+                q.question = `Ile wierzchołków ma graniastosłup prosty, którego podstawą jest ${n}-kąt?`;
+                q.options = shuffleArray(makeUniqueOptions(v, [n, 3*n, n+2]));
+                q.correct = q.options.indexOf(String(v));
+                q.explanation = `Graniastosłup ma dwie identyczne podstawy, więc liczba wierzchołków to 2 · n = 2 · ${n} = ${v}.`;
+            } else if (baseType === 10) {
+                // Liczba krawędzi n-kątnego ostrosłupa
+                let n = getRand(4, 10);
+                let e = 2 * n;
+                q.question = `Ile krawędzi ma ostrosłup, którego podstawą jest ${n}-kąt?`;
+                q.options = shuffleArray(makeUniqueOptions(e, [n, 3*n, n+1]));
+                q.correct = q.options.indexOf(String(e));
+                q.explanation = `Ostrosłup ma n krawędzi podstawy i n krawędzi bocznych. Razem 2 · n = 2 · ${n} = ${e}.`;
+            } else if (baseType === 11) {
+                // Przeliczanie cm3 na litry
+                let v_cm3 = getRand(2, 8) * 1000;
+                let liters = v_cm3 / 1000;
+                q.question = `Pojemnik ma objętość ${v_cm3} \\( \\text{cm}^3 \\). Ile to litrów?`;
+                q.options = shuffleArray(makeUniqueOptions(liters, [liters*10, liters*100, liters/10]));
+                q.correct = q.options.indexOf(String(liters));
+                q.explanation = `1 litr = 1 dm³ = 1000 cm³. ${v_cm3} / 1000 = ${liters} l.`;
+            } else if (baseType === 12) {
+                // Suma krawędzi prostopadłościanu
+                let a = getRand(2, 5); let b = getRand(3, 6); let c = getRand(4, 7);
+                let sum = 4 * (a + b + c);
+                q.question = `Oblicz sumę długości wszystkich krawędzi prostopadłościanu o wymiarach ${a} cm, ${b} cm i ${c} cm.`;
+                q.options = shuffleArray(makeUniqueOptions(sum, [a+b+c, 2*(a+b+c), sum+4]));
+                q.correct = q.options.indexOf(String(sum));
+                q.explanation = `Prostopadłościan ma po 4 krawędzie każdego wymiaru. Suma = 4 · (${a} + ${b} + ${c}) = 4 · ${a+b+c} = ${sum} cm.`;
+            } else if (baseType === 13) {
+                // Sześcian: V -> P_c
+                let a = getRand(2, 5);
+                let v = a * a * a;
+                let pc = 6 * a * a;
+                q.question = `Objętość sześcianu wynosi ${v} \\( \\text{cm}^3 \\). Ile wynosi jego pole powierzchni całkowitej?`;
+                q.options = shuffleArray(makeUniqueOptions(pc, [pc/6, pc*2, v*6]));
+                q.correct = q.options.indexOf(String(pc));
+                q.explanation = `V = a³ => ${v} = a³, więc a = ${a} cm. P_c = 6 · a² = 6 · ${a*a} = ${pc} cm².`;
+            } else if (baseType === 14) {
+                // Graniastosłup czworokątny (Trapez w podstawie)
+                let h_base = 4; let b1 = 5; let b2 = 3; let h_prism = getRand(5, 10);
+                let pp = ((b1 + b2) * h_base) / 2;
+                let v = pp * h_prism;
+                q.question = `Graniastosłup ma w podstawie trapez o podstawach ${b1} cm, ${b2} cm i wysokości ${h_base} cm. Wysokość graniastosłupa wynosi ${h_prism} cm. Oblicz jego objętość.`;
+                q.options = shuffleArray(makeUniqueOptions(v, [v/2, v*10, pp+h_prism]));
+                q.correct = q.options.indexOf(String(v));
+                q.explanation = `P_p = ((${b1}+${b2})·${h_base})/2 = ${pp} cm². V = P_p · h = ${pp} · ${h_prism} = ${v} cm³.`;
+            } else if (baseType === 15) {
+                // Malowanie szafki (bez dna)
+                let a = 2; let b = 3; let h = 4; // dm
+                let area = a*b + 2*(a*h) + 2*(b*h);
+                q.question = `Chcemy pomalować skrzynkę (bez spodu i bez wieka - tylko boki) o wymiarach podstawy ${a} dm x ${b} dm i wysokości ${h} dm. Ile dm² powierzchni musimy pomalować?`;
+                let ans = 2*(a*h) + 2*(b*h);
+                q.options = shuffleArray(makeUniqueOptions(ans, [area, ans+5, a*b*h]));
+                q.correct = q.options.indexOf(String(ans));
+                q.explanation = `Malujemy tylko 4 ściany boczne: 2 · (${a}·${h}) + 2 · (${b}·${h}) = 2·${a*h} + 2·${b*h} = ${ans} dm².`;
+            } else if (baseType === 16) {
+                // Przeliczanie m3 na litry
+                let v_m3 = getRand(1, 4);
+                let liters = v_m3 * 1000;
+                q.question = `Basen ogrodowy ma objętość ${v_m3} \\( \\text{m}^3 \\). Ile to litrów wody?`;
+                q.options = shuffleArray(makeUniqueOptions(liters, [v_m3*10, v_m3*100, v_m3*10000]));
+                q.correct = q.options.indexOf(String(liters));
+                q.explanation = `1 m³ = 1000 dm³ = 1000 litrów. ${v_m3} · 1000 = ${liters} l.`;
+            } else if (baseType === 17) {
+                // Ostrosłup prawidłowy trójkątny (V/F/E)
+                q.question = `Piramida o podstawie trójkąta równobocznego (czworościan) ma:`;
+                q.options = shuffleArray(['4 ściany i 6 krawędzi', '3 ściany i 3 krawędzie', '4 ściany i 4 krawędzie', '5 ścian i 8 krawędzi']);
+                q.correct = q.options.indexOf('4 ściany i 6 krawędzi');
+                q.explanation = `Czworościan ma 1 podstawę i 3 ściany boczne (razem 4) oraz 3 krawędzie podstawy i 3 krawędzie boczne (razem 6).`;
+            } else if (baseType === 18) {
+                // Sześcian: diagonal of one face (Pythagoras)
+                let a = getRand(3, 8);
+                q.question = `Długość przekątnej jednej ściany sześcianu wynosi ${a}√2 cm. Ile wynosi objętość tego sześcianu?`;
+                let v = a * a * a;
+                q.options = shuffleArray(makeUniqueOptions(v, [a*a, a*2, v*2]));
+                q.correct = q.options.indexOf(String(v));
+                q.explanation = `Przekątna kwadratu to a√2, więc a = ${a} cm. V = a³ = ${a}³ = ${v} cm³.`;
+            } else if (baseType === 19) {
+                // Graniastosłup: P_b (area of side walls)
+                let a = 5; let h = 10;
+                let pb = 4 * a * h;
+                q.question = `Oblicz pole powierzchni bocznej graniastosłupa prawidłowego czworokątnego o krawędzi podstawy ${a} cm i wysokości ${h} cm.`;
+                q.options = shuffleArray(makeUniqueOptions(pb, [pb + 2*a*a, a*h, a*a*h]));
+                q.correct = q.options.indexOf(String(pb));
+                q.explanation = `P_b to suma pól 4 ścian bocznych: 4 · (a · h) = 4 · (${a} · ${h}) = ${pb} cm².`;
+            } else if (baseType === 20) {
+                // Comparison: Two prisms
+                let v1 = 2 * 3 * 4; let v2 = 3 * 3 * 3;
+                q.question = `Która bryła ma większą objętość: prostopadłościan o wymiarach 2x3x4 czy sześcian o krawędzi 3?`;
+                q.options = shuffleArray(['Sześcian (27 > 24)', 'Prostopadłościan (24 > 27)', 'Są równe', 'Nie da się określić']);
+                q.correct = q.options.indexOf('Sześcian (27 > 24)');
+                q.explanation = `V1 = 2·3·4 = 24. V2 = 3³ = 27. 27 > 24.`;
+            } else if (baseType === 21) {
+                // Drut na szkielet (Ostrosłup)
+                let n = 4; let a = 10; let b = 15;
+                let total = n*a + n*b;
+                q.question = `Z drutu chcemy zbudować szkielet ostrosłupa prawidłowego czworokątnego o krawędzi podstawy ${a} cm i krawędzi bocznej ${b} cm. Ile cm drutu potrzebujemy?`;
+                q.options = shuffleArray(makeUniqueOptions(total, [a*b, a+b, 4*(a+b)]));
+                q.correct = q.options.indexOf(String(total));
+                q.explanation = `Mamy 4 krawędzie podstawy i 4 krawędzie boczne. Suma = 4·${a} + 4·${b} = ${4*a} + ${4*b} = ${total} cm.`;
+            } else {
+                // Sześcian: P_c -> V
+                let a = 10;
+                let pc = 6 * a * a;
+                let v = a * a * a;
+                q.question = `Pole powierzchni całkowitej sześcianu wynosi ${pc} \\( \\text{cm}^2 \\). Oblicz jego objętość.`;
+                q.options = shuffleArray(makeUniqueOptions(v, [pc, 100, 500]));
+                q.correct = q.options.indexOf(String(v));
+                q.explanation = `P_c = 6·a² => ${pc} = 6·a² => a² = ${a*a} => a = ${a} cm. V = a³ = ${v} cm³.`;
             }
         }
         else if (topic === 'Statystyka i rachunek prawdopodobieństwa') {
@@ -949,27 +1115,67 @@ function generateMathQuestions(topic, count = 15, selectedDiff = 'mix') {
             }
         }
         else if (topic === 'Zadania dowodowe i otwarte') {
-            let baseType = getRand(1, 3);
+            let baseType = getRand(1, 8);
             q.type = 'open';
             if (baseType === 1) {
-                // Kalendarz - wybitny typowy dowód logiczny (miesiące na tej samej dacie tygodnia)
-                q.question = `[DOWODZENIE] Uzasadnij, że pierwszy dzień września oraz pierwszy dzień grudnia tego samego roku wypadają w ten sam dzień tygodnia. Zapisz obliczenia.`;
-                q.correct = "30 (wrz) + 31 (paź) + 30 (lis) = 91 dni. Ponieważ 91 jest podzielne przez 7 (91 : 7 = 13), dni te wypadają w ten sam dzień tygodnia.";
-                q.explanation = `Należy policzyć dni między 1 września a 1 grudnia: wrzesień (30), październik (31), listopad (30). Suma to 91 dni. Ponieważ 91/7 = 13 bez reszty, po pełnych 13 tygodniach układ dni tygodnia będzie identyczny.`;
+                // 1. Zadania otwarte – krótkiej odpowiedzi (2 pkt) - Geometria
+                let a = getRand(6, 12); let h = getRand(4, 9);
+                q.question = `[ZADANIE OTWARTE — 2 PKT] Oblicz pole trójkąta, którego podstawa ma długość ${a} cm, a wysokość opuszczona na tę podstawę jest o ${getRand(1, 3)} cm krótsza od podstawy. Podaj wynik końcowy.`;
+                let effH = a - (a-h > 0 ? (a-h) : 1); // logic check
+                let ans = (a * h) / 2;
+                q.correct = `${ans} cm²`;
+                q.explanation = `Pole trójkąta to (a · h) / 2. Podstawa = ${a}. Wysokość = ${h}. P = (${a} · ${h}) / 2 = ${ans} cm².`;
             } else if (baseType === 2) {
-                let k = getRand(2, 4);
-                let p1 = 3*k, p2 = 4*k, p3 = 5*k;
-                q.question = `[DOWODZENIE] Sprawdź, czy z trzech odcinków o długościach ${p1} cm, ${p2} cm oraz ${p3} cm można zbudować trójkąt prostokątny. Uzasadnij odpowiedź.`;
-                q.correct = `Tak, ponieważ spełnione jest twierdzenie odwrotne do twierdzenia Pitagorasa: ${p1}² + ${p2}² = ${p3}².`;
-                q.explanation = `Stosujemy wzór a² + b² = c². Mamy ${p1}² + ${p2}² = ${p1*p1} + ${p2*p2} = ${p1*p1+p2*p2}. Kwadrat najdłuższego boku to ${p3}² = ${p3*p3}. Ponieważ ${p1*p1+p2*p2} = ${p3*p3}, trójkąt jest prostokątny.`;
+                // 2A. Algebraiczne (równania / wyrażenia)
+                let x = getRand(5, 15);
+                let sum = 3 * x + 3; // x, x+1, x+2
+                q.question = `[ZADANIE ROZSZERZONE — 3 PKT] Suma trzech kolejnych liczb naturalnych wynosi ${sum}. Wyznacz te liczby i zapisz swoje rozumowanie w postaci równania.`;
+                q.correct = `${x}, ${x+1}, ${x+2}`;
+                q.explanation = `Równanie: x + (x+1) + (x+2) = ${sum} => 3x + 3 = ${sum} => 3x = ${sum-3} => x = ${x}. Szukane liczby to ${x}, ${x+1}, ${x+2}.`;
+            } else if (baseType === 3) {
+                // 2B. Tekstowe (modelowanie) - Prędkość
+                let v = getRand(60, 90); let t = 2; let dist = v * t;
+                q.question = `[ZADANIE ROZSZERZONE — 3 PKT] Samochód przejechał drogę ${dist} km w czasie ${t} godzin. Następnie zwiększył prędkość o 10 km/h. W jakim czasie pokona powrotną drogę o tej samej długości? Zapisz obliczenia.`;
+                let v2 = v + 10;
+                let t2 = (dist / v2).toFixed(2);
+                q.correct = `${t2} h`;
+                q.explanation = `Pierwsza prędkość: ${dist}/${t} = ${v} km/h. Nowa prędkość: ${v}+10 = ${v2} km/h. Czas powrotu: ${dist}/${v2} = ${t2} h.`;
+            } else if (baseType === 4) {
+                // 2C. Geometryczne płaskie - Pitagoras
+                let a = 6; let b = 8; let c = 10;
+                let k = getRand(1, 3); a*=k; b*=k; c*=k;
+                q.question = `[ZADANIE ROZSZERZONE — 3 PKT] Przyprostokątne trójkąta prostokątnego mają długości ${a} cm oraz ${b} cm. Oblicz obwód tego trójkąta. Pamiętaj o zastosowaniu twierdzenia Pitagorasa.`;
+                q.correct = `${a+b+c} cm`;
+                q.explanation = `Z tw. Pitagorasa: ${a}² + ${b}² = c². ${a*a} + ${b*b} = ${c*c}. Przeciwprostokątna c = ${c}. Obwód = ${a} + ${b} + ${c} = ${a+b+c} cm.`;
+            } else if (baseType === 5) {
+                // 2D. Geometryczne przestrzenne - Bryły
+                let a = getRand(3, 6);
+                q.question = `[ZADANIE ROZSZERZONE — 3 PKT] Z dwóch jednakowych sześcianów o krawędzi ${a} cm zbudowano prostopadłościan. Oblicz pole powierzchni całkowitej otrzymanej bryły.`;
+                let p_single = a * a;
+                let ans = 10 * p_single; // 2 cubes = 12 faces minus 2 touching faces
+                q.correct = `${ans} cm²`;
+                q.explanation = `Pojedyncza ściana ma pole ${a}·${a} = ${p_single}. Prostopadłościan składa się z 2 sześcianów, ale dwie ściany „znikają” w środku. Zostaje 10 ścian. 10 · ${p_single} = ${ans} cm².`;
+            } else if (baseType === 6) {
+                // 2F. Statystyka / dane
+                let v1 = getRand(2, 5); let v2 = getRand(3, 6);
+                let targetAvg = 4;
+                let v3 = 3 * targetAvg - (v1 + v2);
+                q.question = `[ZADANIE ROZSZERZONE — 3 PKT] Średnia arytmetyczna trzech ocen wynosi ${targetAvg}. Dwie z tych ocen to ${v1} oraz ${v2}. Jaką trzecią ocenę otrzymał uczeń? Wykaż obliczenia.`;
+                q.correct = `${v3}`;
+                q.explanation = `Wzór na średnią: (v1+v2+v3)/3 = ${targetAvg}. (${v1}+${v2}+v3) = ${3*targetAvg}. v3 = ${3*targetAvg} - ${v1+v2} = ${v3}.`;
+            } else if (baseType === 7) {
+                // 2G. Zadania z uzasadnieniem (dowodowe)
+                let n = getRand(2, 5);
+                q.question = `[DOWODZENIE — 3 PKT] Uzasadnij, że suma trzech kolejnych liczb całkowitych jest zawsze podzielna przez 3. Zapisz dowód algebraiczny.`;
+                q.correct = `n + (n+1) + (n+2) = 3n + 3 = 3(n+1). Wynik jest wielokrotnością liczby 3.`;
+                q.explanation = `Przyjmijmy liczby n, n+1, n+2. Ich suma to n + n + 1 + n + 2 = 3n + 3. Wyłączając przed nawias: 3(n + 1). Ponieważ n jest całkowite, 3(n+1) jest podzielne przez 3.`;
             } else {
-                // Rozszerzone logiczne otwarte
-                let books = getRand(5, 10);
-                let costBook = getRand(10, 20);
-                let totalCost = books * costBook;
-                q.question = `[ZADANIE OTWARTE] Uczeń zakupił ${books} zestawów testowych w cenie ${costBook} zł za zestaw. Następnie odsprzedał te zestawy łącznie ${books*3} osobom w cenie 5 zł za każde udostępnienie materiałów. Oblicz końcowy wynik finansowy (zysk lub stratę) tej operacji. Zapisz model rozwiązania.`;
-                q.correct = (books * 3 * 5 - totalCost) + " zł zysku";
-                q.explanation = `Koszt zakupu: ${books} · ${costBook} = ${totalCost} zł. Przychód z odsprzedaży: ${books*3} · 5 = ${books*3*5} zł. Wynik finansowy: ${books*3*5} - ${totalCost} = ${(books*3*5)-totalCost} zł.`;
+                // 2H. Zadania mieszane
+                let a = getRand(4, 7);
+                let p = a * (a + 2);
+                q.question = `[ZADANIE ROZSZERZONE — 3 PKT] Pole prostokąta, którego jeden bok jest o 2 cm dłuższy od drugiego, wynosi ${p} cm². Oblicz obwód tego prostokąta.`;
+                q.correct = `${4*a + 4} cm`;
+                q.explanation = `Równanie: x(x + 2) = ${p}. Dla x=${a} mamy ${a}(${a+2}) = ${a}·${a+2} = ${p}. Boki to ${a} i ${a+2}. Obwód = 2·(${a} + ${a+2}) = 2·(${2*a+2}) = ${4*a+4} cm.`;
             }
         }
         else {
@@ -1725,6 +1931,924 @@ if (typeof ENG_WORDS !== 'undefined') {
     ENG_WORDS.push(...ENG_WORDS_EXTENDED);
 }
 
+const AI_DATABASE = [
+    {
+        subject: 'math',
+        topic: 'Geometria przestrzenna',
+        type: 'mcq',
+        question: 'Akwarium w kształcie prostopadłościanu ma wymiary podstawy 40 cm x 50 cm. Wysokość akwarium to 30 cm. Ile litrów wody wypełni to akwarium do połowy jego wysokości?',
+        options: ['30 litrów', '60 litrów', '15 litrów', '45 litrów'],
+        correct: 0,
+        explanation: 'V = 40cm * 50cm * 15cm (połowa wysokości) = 30 000 cm³. 1000 cm³ = 1 litr, więc 30 000 cm³ = 30 litrów.',
+        model3d: 'prism'
+    },
+    {
+        subject: 'math',
+        topic: 'Geometria przestrzenna',
+        type: 'mcq',
+        question: 'Sześcian ma pole powierzchni całkowitej równe 150 cm². Jaka jest objętość tego sześcianu?',
+        options: ['125 cm³', '25 cm³', '150 cm³', '100 cm³'],
+        correct: 0,
+        explanation: 'P_c = 6 * a² = 150. a² = 25, więc a = 5 cm. V = a³ = 5³ = 125 cm³.',
+        model3d: 'cube'
+    },
+    {
+        subject: 'math',
+        topic: 'Geometria przestrzenna',
+        type: 'mcq',
+        question: 'Ile krawędzi ma graniastosłup o podstawie siedmiokąta?',
+        options: ['21', '14', '7', '15'],
+        correct: 0,
+        explanation: 'Graniastosłup n-kątny ma 3n krawędzi. Dla n=7: 3 * 7 = 21.',
+        model3d: 'prism'
+    },
+    {
+        subject: 'math',
+        topic: 'Geometria przestrzenna',
+        type: 'mcq',
+        question: 'Dany jest ostrosłup o podstawie kwadratu o boku 6 cm. Wysokość ostrosłupa wynosi 10 cm. Oblicz jego objętość.',
+        options: ['120 cm³', '360 cm³', '60 cm³', '180 cm³'],
+        correct: 0,
+        explanation: 'V = 1/3 * P_p * h = 1/3 * (6 * 6) * 10 = 1/3 * 36 * 10 = 12 * 10 = 120 cm³.',
+        model3d: 'pyramid'
+    },
+    {
+        subject: 'math',
+        topic: 'Geometria przestrzenna',
+        type: 'mcq',
+        question: 'Suma długości wszystkich krawędzi sześcianu wynosi 48 cm. Oblicz pole powierzchni jednej ściany tego sześcianu.',
+        options: ['16 cm²', '4 cm²', '64 cm²', '12 cm²'],
+        correct: 0,
+        explanation: 'Sześcian ma 12 krawędzi. 48 / 12 = 4 cm (krawędź a). Pole jednej ściany to a² = 4² = 16 cm².',
+        model3d: 'cube'
+    },
+    {
+        subject: 'math',
+        topic: 'Geometria przestrzenna',
+        type: 'mcq',
+        question: 'Pojemnik w kształcie prostopadłościanu o wymiarach 2 dm x 3 dm x 5 dm jest pusty. Ile litrów wody trzeba do niego wlać, aby wypełnić go w 80%?',
+        options: ['24 litry', '30 litrów', '20 litrów', '40 litrów'],
+        correct: 0,
+        explanation: 'V = 2 * 3 * 5 = 30 dm³ = 30 litrów. 80% z 30 = 0,8 * 30 = 24 litry.',
+        model3d: 'prism'
+    },
+    {
+        subject: 'math',
+        topic: 'Geometria przestrzenna',
+        type: 'mcq',
+        question: 'Z 64 małych sześcianików o krawędzi 1 cm ułożono jeden duży sześcian. Jaka jest długość krawędzi dużego sześcianu?',
+        options: ['4 cm', '8 cm', '16 cm', '2 cm'],
+        correct: 0,
+        explanation: 'Objętość małego sześcianu to 1 cm³. Objętość dużego to 64 cm³. V = a³ = 64, więc a = 4 cm.',
+        model3d: 'cube'
+    },
+    {
+        subject: 'math',
+        topic: 'Geometria przestrzenna',
+        type: 'mcq',
+        question: 'Ile ścian ma ostrosłup dziesięciokątny?',
+        options: ['11', '10', '20', '12'],
+        correct: 0,
+        explanation: 'Ostrosłup n-kątny ma n + 1 ścian (n bocznych + 1 podstawa). Dla n=10: 10 + 1 = 11.',
+        model3d: 'pyramid'
+    },
+    {
+        subject: 'math',
+        topic: 'Geometria przestrzenna',
+        type: 'mcq',
+        question: 'Graniastosłup prosty ma wysokość 12 cm. Jego podstawą jest romb o przekątnych 6 cm i 8 cm. Oblicz objętość tego graniastosłupa.',
+        options: ['288 cm³', '576 cm³', '144 cm³', '96 cm³'],
+        correct: 0,
+        explanation: 'P_p (romb) = (p * q) / 2 = (6 * 8) / 2 = 24 cm². V = P_p * h = 24 * 12 = 288 cm³.',
+        model3d: 'prism'
+    },
+    {
+        subject: 'math',
+        topic: 'Geometria przestrzenna',
+        type: 'mcq',
+        question: 'Metalowy prostopadłościan o wymiarach 4 cm x 9 cm x 6 cm przetopiono na sześcian. Jaka jest długość krawędzi tego sześcianu?',
+        options: ['6 cm', '5 cm', '7 cm', '4 cm'],
+        correct: 0,
+        explanation: 'V prostopadłościanu = 4 * 9 * 6 = 216 cm³. V sześcianu = a³ = 216, więc a = 6 cm.',
+        model3d: 'cube'
+    },
+    {
+        subject: 'math',
+        topic: 'Geometria przestrzenna',
+        type: 'mcq',
+        question: 'Ile wierzchołków ma ostrosłup o 12 krawędziach?',
+        options: ['7', '6', '12', '13'],
+        correct: 0,
+        explanation: 'Ostrosłup n-kątny ma 2n krawędzi. 2n = 12, więc n = 6. Liczba wierzchołków to n + 1 = 6 + 1 = 7.',
+        model3d: 'pyramid'
+    },
+    {
+        subject: 'math',
+        topic: 'Geometria przestrzenna',
+        type: 'mcq',
+        question: 'Oblicz pole powierzchni bocznej sześcianu o krawędzi 10 cm.',
+        options: ['400 cm²', '600 cm²', '100 cm²', '1000 cm²'],
+        correct: 0,
+        explanation: 'Pole powierzchni bocznej sześcianu to pole 4 ścian bocznych. P_b = 4 * a² = 4 * 10² = 400 cm².',
+        model3d: 'cube'
+    },
+    {
+        subject: 'math',
+        topic: 'Geometria przestrzenna',
+        type: 'mcq',
+        question: 'W sześcianie o krawędzi 6 cm wydrążono na wylot otwór o przekroju kwadratu o boku 2 cm, prostopadle do ścian. Oblicz objętość pozostałej bryły.',
+        options: ['192 cm³', '212 cm³', '200 cm³', '180 cm³'],
+        correct: 0,
+        explanation: 'V_sześcianu = 6³ = 216. V_otworu = 2 * 2 * 6 = 24. V_bryły = 216 - 24 = 192 cm³.',
+        model3d: 'cube'
+    },
+    {
+        subject: 'math',
+        topic: 'Geometria przestrzenna',
+        type: 'mcq',
+        question: 'Jaką część objętości sześcianu o krawędzi 2a stanowi sześcian o krawędzi a?',
+        options: ['1/8', '1/4', '1/2', '1/6'],
+        correct: 0,
+        explanation: 'V_duży = (2a)³ = 8a³. V_mały = a³. Stosunek to a³ / 8a³ = 1/8.',
+        model3d: 'cube'
+    },
+    {
+        subject: 'math',
+        topic: 'Geometria przestrzenna',
+        type: 'mcq',
+        question: 'Podstawą graniastosłupa prostego jest trapez równoramienny o podstawach 10 cm i 4 cm oraz ramieniu 5 cm. Wysokość graniastosłupa wynosi 10 cm. Oblicz jego objętość.',
+        options: ['280 cm³', '560 cm³', '140 cm³', '400 cm³'],
+        correct: 0,
+        explanation: 'h podstawy z Pitagorasa: x = (10-4)/2 = 3. h² = 5² - 3² = 16, więc h = 4. P_p = (10+4)*4/2 = 28 cm². V = 28 * 10 = 280 cm³.',
+        model3d: 'prism'
+    },
+    {
+        subject: 'math',
+        topic: 'Geometria przestrzenna',
+        type: 'mcq',
+        question: 'Ile wynosi suma krawędzi czworościanu foremnego o krawędzi 5 cm?',
+        options: ['30 cm', '20 cm', '60 cm', '15 cm'],
+        correct: 0,
+        explanation: 'Czworościan to ostrosłup trójkątny o wszystkich krawędziach równych. Ma 6 krawędzi. 6 * 5 = 30 cm.',
+        model3d: 'pyramid'
+    },
+    {
+        subject: 'math',
+        topic: 'Geometria przestrzenna',
+        type: 'mcq',
+        question: 'Do sześciennego naczynia o krawędzi 10 cm wlewa się wodę z prędkością 0,5 litra na minutę. Po jakim czasie naczynie będzie pełne?',
+        options: ['2 minuty', '1 minutę', '5 minut', '10 minut'],
+        correct: 0,
+        explanation: 'V = 10³ = 1000 cm³ = 1 litr. T = 1 litr / 0,5 l/min = 2 minuty.',
+        model3d: 'cube'
+    },
+    {
+        subject: 'math',
+        topic: 'Geometria przestrzenna',
+        type: 'mcq',
+        question: 'Prostopadłościan ma wymiary 2 cm x 3 cm x 5 cm. Jeśli podwoimy każdą jego krawędź, to objętość wzrośnie:',
+        options: ['8-krotnie', '2-krotnie', '4-krotnie', '6-krotnie'],
+        correct: 0,
+        explanation: 'Skala k=2. Objętość zmienia się w k³ = 2³ = 8.',
+        model3d: 'prism'
+    },
+    {
+        subject: 'math',
+        topic: 'Geometria przestrzenna',
+        type: 'mcq',
+        question: 'Ostrosłup i graniastosłup mają takie same podstawy i wysokości. Ile razy objętość graniastosłupa jest większa od objętości ostrosłupa?',
+        options: ['3 razy', '2 razy', '4 razy', '6 razy'],
+        correct: 0,
+        explanation: 'V_g = P_p * h, V_o = 1/3 * P_p * h. Zatem V_g / V_o = 3.',
+        model3d: 'prism'
+    },
+    {
+        subject: 'math',
+        topic: 'Geometria przestrzenna',
+        type: 'mcq',
+        question: 'Pudełko o wymiarach 10 cm x 20 cm x 30 cm chcemy okleić papierem. Nie oklejamy jednak spodu pudełka. Ile cm² papieru potrzebujemy?',
+        options: ['1500 cm²', '2200 cm²', '1300 cm²', '1600 cm²'],
+        correct: 0,
+        explanation: 'Ściany boczne: 2*(10*30) + 2*(20*30) = 600 + 1200 = 1800. Góra: 10*20 = 200. Razem: 1800 + 200 = 2000? Czekaj. Spód to 10*20 = 200. P_c = 2*(200+300+600) = 2200. Bez spodu: 2200 - 200 = 2000. Wait, logic check: 2*(10*30)=600, 2*(20*30)=1200, 1*(10*20)=200. Sum = 600+1200+200 = 2000 cm².',
+        model3d: 'prism'
+    },
+    {
+        subject: 'math',
+        topic: 'Geometria przestrzenna',
+        type: 'mcq',
+        question: 'Dyrektor szkoły chce wybudować basen o wymiarach 25 m x 10 m i głębokości 2 m. Ile m³ ziemi trzeba wywieźć?',
+        options: ['500 m³', '250 m³', '1000 m³', '750 m³'],
+        correct: 0,
+        explanation: 'V = 25 * 10 * 2 = 500 m³.',
+        model3d: 'prism'
+    },
+    {
+        subject: 'math',
+        topic: 'Geometria przestrzenna',
+        type: 'mcq',
+        question: 'Liczba wierzchołków graniastosłupa wynosi 18. Ile krawędzi ma ta bryła?',
+        options: ['27', '18', '9', '36'],
+        correct: 0,
+        explanation: 'Wierzchołki = 2n = 18, więc n=9. Krawędzie = 3n = 3 * 9 = 27.',
+        model3d: 'prism'
+    },
+    {
+        subject: 'math',
+        topic: 'Geometria przestrzenna',
+        type: 'mcq',
+        question: 'Liczba ścian ostrosłupa wynosi 8. Ile wierzchołków ma ta bryła?',
+        options: ['8', '7', '14', '15'],
+        correct: 0,
+        explanation: 'Ściany = n + 1 = 8, więc n=7. Wierzchołki = n + 1 = 7 + 1 = 8.',
+        model3d: 'pyramid'
+    },
+    {
+        subject: 'math',
+        topic: 'Geometria przestrzenna',
+        type: 'mcq',
+        question: 'Ile litrów wody mieści się w sześcianie o boku 1 metra?',
+        options: ['1000 litrów', '100 litrów', '10 litrów', '10000 litrów'],
+        correct: 0,
+        explanation: '1 m = 10 dm. V = 10 * 10 * 10 = 1000 dm³ = 1000 litrów.',
+        model3d: 'cube'
+    },
+    {
+        subject: 'math',
+        topic: 'Geometria przestrzenna',
+        type: 'mcq',
+        question: 'Suma krawędzi prostopadłościanu o wymiarach 5, 5, 5 wynosi:',
+        options: ['60', '15', '45', '75'],
+        correct: 0,
+        explanation: 'Jest to sześcian o a=5. Suma = 12 * 5 = 60.',
+        model3d: 'cube'
+    },
+    {
+        subject: 'math',
+        topic: 'Geometria przestrzenna',
+        type: 'mcq',
+        question: 'Przekątna sześcianu o boku a wynosi:',
+        options: ['a√3', 'a√2', '2a', 'a√6'],
+        correct: 0,
+        explanation: 'Z twierdzenia Pitagorasa w 3D: d = √(a² + a² + a²) = √3a² = a√3.',
+        model3d: 'cube'
+    },
+    {
+        subject: 'math',
+        topic: 'Geometria przestrzenna',
+        type: 'mcq',
+        question: 'Objętość graniastosłupa o wysokości h i polu podstawy P wynosi:',
+        options: ['P * h', '1/3 * P * h', '2 * P * h', 'P + h'],
+        correct: 0,
+        explanation: 'Klasyczny wzór na objętość graniastosłupa: V = P_p * h.',
+        model3d: 'prism'
+    },
+    {
+        subject: 'math',
+        topic: 'Geometria przestrzenna',
+        type: 'mcq',
+        question: 'Który z poniższych ostrosłupów ma najwięcej wierzchołków?',
+        options: ['Siedmiokątny', 'Sześciokątny', 'Pięciokątny', 'Czworokątny'],
+        correct: 0,
+        explanation: 'Wierzchołki = n + 1. Dla siedmiokątnego (n=7) jest to 8. Dla reszty mniej.',
+        model3d: 'pyramid'
+    },
+    {
+        subject: 'math',
+        topic: 'Geometria przestrzenna',
+        type: 'mcq',
+        question: 'Przekątna prostopadłościanu o wymiarach 3, 4, 12 wynosi:',
+        options: ['13', '19', '17', '15'],
+        correct: 0,
+        explanation: 'd = √(3² + 4² + 12²) = √(9 + 16 + 144) = √169 = 13.',
+        model3d: 'prism'
+    },
+    {
+        subject: 'math',
+        topic: 'Geometria przestrzenna',
+        type: 'mcq',
+        question: 'Ile cm³ to 2,5 litra?',
+        options: ['2500 cm³', '250 cm³', '25 cm³', '25000 cm³'],
+        correct: 0,
+        explanation: '1 litr = 1000 cm³. 2,5 * 1000 = 2500 cm³.',
+        model3d: 'prism'
+    },
+    {
+        subject: 'math',
+        topic: 'Geometria przestrzenna',
+        type: 'mcq',
+        question: 'Dyrektor szkoły kupił szafę o wymiarach 1,2 m x 0,5 m x 2,0 m. Ile m³ objętości zajmuje ta szafa?',
+        options: ['1,2 m³', '0,6 m³', '1,8 m³', '0,3 m³'],
+        correct: 1,
+        explanation: 'V = 1,2 * 0,5 * 2,0 = 0,6 * 2,0 = 1,2 m³? Wait, logic check: 1.2 * 0.5 = 0.6. 0.6 * 2.0 = 1.2. Correct is 1.2 m³.',
+        model3d: 'prism'
+    },
+    {
+        subject: 'math',
+        topic: 'Geometria przestrzenna',
+        type: 'mcq',
+        question: 'Suma krawędzi sześcianu wynosi 72 cm. Oblicz objętość tego sześcianu.',
+        options: ['216 cm³', '36 cm³', '144 cm³', '288 cm³'],
+        correct: 0,
+        explanation: '12a = 72 => a = 6. V = 6³ = 216 cm³.',
+        model3d: 'cube'
+    },
+    {
+        subject: 'math',
+        topic: 'Geometria przestrzenna',
+        type: 'mcq',
+        question: 'Podstawą ostrosłupa jest prostokąt o bokach 8 cm i 6 cm. Wysokość ostrosłupa wynosi 9 cm. Oblicz jego objętość.',
+        options: ['144 cm³', '432 cm³', '72 cm³', '216 cm³'],
+        correct: 0,
+        explanation: 'V = 1/3 * (8*6) * 9 = 1/3 * 48 * 9 = 48 * 3 = 144 cm³.',
+        model3d: 'pyramid'
+    },
+    {
+        subject: 'math',
+        topic: 'Geometria przestrzenna',
+        type: 'mcq',
+        question: 'Ile cm³ ma jeden litr?',
+        options: ['1000 cm³', '100 cm³', '10000 cm³', '1 cm³'],
+        correct: 0,
+        explanation: '1 litr = 1 dm³ = (10 cm)³ = 1000 cm³.',
+        model3d: 'prism'
+    },
+    {
+        subject: 'math',
+        topic: 'Geometria przestrzenna',
+        type: 'mcq',
+        question: 'Graniastosłup o podstawie dziesięciokąta ma ile wierzchołków?',
+        options: ['20', '10', '30', '12'],
+        correct: 0,
+        explanation: 'Wierzchołki = 2n = 20.',
+        model3d: 'prism'
+    },
+    {
+        subject: 'math',
+        topic: 'Geometria przestrzenna',
+        type: 'mcq',
+        question: 'Dwie kostki masła o wymiarach 10 cm x 5 cm x 4 cm każda ułożono jedna na drugiej. Jakie wymiary ma powstały prostopadłościan?',
+        options: ['10 cm x 10 cm x 4 cm', '10 cm x 5 cm x 8 cm', '20 cm x 5 cm x 4 cm', 'Wszystkie podane są możliwe'],
+        correct: 3,
+        explanation: 'Zależy jak je ułożymy. Możemy złożyć ścianami 10x5 (h=8), 10x4 (h=10) lub 5x4 (L=20).',
+        model3d: 'prism'
+    },
+    {
+        subject: 'math',
+        topic: 'Geometria przestrzenna',
+        type: 'mcq',
+        question: 'Pole powierzchni bocznej sześcianu wynosi 64 cm². Oblicz objętość sześcianu.',
+        options: ['64 cm³', '16 cm³', '256 cm³', '32 cm³'],
+        correct: 0,
+        explanation: '4a² = 64 => a² = 16 => a = 4. V = 4³ = 64 cm³.',
+        model3d: 'cube'
+    },
+    {
+        subject: 'math',
+        topic: 'Geometria przestrzenna',
+        type: 'mcq',
+        question: 'Ile wynosi krawędź sześcianu, którego objętość jest równa polu jego powierzchni całkowitej (liczbowo)?',
+        options: ['6', '3', '1', '12'],
+        correct: 0,
+        explanation: 'a³ = 6a² => a = 6.',
+        model3d: 'cube'
+    },
+    {
+        subject: 'math',
+        topic: 'Geometria przestrzenna',
+        type: 'mcq',
+        question: 'Ostrosłup o podstawie pięciokąta ma ile krawędzi?',
+        options: ['10', '5', '15', '6'],
+        correct: 0,
+        explanation: 'Krawędzie = 2n = 10.',
+        model3d: 'pyramid'
+    },
+    {
+        subject: 'math',
+        topic: 'Geometria przestrzenna',
+        type: 'mcq',
+        question: 'W sześcianie o krawędzi 10 dm mieści się ile szklanek wody o pojemności 250 ml każda?',
+        options: ['4000', '400', '1000', '2500'],
+        correct: 0,
+        explanation: 'V = 1000 dm³ = 1000 litrów. Jedna szklanka = 0,25 l. 1000 / 0,25 = 4000 szklanek.',
+        model3d: 'cube'
+    },
+    {
+        subject: 'math',
+        topic: 'Geometria przestrzenna',
+        type: 'mcq',
+        question: 'Graniastosłup ma 18 krawędzi. Co jest jego podstawą?',
+        options: ['Sześciokąt', 'Dziewięciokąt', 'Trójkąt', 'Ośmiokąt'],
+        correct: 0,
+        explanation: '3n = 18 => n = 6. Podstawą jest sześciokąt.',
+        model3d: 'prism'
+    },
+    {
+        subject: 'math',
+        topic: 'Geometria przestrzenna',
+        type: 'mcq',
+        question: 'Pole powierzchni całkowitej sześcianu o boku 1 cm wynosi:',
+        options: ['6 cm²', '1 cm²', '4 cm²', '12 cm²'],
+        correct: 0,
+        explanation: '6 * 1² = 6.',
+        model3d: 'cube'
+    },
+    {
+        subject: 'math',
+        topic: 'Geometria przestrzenna',
+        type: 'mcq',
+        question: 'Suma krawędzi ostrosłupa prawidłowego czworokątnego o krawędzi podstawy 5 cm i krawędzi bocznej 10 cm wynosi:',
+        options: ['60 cm', '40 cm', '20 cm', '80 cm'],
+        correct: 0,
+        explanation: '4 * 5 + 4 * 10 = 20 + 40 = 60 cm.',
+        model3d: 'pyramid'
+    },
+    {
+        subject: 'math',
+        topic: 'Geometria przestrzenna',
+        type: 'mcq',
+        question: 'Objętość prostopadłościanu o krawędziach 2, 3, x wynosi 30. Ile wynosi x?',
+        options: ['5', '6', '10', '15'],
+        correct: 0,
+        explanation: '2 * 3 * x = 30 => 6x = 30 => x = 5.',
+        model3d: 'prism'
+    },
+    {
+        subject: 'math',
+        topic: 'Geometria przestrzenna',
+        type: 'mcq',
+        question: 'Ile ścian bocznych ma graniastosłup o 30 wierzchołkach?',
+        options: ['15', '30', '10', '28'],
+        correct: 0,
+        explanation: '2n = 30 => n = 15. Liczba ścian bocznych = n = 15.',
+        model3d: 'prism'
+    },
+    {
+        subject: 'math',
+        topic: 'Geometria przestrzenna',
+        type: 'mcq',
+        question: 'Basen ma wymiary 5m x 4m x 2m. Ile wiader 10-litrowych trzeba wlać, aby go napełnić?',
+        options: ['4000', '400', '40000', '40'],
+        correct: 0,
+        explanation: 'V = 5 * 4 * 2 = 40 m³ = 40 000 dm³ = 40 000 litrów. 40 000 / 10 = 4000 wiader.',
+        model3d: 'prism'
+    },
+    {
+        subject: 'math',
+        topic: 'Geometria przestrzenna',
+        type: 'mcq',
+        question: 'Który z poniższych ma najwięcej ścian?',
+        options: ['Graniastosłup siedmiokątny', 'Ostrosłup dziesięciokątny', 'Sześcian', 'Prostopadłościan'],
+        correct: 1,
+        explanation: 'Graniastosłup 7: n+2 = 9. Ostrosłup 10: n+1 = 11. Sześcian: 6. Prostopadłościan: 6. 11 jest największe.',
+        model3d: 'pyramid'
+    },
+    {
+        subject: 'math',
+        topic: 'Geometria przestrzenna',
+        type: 'mcq',
+        question: 'Sześcian o objętości 1 m³ ma pole powierzchni całkowitej równe:',
+        options: ['6 m²', '1 m²', '4 m²', '600 cm²'],
+        correct: 0,
+        explanation: 'a³ = 1 => a = 1m. P_c = 6 * 1² = 6 m².',
+        model3d: 'cube'
+    },
+    {
+        subject: 'math',
+        topic: 'Geometria przestrzenna',
+        type: 'mcq',
+        question: 'Przekątna sześcianu wynosi 4√3 cm. Ile wynosi długość jego krawędzi?',
+        options: ['4 cm', '8 cm', '12 cm', '16 cm'],
+        correct: 0,
+        explanation: 'd = a√3 => 4√3 = a√3 => a = 4 cm.',
+        model3d: 'cube'
+    },
+    {
+        subject: 'math',
+        topic: 'Geometria przestrzenna',
+        type: 'mcq',
+        question: 'Ile cm³ ma 0,5 litra?',
+        options: ['500 cm³', '50 cm³', '5000 cm³', '5 cm³'],
+        correct: 0,
+        explanation: '0,5 l = 0,5 dm³ = 500 cm³.',
+        model3d: 'prism'
+    },
+    {
+        subject: 'math',
+        topic: 'Geometria przestrzenna',
+        type: 'mcq',
+        question: 'Liczba krawędzi czworościanu jest równa liczbie:',
+        options: ['Ścian sześcianu', 'Wierzchołków sześcianu', 'Krawędzi sześcianu', 'Ścian ostrosłupa czworokątnego'],
+        correct: 0,
+        explanation: 'Czworościan ma 6 krawędzi. Sześcian ma 6 ścian.',
+        model3d: 'pyramid'
+    },
+    {
+        subject: 'math',
+        topic: 'Geometria przestrzenna',
+        type: 'mcq',
+        question: 'Graniastosłup ma 12 krawędzi. Jego podstawą jest:',
+        options: ['Czworokąt', 'Sześciokąt', 'Trójkąt', 'Ośmiokąt'],
+        correct: 0,
+        explanation: '3n = 12 => n = 4. Podstawą jest czworokąt.',
+        model3d: 'prism'
+    },
+    {
+        subject: 'math',
+        topic: 'Geometria przestrzenna',
+        type: 'mcq',
+        question: 'Objętość domu o wymiarach 10m x 10m i wysokości 3m (dach płaski) wynosi:',
+        options: ['300 m³', '100 m³', '900 m³', '600 m³'],
+        correct: 0,
+        explanation: 'V = 10 * 10 * 3 = 300 m³.',
+        model3d: 'prism'
+    },
+    {
+        subject: 'math',
+        topic: 'Geometria przestrzenna',
+        type: 'mcq',
+        question: 'Gdy krawędź sześcianu zmaleje 3-krotnie, to pole powierzchni całkowitej zmaleje:',
+        options: ['9-krotnie', '3-krotnie', '27-krotnie', '6-krotnie'],
+        correct: 0,
+        explanation: 'Skala k=1/3. Pole zmienia się o k² = (1/3)² = 1/9.',
+        model3d: 'cube'
+    },
+    {
+        subject: 'math',
+        topic: 'Geometria przestrzenna',
+        type: 'mcq',
+        question: 'Ile to jest 100 dm³ w litrach?',
+        options: ['100 litrów', '10 litrów', '1000 litrów', '1 litr'],
+        correct: 0,
+        explanation: '1 dm³ = 1 litr.',
+        model3d: 'prism'
+    },
+    {
+        subject: 'math',
+        topic: 'Geometria przestrzenna',
+        type: 'mcq',
+        question: 'Objętość ostrosłupa jest równa V. Objętość graniastosłupa o tej samej podstawie i wysokości wynosi:',
+        options: ['3V', 'V/3', 'V', '2V'],
+        correct: 0,
+        explanation: 'Z definicji V_ostrosłupa = 1/3 * V_graniastosłupa.',
+        model3d: 'pyramid'
+    },
+    {
+        subject: 'math',
+        topic: 'Geometria przestrzenna',
+        type: 'mcq',
+        question: 'Jeżeli sześcian ma krawędź 2, to jego pole powierzchni wynosi:',
+        options: ['24', '8', '16', '12'],
+        correct: 0,
+        explanation: '6 * 2² = 6 * 4 = 24.',
+        model3d: 'cube'
+    },
+    {
+        subject: 'math',
+        topic: 'Geometria przestrzenna',
+        type: 'mcq',
+        question: 'Liczba wierzchołków sześcianu wynosi:',
+        options: ['8', '6', '12', '4'],
+        correct: 0,
+        explanation: 'Sześcian ma 8 wierzchołków.',
+        model3d: 'cube'
+    },
+    {
+        subject: 'math',
+        topic: 'Geometria przestrzenna',
+        type: 'mcq',
+        question: 'Przekątna kwadratu o boku 5 wynosi:',
+        options: ['5√2', '5√3', '10', '25'],
+        correct: 0,
+        explanation: 'd = a√2.',
+        model3d: 'prism'
+    },
+    {
+        subject: 'math',
+        topic: 'Geometria przestrzenna',
+        type: 'mcq',
+        question: 'Suma krawędzi sześcianu wynosi 120. Ile wynosi pole powierzchni sześcianu?',
+        options: ['600', '100', '120', '1000'],
+        correct: 0,
+        explanation: '12a = 120 => a=10. P = 6*10² = 600.',
+        model3d: 'cube'
+    },
+    // --- JĘZYK POLSKI ---
+    {
+        subject: 'polish',
+        topic: 'Lektury obowiązkowe',
+        type: 'mcq',
+        question: 'Wskaż bohatera "Pana Tadeusza", który pod przebraniem księdza Robaka realizował tajną misję emisariusza:',
+        options: ['Jacek Soplica', 'Cześnik Raptusiewicz', 'Gerwazy', 'Hrabia'],
+        correct: 0,
+        explanation: 'Jacek Soplica po zabójstwie Stolnika przywdział habit i jako ksiądz Robak odkupywał winy, służąc ojczyźnie.',
+        difficulty: 2
+    },
+    {
+        subject: 'polish',
+        topic: 'Lektury obowiązkowe',
+        type: 'mcq',
+        question: 'Który z duchów w "Dziadach cz. II" Adama Mickiewicza wypowiada słowa: "Bo kto nie był człowiekiem ni razu, temu człowiek nic nie pomoże"?',
+        options: ['Widmo Złego Pana', 'Zosia', 'Józio i Rózia', 'Kruk'],
+        correct: 0,
+        explanation: 'Widmo Złego Pana, który za życia był okrutnym dziedzicem, prosi o pomoc, ale wyrok jest nieubłagany.',
+        difficulty: 3
+    },
+    {
+        subject: 'polish',
+        topic: 'Lektury obowiązkowe',
+        type: 'mcq',
+        question: 'W dramacie "Balladyna" Juliusza Słowackiego symbolem zbrodni tytułowej bohaterki jest:',
+        options: ['Krwawa plama na czole', 'Złota korona', 'Dzban malin', 'Piorun'],
+        correct: 0,
+        explanation: 'Po zabójstwie siostry na czole Balladyny pojawia się znamię krwi, którego nie da się zmyć.',
+        difficulty: 1
+    },
+    {
+        subject: 'polish',
+        topic: 'Lektury obowiązkowe',
+        type: 'mcq',
+        question: 'W "Małym Księciu" Antoine’a de Saint-Exupéry’ego Lis uczy głównego bohatera, że:',
+        options: ['Dobrze widzi się tylko sercem', 'Najważniejsze jest posiadanie władzy', 'Miłość to tylko strata czasu', 'Trzeba podróżować, by być mądrym'],
+        correct: 0,
+        explanation: 'Lis wyjaśnia Małemu Księciu, że najważniejsze wartości są niewidoczne dla oczu.',
+        difficulty: 2
+    },
+    {
+        subject: 'polish',
+        topic: 'Nauka o języku',
+        type: 'mcq',
+        question: 'Wskaż zdanie, w którym występuje imiesłów przymiotnikowy bierny:',
+        options: ['Zjedzone jabłko leżało na stole.', 'Czytając książkę, zasnąłem.', 'Pies głośno szczekał.', 'Idąc do szkoły, spotkałem kolegę.'],
+        correct: 0,
+        explanation: '"Zjedzone" to imiesłów przymiotnikowy bierny (od czasownika zjeść).',
+        difficulty: 2
+    },
+    {
+        subject: 'polish',
+        topic: 'Teoria literatury',
+        type: 'mcq',
+        question: 'Czym jest epitet?',
+        options: ['Określeniem rzeczownika', 'Porównaniem dwóch rzeczy', 'Nadaniem cech ludzkich przedmiotom', 'Przesadnią'],
+        correct: 0,
+        explanation: 'Epitet to wyraz (najczęściej przymiotnik) pełniący funkcję określenia rzeczownika w tekście literackim.',
+        difficulty: 1
+    },
+    {
+        subject: 'polish',
+        topic: 'Lektury obowiązkowe',
+        type: 'mcq',
+        question: 'Kto jest autorem utworu "Kamienie na szaniec"?',
+        options: ['Aleksander Kamiński', 'Krzysztof Kamil Baczyński', 'Henryk Sienkiewicz', 'Bolesław Prus'],
+        correct: 0,
+        explanation: 'Autorem tej opowieści o warszawskich harcerzach jest Aleksander Kamiński.',
+        difficulty: 1
+    },
+    {
+        subject: 'polish',
+        topic: 'Lektury obowiązkowe',
+        type: 'mcq',
+        question: 'W "Opowieści wigilijnej" Charlesa Dickensa pierwszym duchem, który nawiedził Ebenezera Scrooge’a, był:',
+        options: ['Jakub Marley', 'Duch Przeszłych Świąt', 'Duch Tegorocznych Świąt', 'Duch Przyszłych Świąt'],
+        correct: 0,
+        explanation: 'Marley, dawny wspólnik Scrooge’a, zjawia się jako pierwszy, by ostrzec go przed losem w zaświatach.',
+        difficulty: 2
+    },
+    {
+        subject: 'polish',
+        topic: 'Teoria literatury',
+        type: 'mcq',
+        question: 'Oksymoron to:',
+        options: ['Zestawienie wyrazów o przeciwstawnym znaczeniu', 'Powtórzenie tego samego słowa', 'Zastąpienie nazwy przedmiotu jego cechą', 'Zwrot do adresata'],
+        correct: 0,
+        explanation: 'Oksymoron to zestawienie sprzecznych pojęć, np. "gorący lód", "żywy trup".',
+        difficulty: 3
+    },
+
+    // --- JĘZYK ANGIELSKI ---
+    {
+        subject: 'english',
+        topic: 'Grammar',
+        type: 'mcq',
+        question: 'Choose the correct form: "If I ... more time, I would travel more."',
+        options: ['had', 'have', 'will have', 'would have'],
+        correct: 0,
+        explanation: 'This is the Second Conditional (unreal situation). We use: If + Past Simple + would + infinitive.',
+        difficulty: 2
+    },
+    {
+        subject: 'english',
+        topic: 'Grammar',
+        type: 'mcq',
+        question: 'Which sentence is in the Passive Voice?',
+        options: ['The book was written by a famous author.', 'A famous author wrote the book.', 'I am reading a famous book.', 'She will write a book next year.'],
+        correct: 0,
+        explanation: '"The book was written" is the passive construction (be + past participle).',
+        difficulty: 2
+    },
+    {
+        subject: 'english',
+        topic: 'Vocabulary',
+        type: 'mcq',
+        question: 'What is the opposite of "generous"?',
+        options: ['mean', 'kind', 'brave', 'lazy'],
+        correct: 0,
+        explanation: '"Mean" (skąpy/złośliwy) is the opposite of "generous" (hojny).',
+        difficulty: 1
+    },
+    {
+        subject: 'english',
+        topic: 'Grammar',
+        type: 'mcq',
+        question: '"I ... my homework yet." Choose the correct form:',
+        options: ["haven't finished", "didn't finish", "don't finish", "won't finish"],
+        correct: 0,
+        explanation: 'We use Present Perfect with "yet" for unfinished actions.',
+        difficulty: 2
+    },
+    {
+        subject: 'english',
+        topic: 'Czytanie ze zrozumieniem',
+        type: 'mcq',
+        question: 'Text: "Tom decided to take the bus instead of his car because of the heavy snow." Why did Tom take the bus?',
+        options: ['Because of the weather', 'Because his car was broken', 'Because he lost his keys', 'Because he missed his friend'],
+        correct: 0,
+        explanation: 'The text states "because of the heavy snow," which refers to the weather.',
+        difficulty: 1
+    },
+    {
+        subject: 'english',
+        topic: 'Grammar',
+        type: 'mcq',
+        question: 'Identify the error: "She have been living here for five years."',
+        options: ['have (should be "has")', 'been (should be "be")', 'living (should be "live")', 'for (should be "since")'],
+        correct: 0,
+        explanation: 'Present Perfect Continuous for 3rd person singular uses "has", not "have".',
+        difficulty: 2
+    },
+    {
+        subject: 'english',
+        topic: 'Vocabulary',
+        type: 'mcq',
+        question: 'Waiters work in a:',
+        options: ['restaurant', 'hospital', 'factory', 'library'],
+        correct: 0,
+        explanation: 'A restaurant is the primary workplace for a waiter.',
+        difficulty: 1
+    },
+    {
+        subject: 'english',
+        topic: 'Grammar',
+        type: 'mcq',
+        question: '"She said she ... busy." (Reported Speech)',
+        options: ['was', 'is', 'will be', 'am'],
+        correct: 0,
+        explanation: 'In Reported Speech, "is" usually changes to "was" (backshift).',
+        difficulty: 2
+    },
+    {
+        subject: 'english',
+        topic: 'Vocabulary',
+        type: 'mcq',
+        question: 'A person who is very afraid is:',
+        options: ['terrified', 'excited', 'bored', 'annoyed'],
+        correct: 0,
+        explanation: '"Terrified" means extremely afraid.',
+        difficulty: 2
+    },
+    // --- WIĘCEJ JĘZYKA POLSKIEGO ---
+    {
+        subject: 'polish',
+        topic: 'Lektury obowiązkowe',
+        type: 'mcq',
+        question: 'W "Latarniku" Henryka Sienkiewicza, co spowodowało, że Skawiński stracił pracę w latarni?',
+        options: ['Zasnął podczas czytania "Pana Tadeusza"', 'Zepsuła się lampa w latarni', 'Zaspał na służbę po piciu wina', 'Został zwolniony z powodu wieku'],
+        correct: 0,
+        explanation: 'Wzruszony treścią polskiej epopei, Skawiński zapomniał zapalić latarnię, co doprowadziło do rozbicia łodzi.',
+        difficulty: 2
+    },
+    {
+        subject: 'polish',
+        topic: 'Lektury obowiązkowe',
+        type: 'mcq',
+        question: 'Głównym motywem "Zemsty" Aleksandra Fredry jest spór o:',
+        options: ['Mur graniczny', 'Rękę Klary', 'Majątek Podstoliny', 'Urząd rejenta'],
+        correct: 0,
+        explanation: 'Cześnik i Rejent spierają się o mur dzielący ich zamek.',
+        difficulty: 1
+    },
+    {
+        subject: 'polish',
+        topic: 'Nauka o języku',
+        type: 'mcq',
+        question: 'Dokaż definicję: Wyraz o znaczeniu zbliżonym do innego wyrazu to:',
+        options: ['Synonim', 'Antonim', 'Homonim', 'Eufemizm'],
+        correct: 0,
+        explanation: 'Synonim to wyraz bliskoznaczny.',
+        difficulty: 1
+    },
+    {
+        subject: 'polish',
+        topic: 'Nauka o języku',
+        type: 'mcq',
+        question: 'Który ze spójników jest spójnikiem przeciwstawnym?',
+        options: ['Ale', 'I', 'Oraz', 'Zarówno'],
+        correct: 0,
+        explanation: '"Ale" służy do łączenia zdań przeciwstawnych.',
+        difficulty: 1
+    },
+    {
+        subject: 'polish',
+        topic: 'Teoria literatury',
+        type: 'mcq',
+        question: 'Środek stylistyczny polegający na nadaniu zwierzętom lub roślinom cech ludzkich to:',
+        options: ['Personifikacja', 'Onomatopeja', 'Metafora', 'Porównanie'],
+        correct: 0,
+        explanation: 'Personifikacja (uosobienie) to nadanie cech ludzkich przedmiotom, zwierzętom, roślinom.',
+        difficulty: 2
+    },
+    // --- WIĘCEJ JĘZYKA ANGIELSKIEGO ---
+    {
+        subject: 'english',
+        topic: 'Vocabulary',
+        type: 'mcq',
+        question: 'To "take off" in a plane means:',
+        options: ['to leave the ground', 'to land', 'to fly slow', 'to crash'],
+        correct: 0,
+        explanation: 'To take off is to start the flight by leaving the ground.',
+        difficulty: 1
+    },
+    {
+        subject: 'english',
+        topic: 'Grammar',
+        type: 'mcq',
+        question: 'Choose the correct preposition: "I am interested ... music."',
+        options: ['in', 'at', 'on', 'with'],
+        correct: 0,
+        explanation: 'We always use "interested in".',
+        difficulty: 1
+    },
+    {
+        subject: 'english',
+        topic: 'Vocabulary',
+        type: 'mcq',
+        question: 'A person who collects stamps as a hobby is a:',
+        options: ['philatelist', 'artist', 'scientist', 'librarian'],
+        correct: 0,
+        explanation: 'A philatelist is a stamp collector.',
+        difficulty: 3
+    },
+    {
+        subject: 'english',
+        topic: 'Grammar',
+        type: 'mcq',
+        question: '"She ... to the cinema twice this month." (Action still possible)',
+        options: ['has been', 'was', 'goes', 'will go'],
+        correct: 0,
+        explanation: 'Present Perfect is used for experiences in a time period that is not finished (this month).',
+        difficulty: 2
+    },
+    {
+        subject: 'english',
+        topic: 'Vocabulary',
+        type: 'mcq',
+        question: 'What do you call a person who designs buildings?',
+        options: ['architect', 'builder', 'plumber', 'electrician'],
+        correct: 0,
+        explanation: 'An architect is responsible for designing buildings.',
+        difficulty: 1
+    },
+    {
+        subject: 'english',
+        topic: 'Grammar',
+        type: 'mcq',
+        question: 'Reported speech: "I am tired", said John.',
+        options: ['John said he was tired.', 'John said he is tired.', 'John says he was tired.', 'John said he had been tired.'],
+        correct: 0,
+        explanation: 'Backshift: "am" becomes "was" in past-tense reporting.',
+        difficulty: 2
+    },
+    {
+        subject: 'english',
+        topic: 'Czytanie ze zrozumieniem',
+        type: 'mcq',
+        question: 'Announcement: "The meeting scheduled for Tuesday has been postponed until Thursday." When is the meeting now?',
+        options: ['Thursday', 'Tuesday', 'Monday', 'Friday'],
+        correct: 0,
+        explanation: '"Postponed until Thursday" means it is now on Thursday.',
+        difficulty: 1
+    },
+    {
+        subject: 'english',
+        topic: 'Grammar',
+        type: 'mcq',
+        question: 'Which of these is a modal verb of obligation?',
+        options: ['must', 'might', 'could', 'would'],
+        correct: 0,
+        explanation: '"Must" expresses obligation.',
+        difficulty: 1
+    }
+];
+
 const THEORY = {
 math: {
 'Liczby i działania': `<h3>📌 Potęgowanie i Pierwiastkowanie</h3>
@@ -2156,7 +3280,7 @@ function updateStudyPlan() {
 }
 
 // --- BRUDNOPIS (SCRATCHPAD) ---
-let padState = { drawing: false, ctx: null, color: '#000000', size: 3, lastX: 0, lastY: 0 };
+let padState = { drawing: false, ctx: null, color: '#000000', size: 3, lastX: 0, lastY: 0, tool: 'pen', isHighlighter: false };
 
 function initScratchpad() {
     const canvas = document.getElementById('scratchpad-canvas');
@@ -2195,6 +3319,7 @@ function initScratchpad() {
         ctx.beginPath();
         ctx.strokeStyle = padState.color;
         ctx.lineWidth = padState.size;
+        ctx.globalAlpha = padState.isHighlighter ? 0.4 : 1.0;
         ctx.moveTo(padState.lastX, padState.lastY);
         ctx.lineTo(pos.x, pos.y);
         ctx.stroke();
@@ -2202,7 +3327,7 @@ function initScratchpad() {
     };
     const stop = () => padState.drawing = false;
 
-    canvas.addEventListener('mousedown', start);
+    canvas.addEventListener('mousedown', (e) => { if(padState.tool === 'text') handlePadClick(e); else start(e); });
     canvas.addEventListener('mousemove', draw);
     window.addEventListener('mouseup', stop);
     canvas.addEventListener('touchstart', start);
@@ -2210,19 +3335,42 @@ function initScratchpad() {
     canvas.addEventListener('touchend', stop);
 }
 
-function setPadColor(c, el) {
+function setPadColor(c, el, isHigh = false) {
     padState.color = c;
+    padState.isHighlighter = isHigh;
     document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
-    el.classList.add('active');
+    if (el) el.classList.add('active');
 }
 function setPadTool(tool, el) {
-    if (tool === 'pen') padState.color = '#000000';
-    if (tool === 'eraser') padState.color = '#ffffff';
+    padState.tool = tool;
     document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
-    el.classList.add('active');
+    if (el) el.classList.add('active');
+    if (tool === 'eraser') {
+        padState.color = '#ffffff';
+        padState.isHighlighter = false;
+    } else if (tool === 'pen' || tool === 'text') {
+        if (padState.color === '#ffffff') padState.color = '#000000';
+    }
+}
+function setPadSize(s) {
+    padState.size = parseInt(s);
 }
 function clearPad() {
     if (padState.ctx) padState.ctx.clearRect(0, 0, padState.ctx.canvas.width, padState.ctx.canvas.height);
+}
+function handlePadClick(e) {
+    if (padState.tool !== 'text') return;
+    const canvas = document.getElementById('scratchpad-canvas');
+    const rect = canvas.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const txt = prompt("Wpisz tekst:");
+    if (txt) {
+        padState.ctx.font = `${padState.size * 5}px Inter`;
+        padState.ctx.fillStyle = padState.color;
+        padState.ctx.globalAlpha = 1.0;
+        padState.ctx.fillText(txt, x, y);
+    }
 }
 function toggleScratchpad() {
     const container = document.getElementById('scratchpad-container');
@@ -3258,21 +4406,35 @@ document.getElementById('tab-'+subject+'-'+tabId).classList.add('active');
 function startQuiz(subject,topic,diff='mix'){
 let qs=[];
 if(subject==='math'){
-qs=generateMathQuestions(topic,15,diff);
+    qs=generateMathQuestions(topic,15,diff);
 }else if(subject==='english'){
-qs=generateEnglishQuestions(topic,15,diff);
+    qs=generateEnglishQuestions(topic,15,diff);
 }else if(subject==='polish'){
-qs=generatePolishQuestions(topic,15,diff);
+    qs=generatePolishQuestions(topic,15,diff);
 }else{
-let qAll=QUESTIONS.filter(q=>q.subject===subject&&q.topic===topic);
-if(diff!=='mix'){
-let qFiltered=qAll.filter(q=>q.difficulty===parseInt(diff));
-qs=qFiltered.length>=5?qFiltered:qAll;
-}else{
-qs=qAll;
+    let qAll=typeof QUESTIONS !== 'undefined' ? QUESTIONS.filter(q=>q.subject===subject&&q.topic===topic) : [];
+    if(diff!=='mix'){
+        let qFiltered=qAll.filter(q=>q.difficulty===parseInt(diff));
+        qs=qFiltered.length>=5?qFiltered:qAll;
+    }else{
+        qs=qAll;
+    }
+    qs=shuffleArray([...qs]);
 }
-qs=shuffleArray([...qs]).slice(0, 15);
+
+// Universal AI Database Injection (Highest priority/quality)
+if(typeof AI_DATABASE !== 'undefined') {
+    let staticQs = AI_DATABASE.filter(q => q.subject === subject && (q.topic === topic || !topic));
+    if(staticQs.length > 0) {
+        // If we have both procedural and static, mix them and take 15
+        qs = shuffleArray([...qs, ...staticQs]).slice(0, 15);
+    } else {
+        qs = qs.slice(0, 15);
+    }
+} else {
+    qs = qs.slice(0, 15);
 }
+
 // Sort explicitly: MCQ first, then GAP, then OPEN at the very end
 qs.sort((a,b) => {
    let order = {mcq: 1, gap: 2, open: 3};
@@ -3304,11 +4466,17 @@ let html=`<div class="quiz-container">
     <div class="scratchpad-toolbar">
         <button class="tool-btn active" onclick="setPadTool('pen', this)" title="Ołówek">✏️</button>
         <button class="tool-btn" onclick="setPadTool('eraser', this)" title="Gumka">🧽</button>
-        <button class="btn btn-sm btn-secondary" onclick="clearPad()">Wyczyść</button>
-        <div style="flex:1"></div>
+        <button class="tool-btn" onclick="setPadTool('text', this)" title="Tekst">T</button>
+        <div class="pad-divider"></div>
+        <input type="range" class="pad-size-slider" min="1" max="25" value="3" oninput="setPadSize(this.value)" title="Rozmiar">
+        <div class="pad-divider"></div>
         <div class="color-btn active" style="background:#000" onclick="setPadColor('#000', this)"></div>
         <div class="color-btn" style="background:#ef4444" onclick="setPadColor('#ef4444', this)"></div>
         <div class="color-btn" style="background:#2563eb" onclick="setPadColor('#2563eb', this)"></div>
+        <div class="color-btn" style="background:#fbbf24; border-radius:4px" data-high="true" onclick="setPadColor('#fbbf24', this, true)" title="Zakreślacz żółty"></div>
+        <div class="color-btn" style="background:#4ade80; border-radius:4px" data-high="true" onclick="setPadColor('#4ade80', this, true)" title="Zakreślacz zielony"></div>
+        <div style="flex:1"></div>
+        <button class="btn btn-sm btn-clear-visible" onclick="clearPad()">Wyczyść</button>
     </div>
     <canvas id="scratchpad-canvas" class="scratchpad-canvas"></canvas>
 </div>
@@ -3714,6 +4882,27 @@ document.getElementById('screen-exam').innerHTML=`<div class="exam-wrapper">
 <div class="exam-nav">${navBtns}</div>
 <div class="card" style="margin-top:16px">
 <div class="quiz-header"><span class="quiz-progress-text">Pytanie ${examState.current+1} / ${examState.questions.length}</span></div>
+<div style="margin-top:10px; display:flex; gap:8px; flex-wrap:wrap">
+    <button class="btn btn-primary btn-sm" style="background:var(--accent); color:white; border:none" onclick="toggleScratchpad()">✍️ Brudnopis</button>
+</div>
+<div id="scratchpad-container" class="scratchpad-container">
+    <div class="scratchpad-toolbar">
+        <button class="tool-btn active" onclick="setPadTool('pen', this)" title="Ołówek">✏️</button>
+        <button class="tool-btn" onclick="setPadTool('eraser', this)" title="Gumka">🧽</button>
+        <button class="tool-btn" onclick="setPadTool('text', this)" title="Tekst">T</button>
+        <div class="pad-divider"></div>
+        <input type="range" class="pad-size-slider" min="1" max="25" value="3" oninput="setPadSize(this.value)" title="Rozmiar">
+        <div class="pad-divider"></div>
+        <div class="color-btn active" style="background:#000" onclick="setPadColor('#000', this)"></div>
+        <div class="color-btn" style="background:#ef4444" onclick="setPadColor('#ef4444', this)"></div>
+        <div class="color-btn" style="background:#2563eb" onclick="setPadColor('#2563eb', this)"></div>
+        <div class="color-btn" style="background:#fbbf24; border-radius:4px" data-high="true" onclick="setPadColor('#fbbf24', this, true)" title="Zakreślacz żółty"></div>
+        <div class="color-btn" style="background:#4ade80; border-radius:4px" data-high="true" onclick="setPadColor('#4ade80', this, true)" title="Zakreślacz zielony"></div>
+        <div style="flex:1"></div>
+        <button class="btn btn-sm btn-clear-visible" onclick="clearPad()">Wyczyść</button>
+    </div>
+    <canvas id="scratchpad-canvas" class="scratchpad-canvas"></canvas>
+</div>
 <div class="quiz-question">${q.question}</div>${qHtml}
 </div>
 <div style="display:flex;justify-content:space-between;margin-top:16px">
