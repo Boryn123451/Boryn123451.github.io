@@ -26,6 +26,20 @@ button{font-family:'Inter',sans-serif;cursor:pointer;border:none;outline:none;fo
 input,textarea{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);border:1px solid #333;border-radius:8px;padding:10px 14px;font-size:1rem;width:100%}
 input:focus,textarea:focus{border-color:var(--accent);outline:none;box-shadow:0 0 0 2px rgba(74,222,128,0.2)}
 .sidebar{position:fixed;left:0;top:0;width:var(--sidebar);height:100vh;background:var(--card);border-right:1px solid #2a2a4a;display:flex;flex-direction:column;padding:24px 0;z-index:100;transition:transform var(--transition)}
+
+@media print {
+    body { background: white !important; color: black !important; }
+    .sidebar-nav, .bottom-nav, .top-header, .btn, .speak-btn, .scratchpad-toolbar, .three-d-hint, .name-edit, .streak-display, .exam-date-info { display: none !important; }
+    #quiz-overlay { position: static !important; display: block !important; padding: 0 !important; background: white !important; }
+    .quiz-overlay-content { box-shadow: none !important; margin: 0 !important; width: 100% !important; max-width: 100% !important; border: none !important; padding: 20px !important; }
+    .quiz-question { color: black !important; font-size: 1.2rem !important; }
+    .quiz-explanation { border: 1px solid #ccc !important; padding: 15px !important; margin-top: 20px !important; background: #fff !important; color: black !important; }
+    .quiz-header, #quiz-next, #quiz-body button, #quiz-feedback .self-assess { display: none !important; }
+    #quiz-feedback { display: block !important; }
+    #open-input { border: 1px solid #000 !important; color: black !important; }
+    h2, h3 { color: black !important; }
+    .math { color: black !important; }
+}
 .sidebar .logo{font-family:'Space Grotesk',sans-serif;font-size:1.5rem;font-weight:700;padding:0 24px 20px;display:block;background:linear-gradient(135deg,var(--accent),var(--accent-blue));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent}
 .coin-container{padding:0 24px 32px;display:block}
 #coin-balance{background:rgba(255,193,7,0.2); color:#fbbf24; padding:6px 12px; border-radius:20px; font-size:0.95rem; font-weight:bold; cursor:pointer; display:inline-flex; align-items:center; gap:6px; transition:transform 0.3s ease}
@@ -711,7 +725,7 @@ function generateMathQuestions(topic, count = 15, selectedDiff = 'mix') {
                 let ans = -c;
                 // e.g. -c = -x / 0.5 + 2
                 // We format -x/0.25
-                q.question = `Oblicz wartość wyrażenia: \\( -${c/2} : 0,5 + 2 \\cdot (-1) \\)`;
+                q.question = `Oblicz wartość wyrażenia: \\( -${c/2} : 0{,}5 + 2 \\cdot (-1) \\)`;
                 q.options = shuffleArray(makeUniqueOptions(-c - 2, [-c + 2, c - 2, c + 2]));
                 q.correct = q.options.indexOf(String(-c-2));
                 q.explanation = `-${c/2} : 1/2 = -${c}. Dalej -${c} + (-2) = ${-c-2}.`;
@@ -728,13 +742,13 @@ function generateMathQuestions(topic, count = 15, selectedDiff = 'mix') {
             let baseType = getRand(1, 4);
             if (baseType === 1) {
                 // Podwójna obniżka
-                let p = getRand(20, 50) * 10;
-                let per1 = 20; let per2 = 10;
-                let ans = p * 0.8 * 0.9;
-                q.question = `Rower kosztował ${p} zł. Najpierw obniżono jego cenę o 20%, a po miesiącu nową cenę obniżono o kolejne 10%. Ile wynosi ostateczna cena roweru?`;
-                let wrongAdd = p * 0.7; // Błąd studenta (dodanie proc)
-                let wrong2 = p * 0.8 * 0.8;
-                let wrong3 = p * 0.9 * 0.9;
+                let p = getRand(35, 85) * 10;
+                let per1 = getRand(15, 25); let per2 = getRand(5, 15);
+                let ans = Math.round(p * (1 - per1/100) * (1 - per2/100));
+                q.question = `Rower kosztował ${p} zł. Najpierw obniżono jego cenę o ${per1}%, a po miesiącu nową cenę obniżono o kolejne ${per2}%. Ile wynosi ostateczna cena roweru (zaokrąglona do pełnych złotych)?`;
+                let wrongAdd = Math.round(p * (1 - (per1 + per2) / 100));
+                let wrong2 = Math.round(p * (1 - per1/100));
+                let wrong3 = Math.round(p * 0.75);
                 q.options = shuffleArray(makeUniqueOptions(ans, [wrongAdd, wrong2, wrong3]));
                 q.correct = q.options.indexOf(String(ans));
                 q.explanation = `Obniżka 20% to cena 80% (${p*0.8} zł). Druga obniżka 10% jest liczona od NOWEJ kwoty, czyli 90% z ${p*0.8} = ${ans} zł.`;
@@ -743,8 +757,8 @@ function generateMathQuestions(topic, count = 15, selectedDiff = 'mix') {
                 let v_s = getRand(10, 30); // m/s
                 let t = getRand(2, 5); // sekundy
                 let ans = v_s * t;
-                q.question = `W gepard porusza się ze średnią prędkością ${v_s} m/s. Jaką drogę pokona w czasie ${t} sekund? (Zakładając ruch jednostajny).`;
-                q.options = shuffleArray(makeUniqueOptions(ans, [Math.round(v_s/t), v_s*t*60, v_s*t/60]));
+                q.question = `Gepard porusza się ze średnią prędkością ${v_s} m/s. Jaką drogę pokona w czasie ${t} sekund?`;
+                q.options = shuffleArray(makeUniqueOptions(ans, [Math.round(v_s/t), Math.round(v_s*t*0.5), Math.round(v_s*t*1.5)]));
                 q.correct = q.options.indexOf(String(ans));
                 q.explanation = `Droga to prędkość razy czas: ${v_s} m/s · ${t} s = ${ans} metrów.`;
             } else if (baseType === 3) {
@@ -752,8 +766,11 @@ function generateMathQuestions(topic, count = 15, selectedDiff = 'mix') {
                 let k = getRand(2, 5) * 1000;
                 let pct = getRand(1, 2) * 10; 
                 let ans = k * (1 + pct/100);
-                q.question = `Klient wpłacił do banku na roczną lokatę ${k} zł oprocentowaną na ${pct}% w skali roku. Jaki będzie stan konta klienta po upływie tego roku (podatki pomijamy)?`;
-                q.options = shuffleArray(makeUniqueOptions(ans, [k*(pct/100), k + pct, k - k*(pct/100)]));
+                q.question = `Klient wpłacił na roczną lokatę ${k} zł oprocentowaną na ${pct}% w skali roku. Jaki będzie stan konta po upływie roku (podatki pomijamy)?`;
+                let w1 = Math.round(k * (pct/100));
+                let w2 = k + pct;
+                let w3 = Math.round(k * (1 - pct/100));
+                q.options = shuffleArray(makeUniqueOptions(ans, [w1, w2, w3]));
                 q.correct = q.options.indexOf(String(ans));
                 q.explanation = `Stan to 100% kapitału + ${pct}% odsetek = ${100+pct}%. ${k} · ${(100+pct)/100} = ${ans} zł.`;
             } else {
@@ -764,7 +781,10 @@ function generateMathQuestions(topic, count = 15, selectedDiff = 'mix') {
                 let mleko = getRand(1, 3);
                 let mlekoAns = mleko * multi;
                 q.question = `Przepis domowy na 4 małe pizzertki wymaga użycia ${mleko} szklanek mąki. Kasia organizuje imprezę dla klasy i chce upiec ${porcjeT} pizzerek. Ile szklanek mąki musi użyć?`;
-                q.options = shuffleArray(makeUniqueOptions(mlekoAns, [mlekoAns - 1, mlekoAns + mleko, mlekoAns * 2]));
+                let w1 = Math.round(mlekoAns - 1);
+                let w2 = Math.round(mlekoAns + mleko);
+                let w3 = Math.round(mlekoAns * 0.5);
+                q.options = shuffleArray(makeUniqueOptions(mlekoAns, [w1, w2, w3]));
                 q.correct = q.options.indexOf(String(mlekoAns));
                 q.explanation = `Stosunek to ${porcjeT}/4 = ${multi}. Potrzebujemy ${multi} razy więcej składników. ${multi} · ${mleko} = ${mlekoAns}.`;
             }
@@ -852,9 +872,9 @@ function generateMathQuestions(topic, count = 15, selectedDiff = 'mix') {
                 q.explanation = `Połowy przekątnych to przyprostokątne. a² = (${d1/2})² + (${d2/2})². Z tego bok to ${a}. Obwód to 4·${a} = ${4*a} cm.`;
             } else if (baseType === 3) {
                 // Różne jednostki wymuszające konwersję PRZED liczeniem
-                let a_dm = getRand(2, 5); let b_cm = getRand(1, 4) * 10;
+                let a_dm = getRand(8, 22); let b_cm = getRand(3, 15) * 10;
                 let ans = a_dm * (b_cm/10); // dm^2
-                q.question = `[Uwaga na konwersję przed liczeniem] Boki prostokąta mają długości ${a_dm} dm i ${b_cm} cm. Oblicz pole powierzchni tego prostokąta WYRAŻONE W DECYMETRACH KWADRATOWYCH ($dm^2$).`;
+                q.question = `Boki prostokąta mają długości ${a_dm} dm i ${b_cm} cm. Oblicz pole powierzchni tego prostokąta wyrażone w decymetrach kwadratowych \\( \\text{dm}^2 \\).`;
                 q.options = shuffleArray(makeUniqueOptions(ans, [a_dm * b_cm, ans * 10, ans / 10]));
                 q.correct = q.options.indexOf(String(ans));
                 q.explanation = `Najpierw zamiana na jednakowe z poleceniem: ${b_cm} cm = ${b_cm/10} dm. Następnie Pole = ${a_dm} dm · ${b_cm/10} dm = ${ans} dm². Zmiana po liczeniu z cm² wymaga dzielenia przez 100, a nie 10, stąd zasada w programie CKE.`;
@@ -872,9 +892,9 @@ function generateMathQuestions(topic, count = 15, selectedDiff = 'mix') {
             let baseType = getRand(1, 3);
             if (baseType === 1) {
                 // Objętość Akwarium / 1 L = 1 dm3 - bardzo popularne
-                let a = getRand(3, 5); let b = getRand(2, 4); let h = getRand(3, 6);
+                let a = getRand(7, 15); let b = getRand(5, 12); let h = getRand(8, 20);
                 let V_dm3 = a * b * h;
-                q.question = `Dno szklanego akwarium (prostopadłościanu) ma wymiary ${a} dm na ${b} dm. Woda sięga obecnie na wysokość ${h} dm. Pamiętając kluczową zależność (1 litr = 1 dm³), podaj, ile ZNAJDUJE SIĘ TERAZ litrów wody w pojemniku.`;
+                q.question = `Dno akwarium w kształcie prostopadłościanu ma wymiary ${a} dm na ${b} dm. Woda sięga na wysokość ${h} dm. Ile litrów wody znajduje się w tym pojemniku?`;
                 q.options = shuffleArray(makeUniqueOptions(V_dm3, [V_dm3/10, V_dm3*10, V_dm3*1000]));
                 q.correct = q.options.indexOf(String(V_dm3));
                 q.explanation = `1 litr to dokładnie jedna decymetryczna kostka sześcienna. V = P_p · h = ${a} · ${b} · ${h} = ${V_dm3} dm³ = ${V_dm3} litrów.`;
@@ -887,9 +907,9 @@ function generateMathQuestions(topic, count = 15, selectedDiff = 'mix') {
                 q.explanation = `Jedna główna podstawa i szpiczaste boki zbiegające się w górnych wierzchołkach to cecha jednoznacznego ostrosłupa. Ma 4 trójkąty, bo w podstawie leży kwadrat z 4 bokami (prawidłowy czworokątny).`;
             } else {
                 // Pole powierzchni sześcianu (łatwe)
-                let a = getRand(2, 5);
+                let a = getRand(11, 25);
                 q.model3d = 'cube';
-                q.question = `Mamy bryłę: sześcian, której każda krawędź ma długość ${a} cm. Oblicz całkowite pole powierzchni zewnętrznej siatki, na które będziemy musieli użyć kartonu.`;
+                q.question = `Mamy bryłę: sześcian, której każda krawędź ma długość ${a} cm. Oblicz całkowite pole powierzchni zewnętrznej siatki, na które będziemy musieli użyć kartonu (wynik podaj w \\( \\text{cm}^2 \\)).`;
                 let ans = 6 * a * a;
                 q.options = shuffleArray(makeUniqueOptions(ans, [8 * a * a, a * a * a, 4 * a * a]));
                 q.correct = q.options.indexOf(String(ans));
@@ -903,7 +923,7 @@ function generateMathQuestions(topic, count = 15, selectedDiff = 'mix') {
                 let pick = getRand(1, 3);
                 let text = pick===1 ? "liczby parzystej" : pick===2 ? "liczby większej od 4" : "liczby pierwszej (2,3,5)";
                 let ways = pick===1 ? 3 : pick===2 ? 2 : 3;
-                q.question = `Podczas rzutu standardową sześcienną kostką do gry sprawdzono prawdopodobieństwo wypadnięcia ${text}. P(A) równe jest ułamkowi nieskracalnemu, którego wartość to:`;
+                q.question = `Podczas rzutu sześcienną kostką do gry oblicz prawdopodobieństwo wypadnięcia ${text}. Podaj wynik w postaci ułamka nieskracalnego.`;
                 let ans = ways === 2 ? '1/3' : '1/2';
                 q.options = shuffleArray([ans, '1/6', '2/3', '5/6']);
                 q.correct = q.options.indexOf(ans);
@@ -933,24 +953,23 @@ function generateMathQuestions(topic, count = 15, selectedDiff = 'mix') {
             q.type = 'open';
             if (baseType === 1) {
                 // Kalendarz - wybitny typowy dowód logiczny (miesiące na tej samej dacie tygodnia)
-                q.question = `[DOWODZENIE] Uzasadnij dedukcyjnie, zliczając poprawnie dni i dzieląc tygodnie bez reszty, że pierwszy dzień września oraz pierwszy dzień grudnia tego samego roku bardzo często wypadają zawsze w dokładnie ten sam dzień tygodnia. Zaprezentuj model logicznoarytmetyczny upływającego czasu.`;
-                q.correct = "Dowód: 30(wrz) + 31(paź) + 30(lis) = 91 dni. 91 / 7 tygodni = równiutkie 13. Brak reszty wyjawia ten sam dzień tygodnia.";
-                q.explanation = `Rozwiązanie musi zliczyć miesiące od września do listopada włącznie (do pierwszego grudnia ubywa 30+31+30 = 91 dni rozłąki). Z uwagi ze tydzien to 7, a 91:7 = 13 (reszty nic), cykl kołowy nakłada je w jedno gniazdo.`;
+                q.question = `[DOWODZENIE] Uzasadnij, że pierwszy dzień września oraz pierwszy dzień grudnia tego samego roku wypadają w ten sam dzień tygodnia. Zapisz obliczenia.`;
+                q.correct = "30 (wrz) + 31 (paź) + 30 (lis) = 91 dni. Ponieważ 91 jest podzielne przez 7 (91 : 7 = 13), dni te wypadają w ten sam dzień tygodnia.";
+                q.explanation = `Należy policzyć dni między 1 września a 1 grudnia: wrzesień (30), październik (31), listopad (30). Suma to 91 dni. Ponieważ 91/7 = 13 bez reszty, po pełnych 13 tygodniach układ dni tygodnia będzie identyczny.`;
             } else if (baseType === 2) {
-                // Dowód geometryczny Pitagorejski CKE
                 let k = getRand(2, 4);
                 let p1 = 3*k, p2 = 4*k, p3 = 5*k;
-                q.question = `[DOWODZENIE Geometria] Jasiu twierdzi, że używając patyczków o rygorystycznych długościach: ${p1} cm, ${p2} cm oraz ${p3} cm, uda mu się zawrzeć na stole klasyczny i perfekcyjny trójkąt, który posiada co najmniej jeden kąt prosty (90 stopni). Oprzyj się na odpowiednim twierdzeniu (lub twierdzeniu odwrotnym) i uargumentuj numeryczną zasadność przypuszczeń Jasia z wymaganą ścisłością matematyczną.`;
-                q.correct = "Tak, ponieważ w twierdzeniu odwrotnym Pitagorasa przyprostokątne w kwadracie dają c². " + p1 +"² + "+ p2 +"² = " + p3 +"².";
-                q.explanation = `(${p1})^2 + (${p2})^2 = ${p1*p1} + ${p2*p2} = ${p1*p1+p2*p2}. Trzeci najdłuższy patyk podniesiony kwadratowo wyjawia ukryte ${p3*p3}. Czyste zrównanie się gwarantuje poprawność odwrotnych założeń Pitagorejskich.`;
+                q.question = `[DOWODZENIE] Sprawdź, czy z trzech odcinków o długościach ${p1} cm, ${p2} cm oraz ${p3} cm można zbudować trójkąt prostokątny. Uzasadnij odpowiedź.`;
+                q.correct = `Tak, ponieważ spełnione jest twierdzenie odwrotne do twierdzenia Pitagorasa: ${p1}² + ${p2}² = ${p3}².`;
+                q.explanation = `Stosujemy wzór a² + b² = c². Mamy ${p1}² + ${p2}² = ${p1*p1} + ${p2*p2} = ${p1*p1+p2*p2}. Kwadrat najdłuższego boku to ${p3}² = ${p3*p3}. Ponieważ ${p1*p1+p2*p2} = ${p3*p3}, trójkąt jest prostokątny.`;
             } else {
                 // Rozszerzone logiczne otwarte
                 let books = getRand(5, 10);
                 let costBook = getRand(10, 20);
                 let totalCost = books * costBook;
-                q.question = `[ZADANIE ROZBUDOWANE CKE] Uczeń pożyczył od rodziców gotówkę, by zakupić w detalu za swoje własne wyznaczniki paczkę materiałów - konkretnie ${books} arkuszy testowych i zapłacił łącznie sumę ${totalCost} zł (darmowa dostawa). Potem dany zestaw odegrał dla połowy rocznika, i jeden pożyczał obcej klasie za wirtualną monetę 5 zł zarobku od osoby. Czy matematyka CKE dopuszcza zwrot inwestycji dla ucznia bez liczenia w słupki, czy tylko logicznie? Wskaż ostateczny deficyt lub nadwyżkę kapitałową zakładając opchnięcie ${books*3} osobom całego biznesu! Należy zapisać model rozwiązań.`;
-                q.correct = (books * 3 * 5 - totalCost) + " zł";
-                q.explanation = `Zapłacił ${totalCost} zł. Wynajmy odbyły się na skale ${books * 3} po dychu za frajes. Dochód: ${books*3} * 5 = ${books*3*5}. Nadwyżka/Brak = ${books*3*5} - ${totalCost} = ${(books*3*5)-totalCost} zł gotówki końcowej.`;
+                q.question = `[ZADANIE OTWARTE] Uczeń zakupił ${books} zestawów testowych w cenie ${costBook} zł za zestaw. Następnie odsprzedał te zestawy łącznie ${books*3} osobom w cenie 5 zł za każde udostępnienie materiałów. Oblicz końcowy wynik finansowy (zysk lub stratę) tej operacji. Zapisz model rozwiązania.`;
+                q.correct = (books * 3 * 5 - totalCost) + " zł zysku";
+                q.explanation = `Koszt zakupu: ${books} · ${costBook} = ${totalCost} zł. Przychód z odsprzedaży: ${books*3} · 5 = ${books*3*5} zł. Wynik finansowy: ${books*3*5} - ${totalCost} = ${(books*3*5)-totalCost} zł.`;
             }
         }
         else {
@@ -1112,13 +1131,13 @@ function generateEnglishQuestions(topic, count = 15, selectedDiff = 'mix') {
                 let w3 = catWords[idxs[3]];
                 
                 if (vT === 1) {
-                    q.question = `Jak przetłumaczysz słowo: <strong>${target.en}</strong>?`;
+                    q.question = `Przetłumacz na język polski: <strong>${target.en}</strong>`;
                     let opts = [target.pl, w1.pl, w2.pl, w3.pl];
                     q.options = shuffleArray(opts);
                     q.correct = q.options.indexOf(target.pl);
                     q.explanation = `Słowo '${target.en}' oznacza '${target.pl}'. Inne podane opcje to również pojęcia z tego samego działu (np. ${w1.en} to ${w1.pl}).`;
                 } else {
-                    q.question = `Jak przetłumaczysz słowo: <strong>${target.pl}</strong>?`;
+                    q.question = `Przetłumacz na język angielski: <strong>${target.pl}</strong>`;
                     let opts = [target.en, w1.en, w2.en, w3.en];
                     q.options = shuffleArray(opts);
                     q.correct = q.options.indexOf(target.en);
@@ -1135,14 +1154,14 @@ function generateEnglishQuestions(topic, count = 15, selectedDiff = 'mix') {
                 ];
                 let f = formations[getRand(0, formations.length - 1)];
                 q.type = 'open';
-                q.question = `CKE: Słowotwórstwo i luki. Przekształć wyraz w nawiasie tak, aby gramatycznie i logicznie pasował do zdania: <br><i>${f.s}</i>`;
+                q.question = `Uzupełnij lukę w poniższym zdaniu, przekształcając wyraz w nawiasie: <br><i>${f.s}</i>`;
                 q.correct = f.ans;
                 q.explanation = `Utworzenie poprawnej części mowy lub wariantu to '${f.ans}'.`;
             } else {
                 // Reagowanie
                 let r = REACTION_PHRASES[getRand(0, REACTION_PHRASES.length - 1)];
                 q.type = 'mcq';
-                q.question = `CKE: Wybierz właściwą reakcję lub uzupełnij dialog. Część sprawdzająca tzw. 'chunks' i potoczny język.<br>Osoba A: <strong>"${r.q}"</strong><br>Osoba B: ?`;
+                q.question = `Wybierz właściwą reakcję lub uzupełnij dialog:<br>Osoba A: <strong>"${r.q}"</strong><br>Osoba B: ?`;
                 let opts = [...r.opts];
                 while(opts.length < 4) {
                     opts.push(["Yes, I am.", "No, thank you.", "See you tomorrow!"][getRand(0,2)]);
@@ -1158,13 +1177,13 @@ function generateEnglishQuestions(topic, count = 15, selectedDiff = 'mix') {
             if (gT <= 2) {
                 q.type = 'open';
                 let t = GRAMMAR_PARAPHRASES[getRand(0, GRAMMAR_PARAPHRASES.length - 1)];
-                q.question = `CKE (Parafrazy, Use of English). Wstaw <strong>maksymalnie 3 wyrazy</strong>, zachowując znaczenie zdania wyjściowego.<br>Zdanie: <i>${t.start}</i><br>Parafraza: <i>${t.p}</i> (Wpisz do luki poniżej).`;
+                q.question = `Uzupełnij poniższą parafrazę (maksymalnie 3 wyrazy), zachowując znaczenie zdania wyjściowego:<br>Zdanie: <i>${t.start}</i><br>Parafraza: <i>${t.p}</i>`;
                 q.correct = t.ans;
                 q.explanation = `Struktura wymuszona: "${t.ans}". Przekroczenie limitu 3 słów grozi zerem punktów za tego typu zadanie!`;
             } else if (gT <= 4) {
                 q.type = 'open';
                 let t = GRAMMAR_TRANSLATIONS[getRand(0, GRAMMAR_TRANSLATIONS.length - 1)];
-                q.question = `CKE (Tłumaczenia fragmentów zdań). Przetłumacz na j. angielski fragment w nawiasie. (Maksymalnie 3 słowa).<br><i>${t.p}</i>`;
+                q.question = `Przetłumacz na język angielski fragment w nawiasie (maksymalnie 3 wyrazy):<br><i>${t.p}</i>`;
                 q.correct = t.ans[0];
                 q.explanation = `Konstrukcja angielska to "${t.ans[0]}".`;
             } else {
@@ -1379,7 +1398,7 @@ function generatePolishQuestions(topic, count = 15, selectedDiff = 'mix') {
                     q.explanation = `Gatunek tego dzieła to: ${pick.answer}.`;
                 } else {
                     q.type = 'open';
-                    q.question = `Odpowiedz w 1-2 zdaniach upewniając się z wiedzy z lektury: <i>${pick.book}</i>.<br>${pick.q}`;
+                    q.question = `Odpowiedz na pytanie dotyczące lektury <i>${pick.book}</i>:<br>${pick.q}`;
                     q.correct = pick.answer;
                     q.explanation = `Uznaje się odpowiedzi oddające sens: ${pick.answer}.`;
                 }
@@ -1405,7 +1424,7 @@ function generatePolishQuestions(topic, count = 15, selectedDiff = 'mix') {
                 q.explanation = `Podana definicja najlepiej pasuje do hasła: ${item.word}.`;
             } else {
                 q.type = 'open';
-                q.question = `[CKE] Zadanie otwarte. Wyjaśnij własnymi słowami, wprost, środek stylistyczny lub pojęcie: <strong>${item.word}</strong>.`;
+                q.question = `Wyjaśnij własnymi słowami znaczenie podanego środka stylistycznego lub pojęcia: <strong>${item.word}</strong>.`;
                 q.correct = item.def;
                 q.explanation = `Klucz CKE oczekuje pojęć bliskoznacznych do: ${item.def}.`;
             }
@@ -1433,7 +1452,7 @@ function generatePolishQuestions(topic, count = 15, selectedDiff = 'mix') {
                     {q: "Rozstrzygnij poprawność pisowni dużą literą: 'Mieszkańcy Warszawy to potocznie WARSZAWIANIE.' T/N?", a: "warszawianie (małą, nazwy mieszkańców miast piszemy od małej litery)."}
                 ];
                 let item = rules[getRand(0, rules.length - 1)];
-                q.question = `[CKE Nauka o Języku - interpunkcja i błędy]. ${item.q}`;
+                q.question = `${item.q}`;
                 q.correct = item.a;
                 q.explanation = item.a;
             } else {
@@ -1454,7 +1473,7 @@ function generatePolishQuestions(topic, count = 15, selectedDiff = 'mix') {
                     }
                 ];
                 let item = writingAssignments[getRand(0, writingAssignments.length - 1)];
-                q.question = `[Wypowiedź Pisemna CKE]<br><b>${item.task}</b><br><br><i>Kryteria CKE: ${item.reqs}</i>`;
+                q.question = `<b>${item.task}</b><br><br><i>Kryteria oceny: ${item.reqs}</i>`;
                 q.correct = 'Zadanie rozbudowane podlegające ocenie indywidualnej Nauczyciela (Treść, Styl, Język).';
                 q.explanation = `Wypracowane powinno ściśle nawiązywać do listy 14 lektur CKE. Unikaj tzw. błędu rzeczowego.`;
             }
@@ -2315,6 +2334,10 @@ function getSmartHint(q, picks) {
         hint = "Wskazówka: Pierwiastek kwadratowy to liczba, która pomnożona przez samą siebie daje liczbę pod znakiem pierwiastka.";
     }
     return hint;
+}
+
+function exportToPDF() {
+    window.print();
 }
 
 let appLogoClicks = 0;
@@ -3274,6 +3297,7 @@ let html=`<div class="quiz-container">
         <button class="btn btn-secondary btn-sm" title="Czytaj pytanie" onclick="speakText('${q.question.replace(/'/g, "\\'")}')">🔊 Czytaj</button>
         <button class="btn btn-primary btn-sm" style="background:var(--accent); color:white; border:none" onclick="toggleScratchpad()">✍️ Brudnopis</button>
         ${q.model3d ? `<button class="btn btn-primary btn-sm" style="background:#8b5cf6; color:white; border:none" onclick="toggle3D('${q.model3d}')">🧊 Widok 3D</button>` : ''}
+        ${q.type === 'open' ? `<button class="btn btn-secondary btn-sm" onclick="exportToPDF()">🖨️ PDF / Drukuj</button>` : ''}
     </div>
 </div>
 <div id="scratchpad-container" class="scratchpad-container">
@@ -3340,8 +3364,10 @@ let fb = document.getElementById('quiz-feedback');
 fb.innerHTML=`
 <div class="quiz-explanation"><strong>Wzorcowa odpowiedź:</strong> ${q.correct}<br><br>${q.explanation||''}<br><br>
 <strong>Czy odpowiedziałeś poprawnie?</strong>
-<div class="self-assess"><button class="btn btn-sm btn-primary" onclick="finishQuestion(true,quizState.questions[quizState.current])">✅ Tak</button>
-<button class="btn btn-sm btn-danger" onclick="finishQuestion(false,quizState.questions[quizState.current])">❌ Nie</button></div></div>`;
+<div class="self-assess">
+    <button class="btn btn-sm btn-secondary" style="border:1px solid var(--success); color:var(--success)" onclick="finishQuestion(true,quizState.questions[quizState.current])">Tak</button>
+    <button class="btn btn-sm btn-secondary" style="border:1px solid var(--error); color:var(--error)" onclick="finishQuestion(false,quizState.questions[quizState.current])">Nie</button>
+</div></div>`;
 renderMath(fb);
 document.getElementById('open-input').disabled=true;
 }
