@@ -194,6 +194,27 @@ input:focus,textarea:focus{border-color:var(--accent);outline:none;box-shadow:0 
 .self-assess{display:flex;gap:10px;margin-top:12px}
 .name-edit{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 .name-edit input{max-width:200px;padding:6px 10px}
+
+/* --- NOWE FUNKCJE --- */
+.scratchpad-container { position: relative; width: 100%; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; background: #fff; display: none; margin-top: 15px; }
+.scratchpad-canvas { cursor: crosshair; display: block; touch-action: none; }
+.scratchpad-toolbar { background: #f1f5f9; padding: 10px; border-bottom: 1px solid #e2e8f0; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.tool-btn { width: 32px; height: 32px; border-radius: 6px; border: 1px solid #cbd5e1; display: flex; align-items: center; justify-content: center; cursor: pointer; background: #fff; color: #475569; transition: all 0.2s; }
+.tool-btn.active { background: var(--accent-blue); color: #fff; border-color: var(--accent-blue); }
+.color-btn { width: 24px; height: 24px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; }
+.color-btn.active { border-color: #000; }
+
+.three-d-panel { width: 100%; height: 300px; background: rgba(0,0,0,0.5); border-radius: 12px; margin: 15px 0; display: none; position: relative; overflow: hidden; border: 1px solid var(--accent); }
+.three-d-canvas { cursor: move; width: 100%; height: 100%; }
+.three-d-hint { position: absolute; bottom: 10px; right: 10px; font-size: 0.75rem; color: var(--text2); pointer-events: none; }
+
+.ai-hint-box { background: rgba(56, 189, 248, 0.1); border-left: 4px solid var(--accent-blue); padding: 15px; border-radius: 8px; margin-top: 20px; display: none; animation: fadeIn 0.4s ease; }
+.ai-hint-title { display: flex; align-items: center; gap: 8px; color: var(--accent-blue); font-weight: bold; margin-bottom: 8px; }
+
+.study-plan-card { border: 1px solid var(--accent); position: relative; overflow: hidden; }
+.study-plan-card::after { content: 'NEW'; position: absolute; top: 10px; right: -25px; background: var(--accent); color: #000; font-size: 0.6rem; font-weight: 800; padding: 2px 30px; transform: rotate(45deg); }
+.daily-goal-circle { width: 60px; height: 60px; border-radius: 50%; border: 4px solid var(--border); display: flex; align-items: center; justify-content: center; font-weight: bold; font-family: 'Space Grotesk'; font-size: 1.2rem; }
+
 @media(max-width:767px){
 .sidebar{transform:translateX(-100%)}
 #main-content{margin-left:0;padding:16px 16px 90px}
@@ -824,6 +845,7 @@ function generateMathQuestions(topic, count = 15, selectedDiff = 'mix') {
                 // scaling for simple integers
                 let scale = getRand(1, 3);
                 d1 *= scale; d2 *= scale; let a = 5 * scale;
+                q.model3d = 'prism'; // Romb as prism base reference
                 q.question = `Długości przekątnych rzymbu wynoszą ${d1} cm oraz ${d2} cm. Oznacza to, że jego trójkąty składowe (wyznaczone przez przecinające się prostopadle przekątne) mają przyprostokątne długości ${d1/2} cm i ${d2/2} cm. Ile wynosi obwód tego rombu?`;
                 q.options = shuffleArray(makeUniqueOptions(4*a, [a, 2*a, 3*a]));
                 q.correct = q.options.indexOf(String(4*a));
@@ -859,12 +881,14 @@ function generateMathQuestions(topic, count = 15, selectedDiff = 'mix') {
             } else if (baseType === 2) {
                 // Siatka bryły i ilość ścian (sześcian / ostrosłup)
                 q.question = `Na lekcji matematyki nauczyciel poprosił Marka o wycięcie i posklejanie siatki czworokątnej bryły składającej się z jednej kwadratowej podstawy oraz z dokładnie 4 jednakowych trójkątów. Powstała bryła to bez wątpienia:`;
+                q.model3d = 'pyramid';
                 q.options = shuffleArray(['Ostrosłup prawidłowy czworokątny', 'Graniastosłup prawidłowy czworokątny', 'Ostrosłup prawidłowy trójkątny', 'Prostopadłościan']);
                 q.correct = q.options.indexOf('Ostrosłup prawidłowy czworokątny');
                 q.explanation = `Jedna główna podstawa i szpiczaste boki zbiegające się w górnych wierzchołkach to cecha jednoznacznego ostrosłupa. Ma 4 trójkąty, bo w podstawie leży kwadrat z 4 bokami (prawidłowy czworokątny).`;
             } else {
                 // Pole powierzchni sześcianu (łatwe)
                 let a = getRand(2, 5);
+                q.model3d = 'cube';
                 q.question = `Mamy bryłę: sześcian, której każda krawędź ma długość ${a} cm. Oblicz całkowite pole powierzchni zewnętrznej siatki, na które będziemy musieli użyć kartonu.`;
                 let ans = 6 * a * a;
                 q.options = shuffleArray(makeUniqueOptions(ans, [8 * a * a, a * a * a, 4 * a * a]));
@@ -1754,19 +1778,16 @@ Kąty przyległe dają razem w sumie \\(180^\\circ\\).</p>`,
 'Geometria przestrzenna': `<h3>📌 Bryły: Pola i Objętości</h3>
 <div class="formula"><b>Zasady Ogólne:</b>
 \\[ P_c = P_p + P_b \\quad \\text{(Pole całkowite = Pole podstawy + Pole boczne)} \\]
-Szukaj trójkątów prostokątnych wewnątrz przekrojów brył (by odnaleźć H za pomocą Pitagorasa!).</div>
-<h3>📌 Graniastosłupy i Sześciany</h3>
-<div class="formula">Walec i Graniastosłup (bryły, co idą prosto w górę):
+</div>
+<h3>📌 Graniastosłupy</h3>
+<div class="formula">Graniastosłup (bryły o dwóch równoległych podstawach):
 \\[ V = P_p \\cdot H \\]
 Sześcian: \\( V = a^3 \\),  \\( P_c = 6a^2 \\), Przekątna sześcianu \\( D = a\\sqrt{3} \\).
 Prostopadłościan: \\( V = a \\cdot b \\cdot c \\), Przekątna \\( D = \\sqrt{a^2+b^2+c^2} \\).</div>
-<h3>📌 Ostrosłupy i Stożki</h3>
-<div class="formula">Stożek i Ostrosłup (bryły zbliżające się do jednego wierzchołka piki):
+<h3>📌 Ostrosłupy</h3>
+<div class="formula">Ostrosłup (bryły zbliżające się do jednego wierzchołka):
 \\[ V = \\frac{1}{3} P_p \\cdot H \\]
-(Pamiętaj: do Pola bocznego stożka używasz tworzącej l: \\( P_b = \\pi r l \\)).</div>
-<h3>📌 Kule</h3>
-<div class="formula">Kula to zbiór punktów przestrzeni oddalonych o \(\le R\) od środka.
-\\[ V = \\frac{4}{3} \\pi R^3 \\qquad P_c = 4 \\pi R^2 \\]</div>`,
+</div>`,
 'Statystyka i rachunek prawdopodobieństwa': `<h3>📌 Prawdopodobieństwo Klasyczne</h3>
 <div class="formula">\\[ P(A) = \\frac{|A|}{|\\Omega|} \\]
 \\(|A|\\) to liczba zdarzeń sprzyjających zdarzeniu A.<br>
@@ -2093,6 +2114,207 @@ function getDeviceId() {
         localStorage.setItem('e8_hwid', hwid);
     }
     return hwid;
+}
+
+// ====== NOWE FUNKCJE: STUDY PLAN, SCRATCHPAD, 3D, AI ======
+
+function updateStudyPlan() {
+    let data = getProgress();
+    if (!data.examDate) return;
+    
+    let today = new Date();
+    let exam = new Date(data.examDate);
+    let diffDays = Math.ceil((exam - today) / (1000 * 60 * 60 * 24));
+    
+    if (diffDays <= 0) return;
+    
+    let totalQ = QUESTIONS.length + 1000; // base + procedural estimates
+    let doneQ = (data.math.completed.length || 0) + (data.polish.completed.length || 0) + (data.english.completed.length || 0);
+    let remaining = Math.max(0, totalQ - doneQ);
+    
+    data.dailyTarget = Math.ceil(remaining / diffDays);
+    saveProgress(data);
+}
+
+// --- BRUDNOPIS (SCRATCHPAD) ---
+let padState = { drawing: false, ctx: null, color: '#000000', size: 3, lastX: 0, lastY: 0 };
+
+function initScratchpad() {
+    const canvas = document.getElementById('scratchpad-canvas');
+    if (!canvas) return;
+    padState.ctx = canvas.getContext('2d');
+    
+    const resize = () => {
+        const rect = canvas.parentElement.getBoundingClientRect();
+        const temp = padState.ctx.getImageData(0, 0, canvas.width, canvas.height);
+        canvas.width = rect.width;
+        canvas.height = 300;
+        padState.ctx.putImageData(temp, 0, 0);
+        padState.ctx.lineCap = 'round';
+        padState.ctx.lineJoin = 'round';
+    };
+    window.addEventListener('resize', resize);
+    resize();
+
+    const getPos = (e) => {
+        const rect = canvas.getBoundingClientRect();
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        return { x: clientX - rect.left, y: clientY - rect.top };
+    };
+
+    const start = (e) => {
+        padState.drawing = true;
+        const pos = getPos(e);
+        padState.lastX = pos.x; padState.lastY = pos.y;
+    };
+    const draw = (e) => {
+        if (!padState.drawing) return;
+        e.preventDefault();
+        const pos = getPos(e);
+        const ctx = padState.ctx;
+        ctx.beginPath();
+        ctx.strokeStyle = padState.color;
+        ctx.lineWidth = padState.size;
+        ctx.moveTo(padState.lastX, padState.lastY);
+        ctx.lineTo(pos.x, pos.y);
+        ctx.stroke();
+        padState.lastX = pos.x; padState.lastY = pos.y;
+    };
+    const stop = () => padState.drawing = false;
+
+    canvas.addEventListener('mousedown', start);
+    canvas.addEventListener('mousemove', draw);
+    window.addEventListener('mouseup', stop);
+    canvas.addEventListener('touchstart', start);
+    canvas.addEventListener('touchmove', draw);
+    canvas.addEventListener('touchend', stop);
+}
+
+function setPadColor(c, el) {
+    padState.color = c;
+    document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
+    el.classList.add('active');
+}
+function setPadTool(tool, el) {
+    if (tool === 'pen') padState.color = '#000000';
+    if (tool === 'eraser') padState.color = '#ffffff';
+    document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
+    el.classList.add('active');
+}
+function clearPad() {
+    if (padState.ctx) padState.ctx.clearRect(0, 0, padState.ctx.canvas.width, padState.ctx.canvas.height);
+}
+function toggleScratchpad() {
+    const container = document.getElementById('scratchpad-container');
+    const isVisible = container.style.display === 'block';
+    container.style.display = isVisible ? 'none' : 'block';
+    if (!isVisible) setTimeout(initScratchpad, 10);
+}
+
+// --- WIZUALIZATOR 3D (LIGHTWEIGHT PROJECTION) ---
+let threeD = { angleX: 0.5, angleY: 0.5, lastX: 0, lastY: 0, dragging: false, shape: 'cube' };
+
+function project3D(p, w, h) {
+    let x = p.x, y = p.y, z = p.z;
+    let cosY = Math.cos(threeD.angleY), sinY = Math.sin(threeD.angleY);
+    let x1 = x * cosY - z * sinY;
+    let z1 = x * sinY + z * cosY;
+    let cosX = Math.cos(threeD.angleX), sinX = Math.sin(threeD.angleX);
+    let y2 = y * cosX - z1 * sinX;
+    let z2 = y * sinX + z1 * cosX;
+    let f = 400 / (400 + z2);
+    return { x: x1 * f + w / 2, y: y2 * f + h / 2 };
+}
+
+function render3DLoop() {
+    const canvas = document.getElementById('three-d-canvas');
+    if (!canvas || canvas.offsetParent === null) return;
+    const ctx = canvas.getContext('2d');
+    const w = canvas.width, h = canvas.height;
+    ctx.clearRect(0, 0, w, h);
+    ctx.strokeStyle = 'var(--accent)';
+    ctx.lineWidth = 2;
+
+    let points = [], lines = [];
+    if (threeD.shape === 'cube') {
+        points = [
+            {x:-50,y:-50,z:-50},{x:50,y:-50,z:-50},{x:50,y:50,z:-50},{x:-50,y:50,z:-50},
+            {x:-50,y:-50,z:50},{x:50,y:-50,z:50},{x:50,y:50,z:50},{x:-50,y:50,z:50}
+        ];
+        lines = [[0,1],[1,2],[2,3],[3,0],[4,5],[5,6],[6,7],[7,4],[0,4],[1,5],[2,6],[3,7]];
+    } else if (threeD.shape === 'pyramid') {
+        points = [
+            {x:-60,y:50,z:-60},{x:60,y:50,z:-60},{x:60,y:50,z:60},{x:-60,y:50,z:60},{x:0,y:-70,z:0}
+        ];
+        lines = [[0,1],[1,2],[2,3],[3,0],[0,4],[1,4],[2,4],[3,4]];
+    } else if (threeD.shape === 'prism') {
+        points = [
+            {x:-40,y:-60,z:-40},{x:40,y:-60,z:-40},{x:0,y:-60,z:30},
+            {x:-40,y:60,z:-40},{x:40,y:60,z:-40},{x:0,y:60,z:30}
+        ];
+        lines = [[0,1],[1,2],[2,0],[3,4],[4,5],[5,3],[0,3],[1,4],[2,5]];
+    }
+
+    let proj = points.map(p => project3D(p, w, h));
+    lines.forEach(l => {
+        ctx.beginPath();
+        ctx.moveTo(proj[l[0]].x, proj[l[0]].y);
+        ctx.lineTo(proj[l[1]].x, proj[l[1]].y);
+        ctx.stroke();
+    });
+    requestAnimationFrame(render3DLoop);
+}
+
+function toggle3D(shape) {
+    const panel = document.getElementById('three-d-panel');
+    threeD.shape = shape || 'cube';
+    panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
+    if (panel.style.display === 'block') {
+        const canvas = document.getElementById('three-d-canvas');
+        canvas.width = panel.clientWidth; canvas.height = 300;
+        if (!canvas.onmousedown) {
+            canvas.onmousedown = e => { threeD.dragging = true; threeD.lastX = e.clientX; threeD.lastY = e.clientY; };
+            canvas.onmousemove = e => {
+                if (threeD.dragging) {
+                    threeD.angleY += (e.clientX - threeD.lastX) * 0.01;
+                    threeD.angleX += (e.clientY - threeD.lastY) * 0.01;
+                    threeD.lastX = e.clientX; threeD.lastY = e.clientY;
+                }
+            };
+            window.addEventListener('mouseup', () => threeD.dragging = false);
+            canvas.addEventListener('touchstart', e => { threeD.dragging = true; threeD.lastX = e.touches[0].clientX; threeD.lastY = e.touches[0].clientY; });
+            canvas.addEventListener('touchmove', e => {
+                if (threeD.dragging) {
+                    threeD.angleY += (e.touches[0].clientX - threeD.lastX) * 0.01;
+                    threeD.angleX += (e.touches[0].clientY - threeD.lastY) * 0.01;
+                    threeD.lastX = e.touches[0].clientX; threeD.lastY = e.touches[0].clientY;
+                }
+            });
+        }
+        render3DLoop();
+    }
+}
+
+// --- ASYSTENT AI: INTELIGENTNE PODPOWIEDZI ---
+function getSmartHint(q, picks) {
+    if (q.subject !== 'math') return null;
+    let hint = null;
+    const lastPick = picks[picks.length - 1];
+    const correctVal = q.options[q.correct];
+    const userVal = q.options[lastPick];
+
+    // Logika rozpoznawania typowych błędów
+    if (parseFloat(userVal) === -parseFloat(correctVal)) {
+        hint = "Uważaj na znaki! Wygląda na to, że wynik się zgadza, ale zgubiłeś minus lub dodałeś go niepotrzebnie.";
+    } else if (q.question.includes('dm') && q.question.includes('cm') && !isNaN(parseFloat(userVal))) {
+        hint = "Sprawdź jednostki! Pamiętaj, że 1 dm = 10 cm, a 1 dm² = 100 cm². Czy na pewno zamieniłeś wszystko przed liczeniem?";
+    } else if (q.topic === 'Wyrażenia algebraiczne i równania' && q.question.includes('x')) {
+        hint = "Wskazówka: Przy przenoszeniu składnika na drugą stronę równania zawsze zmień jego znak na przeciwny!";
+    } else if (q.topic === 'Liczby i działania' && q.question.includes('pierwiastek')) {
+        hint = "Wskazówka: Pierwiastek kwadratowy to liczba, która pomnożona przez samą siebie daje liczbę pod znakiem pierwiastka.";
+    }
+    return hint;
 }
 
 let appLogoClicks = 0;
@@ -2864,6 +3086,22 @@ function renderDashboard(){
         </div>`;
     }
 
+    updateStudyPlan();
+    let goalHtml = '';
+    if (data.examDate && data.dailyTarget) {
+        goalHtml = `
+            <div class="dash-card study-plan-card" style="border-left: 4px solid var(--accent)">
+                <h3>📈 Twój Plan Nauki</h3>
+                <div style="display:flex; align-items:center; gap:20px; margin-top:10px">
+                    <div class="daily-goal-circle" style="border-color:${data.streak > 0 ? 'var(--accent)' : 'var(--border)'}">${data.dailyTarget}</div>
+                    <div>
+                        <p style="font-weight:bold; margin-bottom:4px">Zadania na dziś</p>
+                        <p style="font-size:0.85rem; color:var(--text2)">Tyle musisz rozwiązać dziennie, aby zdążyć przed egzaminem.</p>
+                    </div>
+                </div>
+            </div>`;
+    }
+
     document.getElementById('screen-dashboard').innerHTML = `
     <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:24px">
         <div><h1 class="section-title">Cześć, ${data.userName}! 👋</h1><p class="section-desc">Twój plan na dziś jest gotowy.</p></div>
@@ -2882,6 +3120,7 @@ function renderDashboard(){
     </div>
     ${daysLeft}
     <div class="dashboard-grid">
+        ${goalHtml}
         <div class="dash-card"><h3>📅 Wyzwania dnia</h3>${questHtml}</div>
         <div class="dash-card" onclick="showScreen('ranking')" style="cursor:pointer"><h3>🌍 Ranking Top 3</h3><div id="dashboard-ranking-preview"><p style="font-size:0.8rem; color:var(--text2)">Kliknij, aby zobaczyć tabelę globalną...</p></div></div>
         <div class="dash-card"><h3>📊 Postęp</h3>
@@ -3031,8 +3270,29 @@ let html=`<div class="quiz-container">
 <span class="quiz-progress-text">${'⭐'.repeat(q.difficulty)}</span></div>
 <div class="quiz-question">
     ${q.question}
-    <button class="speak-btn" title="Czytaj pytanie" onclick="speakText('${q.question.replace(/'/g, "\\'")}')">🔊</button>
-</div>`;
+    <div style="margin-top:10px; display:flex; gap:8px; flex-wrap:wrap">
+        <button class="btn btn-secondary btn-sm" title="Czytaj pytanie" onclick="speakText('${q.question.replace(/'/g, "\\'")}')">🔊 Czytaj</button>
+        <button class="btn btn-primary btn-sm" style="background:var(--accent); color:white; border:none" onclick="toggleScratchpad()">✍️ Brudnopis</button>
+        ${q.model3d ? `<button class="btn btn-primary btn-sm" style="background:#8b5cf6; color:white; border:none" onclick="toggle3D('${q.model3d}')">🧊 Widok 3D</button>` : ''}
+    </div>
+</div>
+<div id="scratchpad-container" class="scratchpad-container">
+    <div class="scratchpad-toolbar">
+        <button class="tool-btn active" onclick="setPadTool('pen', this)" title="Ołówek">✏️</button>
+        <button class="tool-btn" onclick="setPadTool('eraser', this)" title="Gumka">🧽</button>
+        <button class="btn btn-sm btn-secondary" onclick="clearPad()">Wyczyść</button>
+        <div style="flex:1"></div>
+        <div class="color-btn active" style="background:#000" onclick="setPadColor('#000', this)"></div>
+        <div class="color-btn" style="background:#ef4444" onclick="setPadColor('#ef4444', this)"></div>
+        <div class="color-btn" style="background:#2563eb" onclick="setPadColor('#2563eb', this)"></div>
+    </div>
+    <canvas id="scratchpad-canvas" class="scratchpad-canvas"></canvas>
+</div>
+<div id="three-d-panel" class="three-d-panel">
+    <canvas id="three-d-canvas" class="three-d-canvas"></canvas>
+    <div class="three-d-hint">Przesuń, aby obrócić</div>
+</div>
+`;
 if(q.type==='mcq'){
 let letters=['A','B','C','D'];
 html+=`<div class="quiz-options">${q.options.map((o,i)=>`<button class="quiz-option" data-idx="${i}" onclick="checkMCQ(${i})"><span class="opt-letter">${letters[i]}</span><span>${o}</span></button>`).join('')}</div>`;
@@ -3047,14 +3307,16 @@ renderMath(body);
 }
 
 function checkMCQ(idx){
-let q=quizState.questions[quizState.current];
-let opts=document.querySelectorAll('.quiz-option');
-opts.forEach(o=>o.classList.add('disabled'));
-let correct=idx===q.correct;
-opts[idx].classList.add(correct?'correct':'wrong');
-if(!correct)opts[q.correct].classList.add('show-correct');
-finishQuestion(correct,q);
+    let q=quizState.questions[quizState.current];
+    q.lastPickIdx = idx; // Store for AI assistant hint
+    let opts=document.querySelectorAll('.quiz-option');
+    opts.forEach(o=>o.classList.add('disabled'));
+    let correct=idx===q.correct;
+    opts[idx].classList.add(correct?'correct':'wrong');
+    if(!correct)opts[q.correct].classList.add('show-correct');
+    finishQuestion(correct,q);
 }
+
 
 function checkGap(){
 let q=quizState.questions[quizState.current];
@@ -3092,13 +3354,29 @@ let data=getProgress();
 let subj=data[q.subject];
 if(!subj.completed.includes(q.id)&&correct)subj.completed.push(q.id);
 saveProgress(data);
-if(q.type!=='open'){
-let fb = document.getElementById('quiz-feedback');
-fb.innerHTML=`<div class="quiz-explanation">${correct?'✅ Dobrze!':'❌ Źle.'} ${q.explanation||''}</div>`;
-renderMath(fb);
+    if(q.type!=='open'){
+        let fb = document.getElementById('quiz-feedback');
+        let smartHint = !correct ? getSmartHint(q, quizState.answers.map((a,i)=>i===quizState.current?quizState.questions[i].options.indexOf(q.options[q.lastPick]):-1)) : null;
+        // Optimization: pick the last answer index from state if possible, though easier to pass it
+        
+        let assistantHtml = '';
+        if (!correct) {
+            // Need the index picked. MCQ is easiest.
+            let hint = getSmartHint(q, [q.lastPickIdx]);
+            if (hint) {
+                assistantHtml = `<div class="ai-hint-box" style="display:block">
+                    <div class="ai-hint-title">🤖 Asystent E8</div>
+                    <div class="ai-hint-text">${hint}</div>
+                </div>`;
+            }
+        }
+
+        fb.innerHTML=`<div class="quiz-explanation">${correct?'✅ Dobrze!':'❌ Źle.'} ${q.explanation||''}</div>${assistantHtml}`;
+        renderMath(fb);
+    }
+    document.getElementById('quiz-next').style.display='block';
 }
-document.getElementById('quiz-next').style.display='block';
-}
+
 
 function nextQuizQuestion(){
 quizState.current++;
