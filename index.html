@@ -719,6 +719,34 @@ const QUESTIONS=[
 {id:168,subject:'english',topic:'Czytanie ze zrozumieniem',type:'gap',question:'<b>Uzupełnij brakujące słowo (przysłówek):</b><br>"Tom didn\'t study for the test at all. ________, he failed it." (W rezultacie...)',correct:'therefore',explanation:'Słowa takie jak "therefore", "consequently" lub "so" (choć "so" zazwyczaj nie zaczyna zdania po kropce z przecinkiem, ale jest możliwe) opisują skutek. Tu pasuje np. therefore / consequently.',difficulty:3}
 ];
 
+/**
+ * VALIDATION LAYER (CKE 2025 COMPLIANCE)
+ * Checks if a task is correctly formed and meets quality standards.
+ */
+function validateGeneratedTask(task) {
+    const errors = [];
+    if (!task.id) errors.push("Missing ID");
+    if (!task.question || task.question.length < 10) errors.push("Question too short or missing");
+    if (task.type === 'mcq') {
+        if (!task.options || (task.options.length !== 4 && task.options.length !== 2)) errors.push("MCQ must have 2 or 4 options");
+        if (task.correct === undefined || task.correct < 0 || task.correct >= task.options.length) errors.push("Invalid 'correct' index for MCQ");
+        // Check for duplicate options
+        let unique = [...new Set(task.options)];
+        if (unique.length < task.options.length) errors.push("Duplicate options in MCQ");
+    } else if (task.type === 'gap' || task.type === 'open') {
+
+        if (task.correct === undefined || task.correct === null || task.correct === '') errors.push("Missing correct answer for GAP/OPEN task");
+    }
+    if (!task.explanation || task.explanation.length < 5) errors.push("Explanation missing or too short");
+    if (task.question.includes('undefined') || task.question.includes('NaN')) errors.push("Question contains 'undefined' or 'NaN'");
+    
+    return {
+        isValid: errors.length === 0,
+        errors: errors
+    };
+}
+
+
 // ZMODYFIKOWANO DLA CKE 2026 E8: ograniczone liczby, ukryte Pitagorasy, specjalne dowody
 function getRand(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -909,6 +937,98 @@ function generateAlgebraicPerimeter() {
     }
 }
 
+// 4.1 COMPLEX: GEOMETRY + ALGEBRA + REASONING
+function generateComplexMathTask() {
+    let subType = getRand(1, 4);
+    if (subType === 1) {
+        // Rectangle: sides depend on x, perimeter given, find new area after side change
+        let x = getRand(5, 15);
+        let a = x;
+        let b = x + 4;
+        let perimeter = 2 * (a + b);
+        let change = getRand(1, 3);
+        let newA = a + change;
+        let newB = b - change;
+        let oldArea = a * b;
+        let newArea = newA * newB;
+        let areaDiff = Math.abs(newArea - oldArea);
+        let direction = newArea > oldArea ? "wzrośnie" : "zmaleje";
+
+        return {
+            question: `Prostokąt ma obwód równy ${perimeter} cm. Jeden z jego boków jest o 4 cm dłuższy od drugiego. Jeśli krótszy bok zwiększymy o ${change} cm, a dłuższy zmniejszymy o ${change} cm, to jak zmieni się pole tego prostokąta?`,
+            options: shuffleArray([
+                `Zmaleje o ${areaDiff} cm²`,
+                `Wzrośnie o ${areaDiff} cm²`,
+                `Nie zmieni się`,
+                `Zmaleje o ${2*areaDiff} cm²`
+            ]),
+            correct: `Zmaleje o ${areaDiff} cm²`,
+            explanation: `1. Obliczamy boki: 2(x + x + 4) = ${perimeter} => 4x + 8 = ${perimeter} => 4x = ${perimeter - 8} => x = ${x}. Boki to ${a} cm i ${b} cm.\n2. Pole początkowe: ${a} · ${b} = ${oldArea} cm².\n3. Nowe boki: ${a} + ${change} = ${newA} cm oraz ${b} - ${change} = ${newB} cm.\n4. Nowe pole: ${newA} · ${newB} = ${newArea} cm².\n5. Różnica: ${oldArea} - ${newArea} = ${areaDiff} cm². Pole ${direction} o ${areaDiff} cm².`
+        };
+    } else if (subType === 2) {
+        // Percent + Algebra: price changes
+        let initialPrice = getRand(10, 30) * 10;
+        let p1 = 20;
+        let p2 = 25;
+        let priceAfterUp = initialPrice * (1 + p1/100);
+        let finalPrice = priceAfterUp * (1 - p2/100);
+        let totalChangePct = Math.round((1 - finalPrice/initialPrice) * 100);
+
+        return {
+            question: `Cenę pewnego towaru podniesiono o ${p1}%, a następnie nową cenę obniżono o ${p2}%. O ile procent zmieniła się cena końcowa w stosunku do ceny początkowej?`,
+            options: shuffleArray([
+                `Zmniejszyła się o ${totalChangePct}%`,
+                `Zwiększyła się o ${totalChangePct}%`,
+                `Zmniejszyła się o ${p2 - p1}%`,
+                `Nie zmieniła się`
+            ]),
+            correct: `Zmniejszyła się o ${totalChangePct}%`,
+            explanation: `Przyjmijmy cenę początkową ${initialPrice} zł.\n1. Po podwyżce o ${p1}%: ${initialPrice} + 0,20 · ${initialPrice} = ${priceAfterUp} zł.\n2. Po obniżce o ${p2}%: ${priceAfterUp} - 0,25 · ${priceAfterUp} = ${finalPrice} zł.\n3. Różnica: ${initialPrice} - ${finalPrice} = ${initialPrice - finalPrice} zł.\n4. Procent: (${initialPrice - finalPrice} / ${initialPrice}) · 100% = ${totalChangePct}%.`
+        };
+    } else if (subType === 3) {
+        // Geometry + Percent: Circle/Square area change
+        let a = getRand(10, 20);
+        let p = 20;
+        let newA = a * (1 + p/100);
+        let oldArea = a * a;
+        let newArea = newA * newA;
+        let pctIncrease = Math.round((newArea/oldArea - 1) * 100);
+
+        return {
+            question: `Bok kwadratu zwiększono o ${p}%. O ile procent wzrosło pole tego kwadratu?`,
+            options: shuffleArray([
+                `${pctIncrease}%`,
+                `${2*p}%`,
+                `${p}%`,
+                `${pctIncrease + 5}%`
+            ]),
+            correct: `${pctIncrease}%`,
+            explanation: `Jeśli bok kwadratu to 'a', to pole wynosi a².\n1. Nowy bok to 1,2a.\n2. Nowe pole to (1,2a)² = 1,44a².\n3. Wzrost wynosi 1,44a² - 1a² = 0,44a².\n4. W ujęciu procentowym to 44%.`
+        };
+    } else {
+        // Speed + Time + Fractions
+        let dist = getRand(2, 5) * 60; // e.g. 120, 180, 240
+        let v1 = 60;
+        let v2 = 80;
+        let t1 = dist / v1;
+        let t2 = dist / v2;
+        let timeSavedMins = (t1 - t2) * 60;
+
+        return {
+            question: `Samochód przejechał trasę ${dist} km ze średnią prędkością ${v1} km/h. O ile minut krócej trwałaby ta podróż, gdyby średnia prędkość wynosiła ${v2} km/h?`,
+            options: shuffleArray([
+                `${timeSavedMins} minut`,
+                `${Math.round(timeSavedMins/2)} minut`,
+                `${timeSavedMins + 10} minut`,
+                `${20} minut`
+            ]),
+            correct: `${timeSavedMins} minut`,
+            explanation: `1. Czas przy prędkości ${v1} km/h: ${dist} / ${v1} = ${t1} h = ${t1*60} min.\n2. Czas przy prędkości ${v2} km/h: ${dist} / ${v2} = ${t2} h = ${t2*60} min.\n3. Różnica: ${t1*60} - ${t2*60} = ${timeSavedMins} minut.`
+        };
+    }
+}
+
+
 function generateMathQuestions(topic, count = 15, selectedDiff = 'mix') {
     let questions = [];
     for (let i = 0; i < count; i++) {
@@ -918,7 +1038,16 @@ function generateMathQuestions(topic, count = 15, selectedDiff = 'mix') {
             subject: 'math', topic: topic, type: 'mcq', difficulty: diff
         };
 
+        // 20% chance for a complex multi-concept task if topic is mix or relevant
+        if (getRand(1, 5) === 1) {
+            let res = generateComplexMathTask();
+            Object.assign(q, res);
+            questions.push(q);
+            continue;
+        }
+
         if (topic === 'Liczby i działania') {
+
             let baseType = getRand(1, 10);
             if (baseType <= 2) {
                 // New Roman Comp
@@ -1068,10 +1197,11 @@ function generateMathQuestions(topic, count = 15, selectedDiff = 'mix') {
                 let a = getRand(2, 5);
                 q.question = `W trójkącie prostokątnym o kątach ostrych 30° i 60°, najkrótsza przyprostokątna (leżąca naprzeciw 30°) ma długość ${a} cm. Ile wynosi długość dąłuższej przyprostokątnej? (Zgodnie z własnościami ekierki)`;
                 let ans = `${a}√3 cm`;
-                q.options = shuffleArray([ans, `${2*a} cm`, `${a*a} cm`, `${a+2} cm`]);
+                q.options = shuffleArray(makeUniqueOptions(ans, [`${2*a} cm`, `${a*a} cm`, `${a+2} cm`, `${a+1} cm`]));
                 q.correct = q.options.indexOf(ans);
                 q.explanation = `Stosunek boków wynosi a, a√3, 2a. Najkrótsza to a, dłuższa to a√3 czyli ${ans}.`;
             }
+
         }
         else if (topic === 'Geometria przestrzenna') {
             let baseType = getRand(1, 22);
@@ -1484,6 +1614,30 @@ const ENG_CATEGORIES = {
     ]
 };
 
+const SITUATIONAL_DIALOGUES = [
+    {
+        context: "At a restaurant",
+        dialogue: "A: Are you ready to order?<br>B: Yes, [...............] the grilled salmon, please.",
+        options: ["I'll have", "I have", "I'm having", "I had"],
+        ans: "I'll have",
+        explanation: "Używamy 'will' dla decyzji podejmowanych w chwili mówienia (np. przy zamawianiu jedzenia)."
+    },
+    {
+        context: "In the street",
+        dialogue: "A: Excuse me, how do I get to the museum?<br>B: [...............] straight on and turn left at the lights.",
+        options: ["Go", "Going", "You going", "Went"],
+        ans: "Go",
+        explanation: "W instrukcjach i dawaniu wskazówek używamy trybu rozkazującego (Imperative)."
+    },
+    {
+        context: "Talking about plans",
+        dialogue: "A: What are your plans for the weekend?<br>B: I [...............] my grandparents in the countryside.",
+        options: ["am going to visit", "visit", "visited", "will visit"],
+        ans: "am going to visit",
+        explanation: "Używamy 'be going to' do wyrażania wcześniej podjętych zamiarów i planów."
+    }
+];
+
 const GRAMMAR_PARAPHRASES = [
     { start: "I haven't got a faster computer than this one.", p: "This is [...............] computer I have ever had.", ans: "the fastest" },
     { start: "They built this school in 1950.", p: "This school [...............] in 1950.", ans: "was built" },
@@ -1494,8 +1648,11 @@ const GRAMMAR_PARAPHRASES = [
     { start: "Someone stole my bike yesterday.", p: "My bike [...............] yesterday.", ans: "was stolen" },
     { start: "You should see a doctor.", p: "If I were you, I [...............] a doctor.", ans: "would see" },
     { start: "They are painting my house now.", p: "My house [...............] painted now.", ans: "is being" },
-    { start: "I started living here in 2015.", p: "I have lived here [...............] 2015.", ans: "since" }
+    { start: "I started living here in 2015.", p: "I have lived here [...............] 2015.", ans: "since" },
+    { start: "I'm sure he is at home now.", p: "He [...............] at home now.", ans: "must be" },
+    { start: "It's not necessary to bring your own lunch.", p: "You [...............] bring your own lunch.", ans: "don't have to" }
 ];
+
 
 const GRAMMAR_TRANSLATIONS = [
     { p: "(Czy jesteś zajęta) [...............] right now? I need to talk to you.", ans: ["Are you busy", "Are you occupied"] },
@@ -1586,7 +1743,20 @@ function generateEnglishQuestions(topic, count = 15, selectedDiff = 'mix') {
             subject: 'english', topic: topic, difficulty: diff
         };
 
+        // 20% chance for a situational dialogue task if topic is mix or relevant
+        if (getRand(1, 5) === 1) {
+            let item = SITUATIONAL_DIALOGUES[getRand(0, SITUATIONAL_DIALOGUES.length - 1)];
+            q.type = 'mcq';
+            q.question = `<b>Context: ${item.context}</b><br><br>${item.dialogue}`;
+            q.options = shuffleArray(item.options);
+            q.correct = q.options.indexOf(item.ans);
+            q.explanation = item.explanation;
+            questions.push(q);
+            continue;
+        }
+
         if (topic === 'Vocabulary') {
+
             let choice = getRand(1, 10);
             if (choice <= 3) {
                 // Translation MCQ
@@ -1718,7 +1888,26 @@ function getRand(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+function makeUniqueOptions(correct, wrongs) {
+    let opts = [String(correct)];
+    let shuffledWrongs = shuffleArray([...wrongs]);
+    for (let w of shuffledWrongs) {
+        if (opts.length >= 4) break;
+        if (!opts.includes(String(w))) {
+            opts.push(String(w));
+        }
+    }
+    // Fallbacks if not enough unique wrongs
+    const fallbacks = ["Inna postać literacka", "Brak informacji w tekście", "Wydarzenie z innej lektury", "Motyw poboczny"];
+    for (let f of fallbacks) {
+        if (opts.length >= 4) break;
+        if (!opts.includes(f)) opts.push(f);
+    }
+    return opts;
+}
+
 function shuffleArray(array) {
+
     if (!array || !array.length) return array;
     let newArray = [...array];
     for (let i = newArray.length - 1; i > 0; i--) {
@@ -1857,19 +2046,46 @@ const MOTIFS_DB = [
     {motif: 'Poszukiwanie sensu / Horyzonty', books: ['Mały Książę', 'Komunikat', 'Latarnik', 'Hobbit'], desc: 'Wychodzenie poza granice własnej wiedzy i poszukiwanie celu w życiu.'}
 ];
 
+const LITERARY_FRAGMENTS = [
+    {
+        book: 'Pan Tadeusz',
+        fragment: "Litwo! Ojczyzno moja! ty jesteś jak zdrowie. Ile cię trzeba cenić, ten tylko się dowie, kto cię stracił. Dziś piękność twą w całej ozdobie widzę i opisuję, bo tęsknię po tobie.",
+        question: "Zacytowany fragment to Inwokacja. Jakie uczucie podmiotu lirycznego dominuje w tym fragmencie i jakie środki stylistyczne na to wskazują?",
+        correct: "Tęsknota za ojczyzną (nostalgia), podkreślona przez bezpośredni zwrot do Litwy (apostrofa) oraz porównanie jej do zdrowia.",
+        explanation: "Autor (Adam Mickiewicz) wyraża głęboką tęsknotę za krajem lat dziecinnych, używając apostrofy ('Litwo! Ojczyzno moja!') oraz porównania ('jesteś jak zdrowie')."
+    },
+    {
+        book: 'Kamienie na szaniec',
+        fragment: "Kiedy Rudy odziksał przytomność, pierwsze co poczuł, to straszliwy ból w całym ciele. Ale w głowie miał tylko jedno: nie wydać nikogo. Nie sypnąć kumpli.",
+        question: "Na podstawie fragmentu i znajomości utworu określ, jaka cecha charakteru Rudego jest tu wyeksponowana i w jaki sposób wpłynęła ona na przebieg Akcji pod Arsenałem?",
+        correct: "Lojalność i niezłomność. Dzięki temu, że Rudy nie wydał kolegów, Szare Szeregi mogły zorganizować akcję jego odbicia bez narażania całej siatki konspiracyjnej.",
+        explanation: "Rudy mimo tortur pozostał wierny ideałom braterstwa, co jest kluczowym motywem utworu."
+    },
+    {
+        book: 'Balladyna',
+        fragment: "Balladyna: 'Zabiłam siostrę... Niechaj nikt nie wie... Dzban malin... maliny krwawe...'. Goplana: 'Widziałam wszystko z okna na jeziorze. Przekleństwo nad tobą, dziewczyno!'.",
+        question: "W jaki sposób natura w utworze (reprezentowana przez Goplanę) reaguje na czyn Balladyny i jakie to ma znaczenie dla rozwoju akcji?",
+        correct: "Natura staje się świadkiem zbrodni i wymierza sprawiedliwość (symboliczne krwawe znamię na czole). Goplana jako siła nadprzyrodzona ingeruje w losy bohaterów.",
+        explanation: "W dramacie Słowackiego natura nie jest tłem, lecz aktywnym uczestnikiem wydarzeń, strażnikiem moralności."
+    }
+];
+
+
 function generatePolishMotifs() {
     let pick = MOTIFS_DB[getRand(0, MOTIFS_DB.length - 1)];
     let type = getRand(1, 2);
     if (type === 1) {
+        let ans = pick.books.join(', ');
+        let opts = shuffleArray([
+            ans,
+            'Akademia Pana Kleksa, Opowieści z Narnii, Zemsta',
+            'Quo vadis, Syzyfowe prace, Mały Książę',
+            'Zemsta, Pan Tadeusz, Chłopcy z Placu Broni'
+        ]);
         return {
             question: `Wskaż grupę utworów obowiązkowych, w których wyraźnie występuje <strong>motyw: ${pick.motif}</strong>.`,
-            options: shuffleArray([
-                pick.books.join(', '),
-                'Akademia Pana Kleksa, Opowieści z Narnii, Zemsta',
-                'Quo vadis, Syzyfowe prace, Mały Książę',
-                'Zemsta, Pan Tadeusz, Chłopcy z Placu Broni'
-            ]),
-            correct: pick.books.join(', '),
+            options: opts,
+            correct: opts.indexOf(ans),
             explanation: `${pick.desc}`
         };
     } else {
@@ -1877,14 +2093,18 @@ function generatePolishMotifs() {
         let book = isTrue ? pick.books[0] : 'Akademia Pana Kleksa';
         if (!isTrue && pick.books.includes(book)) book = 'Zemsta';
         
+        let opts = shuffleArray(['Prawda', 'Fałsz']);
+        let ans = isTrue ? 'Prawda' : 'Fałsz';
+
         return {
             question: `Oceń prawdziwość zdania: "W utworze <i>${book}</i> kluczowe znaczenie ma <strong>motyw: ${pick.motif}</strong>".`,
-            options: shuffleArray(['Prawda', 'Fałsz']),
-            correct: isTrue ? 'Prawda' : 'Fałsz',
+            options: opts,
+            correct: opts.indexOf(ans),
             explanation: isTrue ? `${pick.desc}` : `Głównym motywem tego utworu są inne zagadnienia.`
         };
     }
 }
+
 
 function generatePolishQuestions(topic, count = 15, selectedDiff = 'mix') {
     let questions = [];
@@ -1896,7 +2116,19 @@ function generatePolishQuestions(topic, count = 15, selectedDiff = 'mix') {
             subject: 'polish', topic: topic, difficulty: diff
         };
 
+        // 25% chance for a complex interpretation task if topic is mix or relevant
+        if (getRand(1, 4) === 1) {
+            let item = LITERARY_FRAGMENTS[getRand(0, LITERARY_FRAGMENTS.length - 1)];
+            q.type = 'open';
+            q.question = `<b>Fragment utworu:</b><br><div style="background:rgba(0,0,0,0.1);padding:10px;border-left:4px solid var(--accent);margin-bottom:10px;">${item.fragment}</div>${item.question}`;
+            q.correct = item.correct;
+            q.explanation = item.explanation;
+            questions.push(q);
+            continue;
+        }
+
         if (topic === 'Lektury obowiązkowe') {
+
             let choice = getRand(1, 10);
             if (choice <= 2) {
                 // Author
@@ -1914,12 +2146,13 @@ function generatePolishQuestions(topic, count = 15, selectedDiff = 'mix') {
                 if (pick.type === 'character') {
                     q.type = 'mcq';
                     q.question = `W utworze <i>${pick.book}</i> występuje postać o imieniu: <strong>${pick.name}</strong>. Kim ona jest?`;
-                    q.options = shuffleArray([pick.desc, ...shuffleArray(facts.filter(f => f.desc !== pick.desc).map(f => f.desc)).slice(0, 3)]);
+                    let allDescs = facts.filter(f => f.desc !== pick.desc).map(f => f.desc);
+                    q.options = shuffleArray(makeUniqueOptions(pick.desc, allDescs));
                     q.correct = q.options.indexOf(pick.desc);
                 } else {
                     q.type = 'mcq';
                     q.question = `Zadanie dotyczące lektury <i>${pick.book}</i>: ${pick.q}`;
-                    q.options = shuffleArray([pick.answer, ...pick.wrongs]);
+                    q.options = shuffleArray(makeUniqueOptions(pick.answer, pick.wrongs));
                     q.correct = q.options.indexOf(pick.answer);
                 }
                 q.explanation = `Poprawna odpowiedź: ${pick.answer || pick.desc}.`;
@@ -1929,15 +2162,17 @@ function generatePolishQuestions(topic, count = 15, selectedDiff = 'mix') {
                 Object.assign(q, res);
                 if (!q.type) q.type = 'mcq';
             } else {
+
                 // Genre
                 let facts = POLISH_LEKTURY_DB.filter(x => x.type === 'genre');
                 let pick = facts[getRand(0, facts.length - 1)];
                 q.type = 'mcq';
                 q.question = `Jaki gatunek literacki reprezentuje <i>${pick.book}</i>?`;
-                q.options = shuffleArray([pick.answer, ...pick.wrongs]);
+                q.options = shuffleArray(makeUniqueOptions(pick.answer, pick.wrongs));
                 q.correct = q.options.indexOf(pick.answer);
                 q.explanation = `Gatunek tego dzieła to: ${pick.answer}.`;
             }
+
         }
         else if (topic === 'Teoria literatury') {
             let type = getRand(1, 4);
