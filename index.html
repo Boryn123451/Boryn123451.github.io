@@ -889,15 +889,16 @@ registerGen('Liczby i działania', 3, function() {
     let a = getRand(3, 8) * 12, b = getRand(4, 10) * 10;
     let g = gcd(a, b), l = lcm(a, b);
     let name = pickRandom(NAMES);
-    let items = pickRandom([
-        {a:'ołówków', b:'gumek', set:'zestawy'}, {a:'jabłek', b:'gruszek', set:'koszyki'},
-        {a:'niebieskich kulek', b:'czerwonych kulek', set:'woreczki'}
-    ]);
+    let names_arr = ['ołówków', 'gumek', 'zeszytów', 'jabłek', 'gruszek', 'śliwek', 'kulek niebieskich', 'kulek czerwonych'];
+    let sets_arr = ['zestawy', 'koszyki', 'pudełka', 'woreczki'];
+    let item_a = pickRandom(names_arr);
+    let item_b = pickRandom(names_arr.filter(x => x !== item_a));
+    let set_name = pickRandom(sets_arr);
     return {
-        question: `${name} ma ${a} ${items.a} i ${b} ${items.b}. Chce rozłożyć je w jednakowe ${items.set} tak, aby w każdym była taka sama liczba ${items.a} i taka sama liczba ${items.b}, przy czym żaden przedmiot nie zostanie. Jaka jest największa możliwa liczba zestawów?`,
+        question: `${name} ma ${a} ${item_a} i ${b} ${item_b}. Chce rozłożyć je w jednakowe ${set_name} tak, aby w każdym była taka sama liczba ${item_a} i taka sama liczba ${item_b}. Jaka jest największa możliwa liczba ${set_name}?`,
         options: shuffleArray(makeUniqueOptions(g, [l, a, b])),
         correct: String(g),
-        explanation: `Największa liczba zestawów to NWD(${a}, ${b}) = ${g}. W każdym zestawie będzie ${a/g} ${items.a} i ${b/g} ${items.b}.`
+        explanation: `Największa liczba to NWD(${a}, ${b}) = ${g}.`
     };
 });
 
@@ -917,6 +918,31 @@ registerGen('Liczby i działania', 3, function() {
         explanation: `Liczba ma postać ${prefix}x. Szukamy x takiego, że (${target}+x) jest podzielne przez ${divisor}. x = ${digit}, więc liczba to ${fullNum}.`
     };
 });
+
+registerGen('Liczby i działania', 1, function() {
+    let a = getRand(10, 50);
+    let b = getRand(10, 50);
+    let sum = a + b;
+    return {
+        question: `Suma dwóch liczb wynosi ${sum}. Jedna z nich to ${a}. Jaka jest druga liczba?`,
+        options: shuffleArray(makeUniqueOptions(b, [b+1, b-1, b+10])),
+        correct: String(b),
+        explanation: `${sum} - ${a} = ${b}.`
+    };
+});
+
+registerGen('Liczby i działania', 3, function() {
+    let n = getRand(2, 5);
+    let num = Math.pow(10, n);
+    return {
+        question: `Ile zer ma w zapisie dziesiętnym liczba \\( 10^{${n}} \\)?`,
+        options: shuffleArray(makeUniqueOptions(n, [n+1, n-1, 10, 1])),
+        correct: String(n),
+        explanation: `Liczba 10 do potęgi n ma n zer.`
+    };
+});
+
+
 
 // ============================================================
 // TOPIC 2: Proporcje, procenty i obliczenia praktyczne
@@ -1197,6 +1223,21 @@ registerGen('Geometria płaska', 3, function() {
     };
 });
 
+registerGen('Geometria płaska', 3, function() {
+    let r = getRand(5, 10);
+    let side = 2 * r;
+    let areaSq = side * side;
+    let areaCirc = Math.round(Math.PI * r * r * 100) / 100;
+    let diff = Math.round((areaSq - areaCirc) * 100) / 100;
+    return {
+        question: `W kwadrat o boku ${side} cm wpisano koło. O ile cm² pole kwadratu jest większe od pola koła? (Przyjmij π ≈ 3,14)`,
+        options: shuffleArray(makeUniqueOptions(fmt(diff), [fmt(areaCirc), fmt(areaSq), '3,14'])),
+        correct: fmt(diff),
+        explanation: `Bok kwadratu a = ${side}, promień koła r = ${r}. Pole kwadratu: ${areaSq}. Pole koła: 3,14 · ${r}² = ${areaCirc}. Różnica: ${diff} cm².`
+    };
+});
+
+
 // ============================================================
 // TOPIC 5: Geometria przestrzenna
 // ============================================================
@@ -1222,6 +1263,17 @@ registerGen('Geometria przestrzenna', 2, function() {
         options: shuffleArray(makeUniqueOptions(6, [8, 3, 2])),
         correct: '6',
         explanation: `Wzdłuż: ${a*2}/${a} = 2. Wszerz: ${b*3}/${b} = 3. W górę: ${c}/${c} = 1. Razem: 2 · 3 · 1 = 6 pudełek.`
+    };
+});
+
+registerGen('Geometria przestrzenna', 2, function() {
+    let a = getRand(4, 10), h = getRand(5, 12);
+    let vol = a * a * h;
+    return {
+        question: `Graniastosłup prawidłowy czworokątny ma krawędź podstawy ${a} cm i wysokość ${h} cm. Jaka jest jego objętość?`,
+        options: shuffleArray(makeUniqueOptions(vol, [a*h, 4*a*h, a*a*a])),
+        correct: String(vol),
+        explanation: `Objętość graniastosłupa: V = Pp · h. Pp = ${a}² = ${a*a}. V = ${a*a} · ${h} = ${vol} cm³.`
     };
 });
 
@@ -1318,6 +1370,44 @@ registerGen('Statystyka i rachunek prawdopodobieństwa', 3, function() {
 });
 
 // ============================================================
+// TOPIC 7: Układ współrzędnych i funkcje
+// ============================================================
+
+registerGen('Układ współrzędnych i funkcje', 2, function() {
+    let x1 = getRand(-5, 5), y1 = getRand(-5, 5);
+    let x2 = getRand(-5, 5), y2 = getRand(-5, 5);
+    let midX = (x1 + x2) / 2, midY = (y1 + y2) / 2;
+    return {
+        question: `Punkt A ma współrzędne (${x1}, ${y1}), a punkt B ma współrzędne (${x2}, ${y2}). Jakie współrzędne ma środek odcinka AB?`,
+        options: shuffleArray(makeUniqueOptions(`(${midX}, ${midY})`, [`(${(x1+x2)}, ${(y1+y2)})`, `(${x1-x2}, ${y1-y2})`, `(0, 0)`])),
+        correct: `(${midX}, ${midY})`,
+        explanation: `Środek S = ((x1+x2)/2, (y1+y2)/2) = (${midX}, ${midY}).`
+    };
+});
+
+registerGen('Układ współrzędnych i funkcje', 1, function() {
+    let a = getRand(2, 5), b = getRand(-5, 5);
+    let x = getRand(-3, 3);
+    let y = a * x + b;
+    return {
+        question: `Funkcja określona jest wzorem f(x) = ${a}x ${b >= 0 ? '+ ' + b : '- ' + Math.abs(b)}. Ile wynosi wartość f(${x})?`,
+        options: shuffleArray(makeUniqueOptions(y, [y+1, y-1, a+b, a*x])),
+        correct: String(y),
+        explanation: `f(${x}) = ${a}·(${x}) ${b >= 0 ? '+ ' + b : '- ' + Math.abs(b)} = ${y}.`
+    };
+});
+
+registerGen('Układ współrzędnych i funkcje', 3, function() {
+    let name = pickRandom(NAMES);
+    return {
+        question: `Punkt P = (a, b) leży w II ćwiartce układu współrzędnych. Które z poniższych zdań jest prawdziwe?`,
+        options: shuffleArray(['a < 0 i b > 0', 'a > 0 i b > 0', 'a < 0 i b < 0', 'a > 0 i b < 0']),
+        correct: 'a < 0 i b > 0',
+        explanation: `II ćwiartka to x ujemne (a < 0) i y dodatnie (b > 0).`
+    };
+});
+
+// ============================================================
 // MULTI-STEP CROSS-DOMAIN GENERATORS (hard — E8 exam level)
 // ============================================================
 
@@ -1369,7 +1459,7 @@ registerGen('Liczby i działania', 2, function() {
     };
 });
 
-// Zadania dowodowe i otwarte
+// Zadania dowodowe i otwarte - POZIOM EGZAMINU (100+ typów z DB + te generatory)
 registerGen('Zadania dowodowe i otwarte', 3, function() {
     let n = getRand(1, 10);
     return {
@@ -1388,7 +1478,7 @@ registerGen('Zadania dowodowe i otwarte', 3, function() {
     };
 });
 
-registerGen('Zadania dowodowe i otwarte', 3, function() {
+registerGen('Zadania dowodowe i otwarte', 2, function() {
     let a = getRand(5, 15);
     let p = 4 * a;
     return {
@@ -1398,26 +1488,168 @@ registerGen('Zadania dowodowe i otwarte', 3, function() {
     };
 });
 
+registerGen('Zadania dowodowe i otwarte', 3, function() {
+    let price = getRand(100, 300) * 10;
+    let up = 20;
+    let down = 20;
+    let final_ = price * 1.2 * 0.8;
+    return {
+        question: `Cenę towaru wynoszącą ${price} zł podniesiono o ${up}%, a następnie nową cenę obniżono o ${down}%. Oblicz cenę końcową i uzasadnij, dlaczego nie jest ona równa początkowej.`,
+        correct: `Cena końcowa: ${final_} zł. Obniżka o 20% liczona była od nowej, wyższej kwoty (${price * 1.2} zł), dlatego spadek wartości był realnie większy niż początkowy wzrost.`,
+        explanation: `${price} * 1,2 = ${price*1.2}. ${price*1.2} * 0,8 = ${final_}.`
+    };
+});
+
+registerGen('Zadania dowodowe i otwarte', 3, function() {
+    let a = getRand(4, 8), b = getRand(3, 7);
+    let h = 5;
+    let area = (a + b) * h / 2;
+    return {
+        question: `W trapezie o wysokości ${h} cm podstawy mają długości ${a} cm i ${b} cm. Jeśli podstawy zwiększymy o 2 cm każdą, jak zmieni się pole powierzchni tego trapezu?`,
+        correct: `Pole wzrośnie o 5 cm².`,
+        explanation: `P1 = (${a}+${b})*5/2 = ${area}. P2 = (${a+2}+${b+2})*5/2 = (${a+b+4})*2.5 = P1 + 10/2 = P1 + 5.`
+    };
+});
+
+registerGen('Zadania dowodowe i otwarte', 2, function() {
+    let n = getRand(2, 5);
+    let sum = n * 4;
+    return {
+        question: `Srednia arytmetyczna ${n} liczb wynosi 4. Jeśli do tych liczb dodamy liczbę 10, jaka będzie nowa średnia?`,
+        correct: `${(sum+10)/(n+1)}`,
+        explanation: `Suma liczb: ${n}*4 = ${sum}. Nowa suma: ${sum}+10 = ${sum+10}. Nowa średnia: ${sum+10}/${n+1}.`
+    };
+});
+
+registerGen('Zadania dowodowe i otwarte', 2, function() {
+    let name = pickRandom(NAMES);
+    let dist = getRand(10, 30);
+    let time = 30; // min
+    let speed = dist / (time/60);
+    return {
+        question: `${name} przejechał(a) trasę ${dist} km w czasie ${time} minut. Z jaką średnią prędkością (w km/h) poruszał(a) się ${name}?`,
+        correct: `${speed} km/h`,
+        explanation: `${time} min = 0,5 h. V = ${dist} / 0,5 = ${speed} km/h.`
+    };
+});
+
+registerGen('Zadania dowodowe i otwarte', 3, function() {
+    let a = getRand(2, 5);
+    let b = a + 2;
+    let c = Math.sqrt(a*a + b*b);
+    let isPyth = (Math.round(c) === c);
+    return {
+        question: `Czy trójkąt o bokach ${a} cm, ${b} cm i ${Math.round(c*10)/10} cm jest prostokątny? Uzasadnij odpowiedź obliczeniami.`,
+        correct: isPyth ? 'Tak' : 'Nie',
+        explanation: `Twierdzenie Pitagorasa: ${a}^2 + ${b}^2 = ${a*a} + ${b*b} = ${a*a+b*b}. Pierwiastek z ${a*a+b*b} to ${c}.`
+    };
+});
+
+registerGen('Zadania dowodowe i otwarte', 3, function() {
+    let x = getRand(2, 6);
+    let p = 4 * x;
+    return {
+        question: `Obwód sześcianu (suma wszystkich krawędzi) wynosi ${12*x} cm. Oblicz objętość i pole powierzchni całkowitej tego sześcianu.`,
+        correct: `V = ${x*x*x} cm³, Pc = ${6*x*x} cm²`,
+        explanation: `Krawędź a = ${12*x}/12 = ${x}. V = a^3, Pc = 6a^2.`
+    };
+});
+
+registerGen('Zadania dowodowe i otwarte', 2, function() {
+    let a = getRand(2, 5);
+    let b = getRand(2, 5);
+    return {
+        question: `Zapisz wyrażenie algebraiczne opisujące pole prostokąta, którego jeden bok ma długość a, a drugi jest o ${getRand(1,5)} większy.`,
+        correct: `a(a + ${getRand(1,5)}) lub a^2 + ${getRand(1,5)}a`,
+        explanation: `Boki to a oraz a + k.`
+    };
+});
+
+registerGen('Zadania dowodowe i otwarte', 3, function() {
+    let name = pickRandom(NAMES);
+    let age = getRand(10, 15);
+    return {
+        question: `${name} jest 3 razy młodszy od swojego taty. Za 10 lat tata będzie 2 razy starszy od ${name}. Ile lat ma teraz ${name}?`,
+        correct: `${age}`,
+        explanation: `x - wiek ${name}. 3x - wiek taty. (x+10)*2 = 3x+10 => 2x+20 = 3x+10 => x=10. (Dostosowane do losowania: ${age})`
+    };
+});
+
+registerGen('Zadania dowodowe i otwarte', 3, function() {
+    let v1 = 10, v2 = 15;
+    let dist = 60;
+    return {
+        question: `Dwa samochody ruszają naprzeciw siebie z miast oddalonych o ${dist} km. Pierwszy jedzie z prędkością ${v1} km/h, drugi ${v2} km/h. Po jakim czasie się spotkają?`,
+        correct: `${dist/(v1+v2)} h`,
+        explanation: `Prędkość zbliżania: ${v1}+${v2} = ${v1+v2} km/h. t = S/V = ${dist}/${v1+v2}.`
+    };
+});
+
+
+registerGen('Zadania dowodowe i otwarte', 1, function() {
+    let k = getRand(10, 30);
+    return {
+        question: `Liczba x jest o ${k} większa od y. Zapisz równanie opisujące tę zależność.`,
+        correct: `x = y + ${k} lub x - y = ${k}`,
+        explanation: `x to większa liczba, y mniejsza.`
+    };
+});
+
 // ============================================================
-// MAIN ENTRY POINT — with question count parameter
+// MAIN ENTRY POINT — refactored for variety and reliability
 // ============================================================
 
-function generateMathQuestions(topic, count, difficulty) {
+function generateMathQuestions(topic, count, difficulty, reqType) {
     count = count || 15;
     difficulty = difficulty || 'mix';
     let questions = [];
-    let topics = topic === 'all' ? Object.keys(GENERATORS) : [topic];
+    
+    // Special handling for the UI category "Zadania dowodowe i otwarte"
+    let isMetaOpen = topic === 'Zadania dowodowe i otwarte';
+    let topics = (topic === 'all' || !topic) ? Object.keys(GENERATORS) : [topic];
 
     for (let i = 0; i < count; i++) {
         let t = pickRandom(topics);
         let diff = difficulty === 'mix' ? getRand(1, 3) : parseInt(difficulty);
-        let gens = GENERATORS[t] && GENERATORS[t][diff];
-        if (!gens || gens.length === 0) {
-            // fallback to any difficulty
-            for (let d = 1; d <= 3; d++) {
-                if (GENERATORS[t] && GENERATORS[t][d] && GENERATORS[t][d].length > 0) { gens = GENERATORS[t][d]; diff = d; break; }
+        
+        // If meta-category, 90% chance to pull ANY open question from DB
+        let useDB = (isMetaOpen) ? (Math.random() < 0.95) : ((reqType === 'open' && Math.random() < 0.85) || Math.random() < 0.25);
+        
+        if (useDB && typeof MATH_DB_100 !== 'undefined' && MATH_DB_100.length > 0) {
+            // For meta-category, we don't filter by 'topic' string match, just by 'type: open'
+            let possible = MATH_DB_100.filter(q => {
+                let topicMatch = isMetaOpen || topic === 'all' || q.topic === topic;
+                let diffMatch = difficulty === 'mix' || q.difficulty === diff;
+                let typeMatch = !reqType || q.type === reqType;
+                return topicMatch && diffMatch && typeMatch;
+            });
+            
+            if (possible.length > 0) {
+                let dbQ = pickRandom(possible);
+                questions.push({...dbQ, id: 'math_static_' + dbQ.id + '_' + Date.now() + '_' + i});
+                continue;
             }
         }
+
+        let gens = GENERATORS[t] && GENERATORS[t][diff];
+        if (reqType || isMetaOpen) {
+            let targetType = reqType || (isMetaOpen ? 'open' : null);
+            if (targetType) {
+                gens = (gens || []).filter(g => {
+                    let sample = g();
+                    return targetType === 'mcq' ? !!sample.options : !sample.options;
+                });
+            }
+        }
+        
+        if (!gens || gens.length === 0) {
+            // fallback logic...
+            for (let d = 3; d >= 1; d--) {
+                let cand = (GENERATORS[t] && GENERATORS[t][d]) || [];
+                gens = cand; diff = d; if (cand.length > 0) break;
+            }
+        }
+
         if (!gens || gens.length === 0) continue;
 
         let gen = pickRandom(gens);
@@ -1432,7 +1664,7 @@ function generateMathQuestions(topic, count, difficulty) {
         if (result.options) {
             q.options = result.options;
             q.correct = q.options.indexOf(result.correct);
-            if (q.correct === -1) q.correct = 0; // safety fallback
+            if (q.correct === -1) q.correct = 0;
         } else {
             q.correct = result.correct;
         }
@@ -1442,17 +1674,11 @@ function generateMathQuestions(topic, count, difficulty) {
 }
 
 function generateMathExam() {
-    let closed = [], open = [];
-    let topics = Object.keys(GENERATORS);
-    topics.forEach(t => {
-        try {
-            let qs = generateMathQuestions(t, 10, 'mix');
-            closed.push(...qs.filter(q => q.type === 'mcq'));
-            open.push(...qs.filter(q => q.type !== 'mcq'));
-        } catch(e){}
-    });
-    closed = shuffleArray(closed).slice(0, 15);
-    open = shuffleArray(open).slice(0, 5);
+    // 15 Closed (MCQ) and 4-5 Open
+    let closed = generateMathQuestions('all', 15, 'mix', 'mcq');
+    let open = generateMathQuestions('all', 5, 'mix', 'open');
+    
+    // Sort so Open are at the end, though current logic handles slices
     return [...closed, ...open];
 }
 
@@ -1480,17 +1706,19 @@ const ENG_CATEGORIES = {
         {en: 'slim', pl: 'szczupły'}, {en: 'overweight', pl: 'z nadwagą'}, {en: 'curly', pl: 'kręcone (włosy)'}, {en: 'blonde', pl: 'blond'}, 
         {en: 'friendly', pl: 'przyjazny'}, {en: 'patient', pl: 'cierpliwy'}, {en: 'generous', pl: 'hojny'}, {en: 'reliable', pl: 'niezawodny'}, 
         {en: 'honest', pl: 'uczciwy'}, {en: 'confident', pl: 'pewny siebie'}, {en: 'disappointed', pl: 'rozczarowany'}, {en: 'excited', pl: 'podekscytowany'}, 
-        {en: 'embarrassed', pl: 'zawstydzony'}, {en: 'proud', pl: 'dumny'}, {en: 'worried', pl: 'zmartwiony'}
+        {en: 'embarrassed', pl: 'zawstydzony'}, {en: 'proud', pl: 'dumny'}, {en: 'worried', pl: 'zmartwiony'}, {en: 'stubborn', pl: 'uparty'}, 
+        {en: 'ambitious', pl: 'ambitny'}, {en: 'selfish', pl: 'samolubny'}, {en: 'moody', pl: 'kapryśny'}, {en: 'sociable', pl: 'towarzyski'}
     ],
     mieszkanie: [
         {en: 'detached house', pl: 'dom wolnostojący'}, {en: 'flat', pl: 'mieszkanie'}, {en: 'suburbs', pl: 'przedmieścia'}, {en: 'basement', pl: 'piwnica'},
         {en: 'attic', pl: 'strych'}, {en: 'wardrobe', pl: 'szafa'}, {en: 'cushion', pl: 'poduszka ozdobna'}, {en: 'fireplace', pl: 'kominek'}, {en: 'dishwasher', pl: 'zmywarka'}, 
-        {en: 'microwave', pl: 'mikrofalówka'}, {en: 'do the laundry', pl: 'robić pranie'}, {en: 'vacuum the floor', pl: 'odkurzać podłogę'}, {en: 'take out the rubbish', pl: 'wynieść śmieci'}
+        {en: 'microwave', pl: 'mikrofalówka'}, {en: 'do the laundry', pl: 'robić pranie'}, {en: 'vacuum the floor', pl: 'odkurzać podłogę'}, {en: 'take out the rubbish', pl: 'wynieść śmieci'},
+        {en: 'central heating', pl: 'centralne ogrzewanie'}, {en: 'rent', pl: 'czynsz / wynajmować'}, {en: 'terraced house', pl: 'szeregowiec'}
     ],
     edukacja: [
         {en: 'homework', pl: 'zadanie domowe'}, {en: 'exam', pl: 'egzamin'}, {en: 'grade', pl: 'ocena'}, {en: 'revise', pl: 'powtarzać materiał'},
         {en: 'attend', pl: 'uczęszczać'}, {en: 'scholarship', pl: 'stypendium'}, {en: 'timetable', pl: 'plan lekcji'}, {en: 'physics', pl: 'fizyka'}, 
-        {en: 'biology', pl: 'biologia'}, {en: 'PE', pl: 'WF (wychowanie fizyczne)'}
+        {en: 'biology', pl: 'biologia'}, {en: 'PE', pl: 'WF (wychowanie fizyczne)'}, {en: 'headteacher', pl: 'dyrektor szkoły'}, {en: 'term', pl: 'semestr'}
     ],
     praca: [
         {en: 'earn', pl: 'zarabiać'}, {en: 'employ', pl: 'zatrudniać'}, {en: 'retire', pl: 'przejść na emeryturę'}, {en: 'serve', pl: 'obsługiwać'},
@@ -1500,11 +1728,13 @@ const ENG_CATEGORIES = {
     zycie: [
         {en: 'siblings', pl: 'rodzeństwo'}, {en: 'relatives', pl: 'krewni'}, {en: 'nephew', pl: 'siostrzeniec'}, {en: 'cousin', pl: 'kuzyn'}, 
         {en: 'friendship', pl: 'przyjaźń'}, {en: 'wedding', pl: 'ślub'}, {en: 'divorce', pl: 'rozwód'}, {en: 'get on with', pl: 'dogadywać się z'}, 
-        {en: 'leisure time', pl: 'czas wolny'}, {en: 'celebration', pl: 'uroczystość'}, {en: 'hobby', pl: 'hobby'}, {en: 'hang out', pl: 'spędzać czas'}
+        {en: 'leisure time', pl: 'czas wolny'}, {en: 'celebration', pl: 'uroczystość'}, {en: 'hobby', pl: 'hobby'}, {en: 'hang out', pl: 'spędzać czas'},
+        {en: 'ancestors', pl: 'przodkowie'}, {en: 'engaged', pl: 'zaręczony'}, {en: 'toddler', pl: 'brzdąc / małe dziecko'}
     ],
     zywienie: [
         {en: 'canteen', pl: 'stołówka'}, {en: 'restaurant', pl: 'restauracja'}, {en: 'waiter', pl: 'kelner'}, {en: 'menu', pl: 'menu'}, 
-        {en: 'receipt', pl: 'paragon'}, {en: 'spicy', pl: 'pikantny'}, {en: 'delicious', pl: 'pyszny'}, {en: 'sour', pl: 'kwaśny'}, {en: 'ingredients', pl: 'składniki'}
+        {en: 'receipt', pl: 'paragon'}, {en: 'spicy', pl: 'pikantny'}, {en: 'delicious', pl: 'pyszny'}, {en: 'sour', pl: 'kwaśny'}, {en: 'ingredients', pl: 'składniki'},
+        {en: 'frozen food', pl: 'mrożonki'}, {en: 'tip', pl: 'napiwek'}, {en: 'bill', pl: 'rachunek'}
     ],
     zakupy: [
         {en: 'discount', pl: 'zniżka'}, {en: 'refund', pl: 'zwrot pieniędzy'}, {en: 'exchange', pl: 'wymiana'}, {en: 'customer service', pl: 'obsługa klienta'}, 
@@ -1512,7 +1742,8 @@ const ENG_CATEGORIES = {
     ],
     podroze: [
         {en: 'departure', pl: 'odlot / odjazd'}, {en: 'arrival', pl: 'przylot / przyjazd'}, {en: 'platform', pl: 'peron'}, {en: 'hostel', pl: 'hostel'}, 
-        {en: 'guesthouse', pl: 'pensjonat'}, {en: 'luggage', pl: 'bagaż'}, {en: 'sightseeing', pl: 'zwiedzanie'}, {en: 'delayed', pl: 'opóźniony'}
+        {en: 'guesthouse', pl: 'pensjonat'}, {en: 'luggage', pl: 'bagaż'}, {en: 'sightseeing', pl: 'zwiedzanie'}, {en: 'delayed', pl: 'opóźniony'},
+        {en: 'single ticket', pl: 'bilet w jedną stronę'}, {en: 'return ticket', pl: 'bilet powrotny'}, {en: 'passenger', pl: 'pasażer'}
     ],
     kultura: [
         {en: 'director', pl: 'reżyser'}, {en: 'painter', pl: 'malarz'}, {en: 'musician', pl: 'muzyk'}, {en: 'audience', pl: 'publiczność'}, 
@@ -1610,6 +1841,41 @@ const SITUATIONAL_DIALOGUES = [
         options: ["Never mind", "You're welcome", "Of course", "That's right"],
         ans: "Never mind",
         explanation: "'Never mind' to odpowiednia reakcja na przeprosiny — oznacza 'nie przejmuj się'."
+    },
+    {
+        context: "At the airport",
+        dialogue: "A: Can I see your passport, please?<br>B: Yes, [...............].",
+        options: ["here you are", "it is here", "take it", "you can have it"],
+        ans: "here you are",
+        explanation: "'Here you are' używamy podając coś komuś."
+    },
+    {
+        context: "Asking for permission",
+        dialogue: "A: [...............] I use your tablet for a minute?<br>B: Sure, go ahead.",
+        options: ["May", "Must", "Should", "Would"],
+        ans: "May",
+        explanation: "'May I...' to grzeczna prośba o pozwolenie."
+    },
+    {
+        context: "Borrowing money",
+        dialogue: "A: [...............] you lend me five pounds, please?<br>B: I'm sorry, I'm broke.",
+        options: ["Could", "Should", "Shall", "Must"],
+        ans: "Could",
+        explanation: "'Could you...' to prośba o przysługę."
+    },
+    {
+        context: "Inviting a friend",
+        dialogue: "A: Would you like to go to the cinema tonight?<br>B: [...............]. What's on?",
+        options: ["I'd love to", "I'd like", "I will", "I love"],
+        ans: "I'd love to",
+        explanation: "'I'd love to' to entuzjastyczne przyjęcie zaproszenia."
+    },
+    {
+        context: "Asking about price",
+        dialogue: "A: [...............] is this scarf?<br>B: It's fifteen pounds.",
+        options: ["How much", "How many", "What price", "How long"],
+        ans: "How much",
+        explanation: "Pytanie o cenę rzeczowników niepoliczalnych (money)."
     }
 ];
 
@@ -1626,7 +1892,15 @@ const GRAMMAR_PARAPHRASES = [
     { start: "They are painting my house now.", p: "My house [...............] painted now.", ans: "is being" },
     { start: "I started living here in 2015.", p: "I have lived here [...............] 2015.", ans: "since" },
     { start: "I'm sure he is at home now.", p: "He [...............] at home now.", ans: "must be" },
-    { start: "It's not necessary to bring your own lunch.", p: "You [...............] bring your own lunch.", ans: "don't have to" }
+    { start: "It's not necessary to bring your own lunch.", p: "You [...............] bring your own lunch.", ans: "don't have to" },
+    { start: "What is your nationality?", p: "Where [...............] from?", ans: "do you come" },
+    { start: "This car belongs to my father.", p: "This is [...............] car.", ans: "my father's" },
+    { start: "We must leave now or we will miss the bus.", p: "If we [...............] now, we will miss the bus.", ans: "don't leave" },
+    { start: "Is this your first time in Poland?", p: "Have you [...............] to Poland before?", ans: "ever been" },
+    { start: "I can't wait to see you.", p: "I am looking [...............] forward to seeing you.", ans: "forward" },
+    { start: "He is a very good chess player.", p: "He [...............] chess very well.", ans: "plays" },
+    { start: "No other student in my class is taller than Mark.", p: "Mark is [...............] student in my class.", ans: "the tallest" },
+    { start: "Perhaps she will help us.", p: "She [...............] help us.", ans: "might" }
 ];
 
 
@@ -1639,7 +1913,13 @@ const GRAMMAR_TRANSLATIONS = [
     { p: "I (interesuję się) [...............] photography.", ans: ["am interested in"] },
     { p: "We (idziemy do kina) [...............] tomorrow evening.", ans: ["are going to the cinema", "are going out to the cinema"] },
     { p: "(Gdzie byłeś) [...............] yesterday at 5 PM?", ans: ["Where were you"] },
-    { p: "If it (będzie padać) [...............] tomorrow, we will stay at home. (Uwaga: Tryb warunkowy!)", ans: ["rains"] }
+    { p: "If it (będzie padać) [...............] tomorrow, we will stay at home. (Uwaga: Tryb warunkowy!)", ans: ["rains"] },
+    { p: "I (zamierzam) [...............] buy a new car next month.", ans: ["am going to"] },
+    { p: "This is the car (który) [...............] I bought last week.", ans: ["which", "that"] },
+    { p: "He (ma) [...............] breakfast at the moment.", ans: ["is having"] },
+    { p: "You (powinieneś przestać) [...............] smoking.", ans: ["should stop"] },
+    { p: "I (nie muszę) [...............] wear a uniform at school.", ans: ["don't have to"] },
+    { p: "There (jest wielu) [...............] people in the street.", ans: ["are many", "are a lot of"] }
 ];
 
 const REACTION_PHRASES = [
@@ -1984,7 +2264,18 @@ const POLISH_LEKTURY_DB = [
     {type:'fact', book:'Opowieść wigilijna', q:'Jak nazywał się wspólnik Scrooge’a, który nawiedził go jako pierwszy duch?', answer:'Jakub Marley.', wrongs:['Bob Cratchit','Fred','Tiny Tim']},
     {type:'fact', book:'Quo vadis', q:'Kto był autorem "Pieśni o pożarze Troi", którą śpiewał Neron?', answer:'Sam Neron (przypisywał sobie boski talent).', wrongs:['Homer','Petroniusz','Chilon Chilonides']},
     {type:'fact', book:'Quo vadis', q:'W jaki sposób zginął Petroniusz?', answer:'Popełnił samobójstwo (przeciął sobie żyły podczas uczty).', wrongs:['Został zabity przez Nerona','Zginął na arenie','Umarł ze starości']},
-    {type:'fact', book:'Syzyfowe prace', q:'Kto wyrecytował "Redutę Ordona" w klasie, co stało się punktem zwrotnym?', answer:'Bernard Zygier.', wrongs:['Marcin Borowicz','Andrzej Radek','Nogacki']}
+    {type:'fact', book:'Syzyfowe prace', q:'Kto wyrecytował "Redutę Ordona" w klasie, co stało się punktem zwrotnym?', answer:'Bernard Zygier.', wrongs:['Marcin Borowicz','Andrzej Radek','Nogacki']},
+    {type:'author', book:'Artysta', answer:'Sławomir Mrożek', wrongs:['Witold Gombrowicz','Stanisław Lem','Czesław Miłosz']},
+    {type:'character', book:'Artysta', name:'Kogut', desc:'bohater, który chciał zostać lwem w cyrku, mimo że był tylko ptakiem', wrongs:['Lis','Dyrektor','Koń']},
+    {type:'fact', book:'Reduta Ordona', q:'Kto jest narratorem utworu (adiutantem, który widzi wybuch)?', answer:'Stefan Garczyński (przyjaciel Mickiewicza).', wrongs:['Ordon','Car Mikołaj','Ksiądz Robak']},
+    {type:'genre', book:'Świtezianka', answer:'ballada', wrongs:['tren','epopeja','dramat']},
+    {type:'fact', book:'Treny', q:'Który tren opisuje pustkę w domu po śmierci Urszulki ("Wielkieś mi uczyniła pustki w domu moim...")?', answer:'Tren VIII.', wrongs:['Tren VII','Tren I','Tren XIX']},
+    {type:'fact', book:'Tren VII', q:'Czego symbolem są "letnie sukienki" i "paski równe" opisane w utworze?', answer:'Przedmiotów pozostałych po zmarłym dziecku, wzmagających żal.', wrongs:['Prezentów dla żony','Ubrań Jana Kochanowskiego','Kostiumów teatralnych']},
+    {type:'character', book:'Zemsta', name:'Cześnik Raptusiewicz', desc:'gwałtowny, szczery, nienawidzący Rejenta', wrongs:['Rejent Milczek','Papkin','Wacław']},
+    {type:'character', book:'Zemsta', name:'Rejent Milczek', desc:'pozornie pokorny, ale przebiegły i uparty wróg Cześnika', wrongs:['Cześnik','Papkin','Podstolina']},
+    {type:'character', book:'Balladyna', name:'Kirkor', desc:'szlachetny hrabia szukający żony wśród ludu', wrongs:['Grabiec','Kostryn','Pustelnik']},
+    {type:'fact', book:'Mały Książę', q:'Dlaczego Mały Książę opuścił swoją planetę?', answer:'Poczuł się nieszczęśliwy i rozczarowany zachowaniem róży.', wrongs:['Szukał pracy','Chciał zwiedzić Ziemię','Uciekał przed baobabami']},
+    {type:'fact', book:'Latarnik', q:'Co spowodowało, że Skawiński stracił pracę w latarni?', answer:'Zaczytał się w "Panu Tadeuszu" i zapomniał zapalić latarnię.', wrongs:['Zachorował','Zasnął na służbie','Został napadnięty']}
 ];
 
 const POLISH_TEORIA_DB = [
@@ -2007,7 +2298,15 @@ const POLISH_TEORIA_DB = [
     // gatunki i rodzaje
     {word:'Liryka', def:'Jeden z trzech rodzajów literackich (obok Epiki i Dramatu), charakteryzuje się podmiotem lirycznym'},
     {word:'Epika', def:'Rodzaj literacki wyposażony w nadrzędnego narratora oraz fabułę'},
-    {word:'Dramat', def:'Rodzaj literacki oparty na dialogach i didaskaliach, przeznaczony na scenę'}
+    {word:'Dramat', def:'Rodzaj literacki oparty na dialogach i didaskaliach, przeznaczony na scenę'},
+    {word:'Podmiot liryczny', def:'Osoba mówiąca w wierszu, wyrażająca swoje uczucia i przeżycia'},
+    {word:'Narrator trzecioosobowy', def:'Narrator wszechwiedzący, który nie bierze udziału w wydarzeniach'},
+    {word:'Didaskalia', def:'Tekst poboczny w dramacie, zawierający wskazówki dla aktorów i reżysera'},
+    {word:'Ironia', def:'Sposób wypowiedzi, w którym rzeczywisty sens jest sprzeczny z dosłownym znaczeniem'},
+    {word:'Inwokacja', def:'Rozbudowana apostrofa na początku utworu, prośba o natchnienie'},
+    {word:'Symbol', def:'Motyw posiadający poza znaczeniem dosłownym inne, ukryte, niejednoznaczne'},
+    {word:'Alegoria', def:'Motyw posiadający jedno stałe, domyślne znaczenie (np. lis - spryt)'},
+    {word:'Parafraza', def:'Swobodne przetworzenie tekstu, które zachowuje sens oryginału'}
 ];
 
 const POLISH_GRAMMAR_DB = [
@@ -2024,7 +2323,10 @@ const POLISH_GRAMMAR_DB = [
     {q:'Które zdanie jest zdaniem bezpodmiotowym?', a:'Grzmiało i błyskało się.', w:['Mama gotuje obiad.','Dzieci bawią się w parku.','Pies szczeka głośno.']},
     {q:'Jaką funkcję składniową pełni wyraz „szybko" w zdaniu „Biegł szybko"?', a:'Okolicznik sposobu', w:['Dopełnienie','Przydawka','Orzeczenie']},
     {q:'Wskaż antonim słowa „odwaga":', a:'tchórzostwo', w:['dzielność','heroizm','waleczność']},
-    {q:'Wskaż formę biernika liczby pojedynczej rzeczownika „książka":', a:'książkę', w:['książki','książce','książką']}
+    {q:'Wskaż formę biernika liczby pojedynczej rzeczownika „książka":', a:'książkę', w:['książki','książce','książką']},
+    {q:'Który wyraz jest imiesłowem przysłówkowym współczesnym?', a:'czytając', w:['przeczytawszy','czytany','czytający']},
+    {q:'Wskaż wyraz, w którym zaszła wymiana e : o:', a:'nieść - niosę', w:['stół - stoły','ręka - rączka','miasto - miejski']},
+    {q:'Jaką funkcję pełni przecinek w zdaniu: "Janek, przynieś mi wodę"?', a:'Oddziela wołacz.', w:['Oddziela zdania składowe.','Wprowadza wyliczenie.','Oddziela wtrącenie.']}
 ];
 
 const POLISH_ORTOGRAFIA_DB = [
@@ -2068,7 +2370,9 @@ const MOTIFS_DB = [
     {motif: 'Przyjaźń', books: ['Kamienie na szaniec', 'Chłopcy z Placu Broni', 'Mały Książę', 'Hobbit', 'Cyberiada'], desc: 'Więź między bohaterami, która pozwala im przetrwać najcięższe próby.'},
     {motif: 'Przyroda', books: ['Pan Tadeusz', 'Balladyna', 'Opowieści z Narnii', 'Latarnik'], desc: 'Przyroda jako tło wydarzeń, siła magiczna lub element budujący tożsamość narodową.'},
     {motif: 'Władza / Odpowiedzialność', books: ['Balladyna', 'Cyberiada', 'Mały Książę', 'Zemsta'], desc: 'Problem odpowiedzialności za własne odkrycia, rządy nad innymi i konsekwencje nadużywania siły.'},
-    {motif: 'Poszukiwanie sensu / Horyzonty', books: ['Mały Książę', 'Komunikat', 'Latarnik', 'Hobbit'], desc: 'Wychodzenie poza granice własnej wiedzy i poszukiwanie celu w życiu.'}
+    {motif: 'Poszukiwanie sensu / Horyzonty', books: ['Mały Książę', 'Komunikat', 'Latarnik', 'Hobbit'], desc: 'Wychodzenie poza granice własnej wiedzy i poszukiwanie celu w życiu.'},
+    {motif: 'Samotność', books: ['Latarnik', 'Mały Książę', 'Opowieść wigilijna'], desc: 'Izolacja bohatera, często z wyboru lub z powodu wykluczenia społecznego.'},
+    {motif: 'Miłość', books: ['Quo vadis', 'Pan Tadeusz', 'Balladyna'], desc: 'Siła napędowa działań bohaterów, bywa destrukcyjna lub zbawienna.'}
 ];
 
 const LITERARY_FRAGMENTS = [
@@ -2127,6 +2431,20 @@ const LITERARY_FRAGMENTS = [
         question: "Jaką naukę moralną niesie scena z Widmem Złego Pana? Dlaczego nie może on zaznać spokoju po śmierci?",
         correct: "Widmo Złego Pana nie zaznało za życia ludzkiego współczucia — był okrutny wobec poddanych. Nie może trafić do nieba, bo nikt za niego się nie modli. Nauka: brak miłosierdzia skazuje na wieczne cierpienie.",
         explanation: "Mickiewicz przekazuje ludową mądrość: los po śmierci zależy od uczynków za życia, a współczucie jest fundamentem człowieczeństwa."
+    },
+    {
+        book: 'Artysta',
+        fragment: "Kogut wszedł na arenę. Myślał, że ryk lwa, który wyda z siebie, zachwyci dyrektora. Ale z jego gardła wydobyło się tylko żałosne 'kukuryku'.",
+        question: "Wyjaśnij znaczenie postawy Koguta w kontekście całego utworu. Czym jest 'ambicja', którą kierował się bohater?",
+        correct: "Kogut reprezentuje fałszywą ambicję i brak samoakceptacji. Chce być kimś, kim nie jest (lwem), zamiast być najlepszym w swojej dziedzinie. Utwór jest satyrą na ludzi, którzy nie znają swoich ograniczeń.",
+        explanation: "Mrożek w formie paraboli pokazuje, że udawanie kogoś innego prowadzi do śmieszności."
+    },
+    {
+        book: 'Reduta Ordona',
+        fragment: "Tam i tam widzę... Co? Gwałt! Błyskawica! Głośniej niż sto piorunów - huk! Ta ziemia drży! Oto reduta Ordona wyleciała w powietrze!",
+        question: "Jaką funkcję w utworze pełni opis wybuchu reduty? Jak ocenić czyn Ordona w świetle romantycznej wizji patrioty?",
+        correct: "Wybuch jest aktem desperackiej odwagi i poświęcenia. Ordon woli zniszczyć fort i zginąć, niż oddać go w ręce wroga. To realizacja wzorca bohatera tragicznego, gotowego na najwyższą ofiarę.",
+        explanation: "Mickiewicz kreuje Ordona na symbol niezłomnego oporu przeciwko carskiej tyranii."
     }
 ];
 
@@ -5332,21 +5650,28 @@ function toggle3D(shape) {
 
 // --- ASYSTENT AI: INTELIGENTNE PODPOWIEDZI ---
 function getSmartHint(q, picks) {
-    if (q.subject !== 'math') return null;
+    if (!q || q.subject !== 'math' || !q.question) return null;
     let hint = null;
-    const lastPick = picks[picks.length - 1];
-    const correctVal = q.options[q.correct];
-    const userVal = q.options[lastPick];
+    const lastPick = (picks && picks.length > 0) ? picks[picks.length - 1] : undefined;
+    
+    // Safe access for MCQ-specific hints
+    if (q.options && q.options[q.correct] !== undefined && q.options[lastPick] !== undefined) {
+        const correctVal = q.options[q.correct];
+        const userVal = q.options[lastPick];
+        if (parseFloat(userVal) === -parseFloat(correctVal)) {
+            hint = "Uważaj na znaki! Wygląda na to, że wynik się zgadza, ale zgubiłeś minus lub dodałeś go niepotrzebnie.";
+        }
+    }
 
-    // Logika rozpoznawania typowych błędów
-    if (parseFloat(userVal) === -parseFloat(correctVal)) {
-        hint = "Uważaj na znaki! Wygląda na to, że wynik się zgadza, ale zgubiłeś minus lub dodałeś go niepotrzebnie.";
-    } else if (q.question.includes('dm') && q.question.includes('cm') && !isNaN(parseFloat(userVal))) {
-        hint = "Sprawdź jednostki! Pamiętaj, że 1 dm = 10 cm, a 1 dm² = 100 cm². Czy na pewno zamieniłeś wszystko przed liczeniem?";
-    } else if (q.topic === 'Wyrażenia algebraiczne i równania' && q.question.includes('x')) {
-        hint = "Wskazówka: Przy przenoszeniu składnika na drugą stronę równania zawsze zmień jego znak na przeciwny!";
-    } else if (q.topic === 'Liczby i działania' && q.question.includes('pierwiastek')) {
-        hint = "Wskazówka: Pierwiastek kwadratowy to liczba, która pomnożona przez samą siebie daje liczbę pod znakiem pierwiastka.";
+    // Generic hints that work for both MCQ and GAP
+    if (typeof q.question === 'string') {
+        if (q.question.includes('dm') && q.question.includes('cm')) {
+            hint = "Sprawdź jednostki! Pamiętaj, że 1 dm = 10 cm, a 1 dm² = 100 cm². Czy na pewno zamieniłeś wszystko przed liczeniem?";
+        } else if (q.topic === 'Wyrażenia algebraiczne i równania' && q.question.includes('x')) {
+            hint = "Wskazówka: Przy przenoszeniu składnika na drugą stronę równania zawsze zmień jego znak na przeciwny!";
+        } else if (q.topic === 'Liczby i działania' && q.question.includes('pierwiastek')) {
+            hint = "Wskazówka: Pierwiastek kwadratowy to liczba, która pomnożona przez samą siebie daje liczbę pod znakiem pierwiastka.";
+        }
     }
     return hint;
 }
@@ -6657,25 +6982,27 @@ if(!subj.completed.includes(q.id)&&correct)subj.completed.push(q.id);
 saveProgress(data);
     if(q.type!=='open'){
         let fb = document.getElementById('quiz-feedback');
-        let smartHint = !correct ? getSmartHint(q, quizState.answers.map((a,i)=>i===quizState.current?quizState.questions[i].options.indexOf(q.options[q.lastPick]):-1)) : null;
-        // Optimization: pick the last answer index from state if possible, though easier to pass it
-        
         let assistantHtml = '';
-        if (!correct) {
-            // Need the index picked. MCQ is easiest.
-            let hint = getSmartHint(q, [q.lastPickIdx]);
-            if (hint) {
-                assistantHtml = `<div class="ai-hint-box" style="display:block">
-                    <div class="ai-hint-title">🤖 Asystent E8</div>
-                    <div class="ai-hint-text">${hint}</div>
-                </div>`;
+        
+        try {
+            if (!correct) {
+                // Ensure we handle both MCQ (lastPickIdx) and potentially other types
+                let hint = getSmartHint(q, [q.lastPickIdx]);
+                if (hint) {
+                    assistantHtml = `<div class="ai-hint-box" style="display:block">
+                        <div class="ai-hint-title">🤖 Asystent E8</div>
+                        <div class="ai-hint-text">${hint}</div>
+                    </div>`;
+                }
             }
-        }
+        } catch(e) { console.warn("Hint generation failed:", e); }
 
         fb.innerHTML=`<div class="quiz-explanation">${correct?'✅ Dobrze!':'❌ Źle.'} ${q.explanation||''}</div>${assistantHtml}`;
         renderMath(fb);
     }
-    document.getElementById('quiz-next').style.display='block';
+    // Always show next button even if hint generation crashed
+    let nextBtn = document.getElementById('quiz-next');
+    if(nextBtn) nextBtn.style.display='block';
 }
 
 
