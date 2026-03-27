@@ -1534,6 +1534,54 @@ registerGen('Zadania dowodowe i otwarte', 2, function() {
 });
 
 registerGen('Zadania dowodowe i otwarte', 3, function() {
+    let count = getRand(3, 5);
+    let arr = [];
+    let sum = 0;
+    for (let i = 0; i < count; i++) {
+        let num = getRand(1, 10);
+        arr.push(num);
+        sum += num;
+    }
+    let x = getRand(1, 10);
+    let mean = (sum + x) / (count + 1);
+    return {
+        type: 'open',
+        question: `Dany jest zbiór liczb: ${arr.join(', ')}, x. Średnia arytmetyczna tego zbioru wynosi ${fmt(mean.toFixed(2))}. Oblicz wartość x.`,
+        correct: x,
+        explanation: `Suma liczb: (${arr.join(' + ')}) = ${sum}. Wiemy, że (${sum} + x) / ${arr.length + 1} = ${fmt(mean.toFixed(2))}. Stąd ${sum} + x = ${fmt(mean.toFixed(2))} * ${arr.length + 1} = ${fmt(mean * (arr.length + 1)).toFixed(2)}. Zatem x = ${fmt(mean * (arr.length + 1) - sum).toFixed(2)} = ${x}.`
+    };
+});
+
+registerGen('Geometria płaska', 3, function() {
+    let triples = [[3,4,5], [5,12,13], [8,15,17]];
+    let base = triples[getRand(0, triples.length - 1)];
+    let m = getRand(1, 4); 
+    let t1 = base.map(s => s * m);
+    let scale = [2, 3, 0.5][getRand(0, 2)];
+    let t2 = t1.map(s => s * scale);
+    
+    let type = getRand(1, 2);
+    if (type === 1) {
+        let p2 = t2.reduce((a, b) => a + b, 0);
+        return {
+            type: 'open',
+            question: `Trójkąt prostokątny T1 ma boki o długościach: ${t1[0]} cm, ${t1[1]} cm, ${t1[2]} cm. Trójkąt T2 jest podobny do T1 w skali k = ${scale}. Oblicz obwód trójkąta T2.`,
+            correct: p2,
+            explanation: `Obwód T1 = ${t1.reduce((a,b)=>a+b,0)}. Skala k = ${scale}, więc obwód T2 = Obwód T1 * ${scale} = ${p2} cm.`
+        };
+    } else {
+        let area1 = (t1[0] * t1[1]) / 2;
+        let area2 = area1 * (scale * scale);
+        return {
+            type: 'open',
+            question: `Trójkąt prostokątny T1 ma przyprostokątne: ${t1[0]} cm i ${t1[1]} cm. Trójkąt T2 jest podobny do T1 w skali k = ${scale}. Oblicz pole trójkąta T2.`,
+            correct: area2,
+            explanation: `Pole T1 = ${area1}. Stosunek pól trójkątów podobnych to k^2 = ${scale*scale}. Zatem Pole T2 = ${area1} * ${scale*scale} = ${area2} cm².`
+        };
+    }
+});
+
+registerGen('Zadania dowodowe i otwarte', 3, function() {
     let a = getRand(2, 5);
     let b = a + 2;
     let c = Math.sqrt(a*a + b*b);
@@ -1876,6 +1924,56 @@ const SITUATIONAL_DIALOGUES = [
         options: ["How much", "How many", "What price", "How long"],
         ans: "How much",
         explanation: "Pytanie o cenę rzeczowników niepoliczalnych (money)."
+    },
+    // New categories from Holistic Analysis
+    {
+        context: "Health / Samopoczucie",
+        dialogue: "A: What seems to be the problem?<br>B: [...............] a terrible cough and a fever.",
+        options: ["I've got", "I am", "I feel", "I do"],
+        ans: "I've got",
+        explanation: "W diagnozach medycznych używamy 'I've got' (mam) lub 'I feel'."
+    },
+    {
+        context: "Asking for directions",
+        dialogue: "A: Excuse me, [...............] get to the airport?<br>B: Go straight on and turn left at the lights.",
+        options: ["how do I", "where is to", "can I to", "which way"],
+        ans: "how do I",
+        explanation: "Standardowa formuła pytania o drogę: 'How do I get to...'."
+    },
+    {
+        context: "Offering / Requesting help",
+        dialogue: "A: Can you give me a hand with this suitcase?<br>B: [...............]. It looks very heavy.",
+        options: ["Of course", "Here you are", "I'd rather not", "Not at all"],
+        ans: "Of course",
+        explanation: "'Give me a hand' to prośba o pomoc. 'Of course' to naturalna zgoda."
+    },
+    {
+        context: "Advice and Suggestions",
+        dialogue: "A: I need your advice. What should I do?<br>B: If I [...............] you, I'd talk to the teacher.",
+        options: ["were", "am", "will be", "had been"],
+        ans: "were",
+        explanation: "II tryb warunkowy w udzielaniu rad: 'If I were you...'."
+    },
+    {
+        context: "Giving opinions",
+        dialogue: "A: What's your opinion of this new book?<br>B: [...............], it's a bit boring.",
+        options: ["In my opinion", "I think so", "I'm afraid", "To be honest"],
+        ans: "In my opinion",
+        explanation: "Wyrażanie opinii: 'In my opinion' (Moim zdaniem)."
+    },
+    {
+        context: "Phone conversation",
+        dialogue: "A: Can you speak up, please? [...............] die.<br>B: Oh, sorry. I'll call you later.",
+        options: ["My battery is about to", "I am going to", "The phone is", "I must"],
+        ans: "My battery is about to",
+        explanation: "Sytuacja telefoniczna: 'My battery is about to die' (bateria mi zaraz padnie)."
+    },
+    {
+        context: "Shop / Restaurant",
+        dialogue: "A: Are you ready to order?<br>B: Yes, we'd like [...............] for two.",
+        options: ["a table", "a meal", "the bill", "to pay"],
+        ans: "a table",
+        explanation: "W restauracji przed zamówieniem prosimy o stolik: 'a table for two'."
     }
 ];
 
@@ -2198,8 +2296,12 @@ const POLISH_LEKTURY_DB = [
     {type:'author', book:'Opowieść wigilijna', answer:'Charles Dickens', wrongs:['William Shakespeare','Oscar Wilde','Mark Twain']},
     {type:'author', book:'Zemsta', answer:'Aleksander Fredro', wrongs:['Adam Mickiewicz','Juliusz Słowacki','Stanisław Wyspiański']},
     {type:'author', book:'Kamienie na szaniec', answer:'Aleksander Kamiński', wrongs:['Arkady Fiedler','Zofia Nałkowska','Melchior Wańkowicz']},
-    {type:'author', book:'Cyberiada (wybrane opowiadania)', answer:'Stanisław Lem', wrongs:['Janusz Zajdel','Jacek Dukaj','Sławomir Mrożek']},
+    {type:'author', book:'Cyberiada (Bajka o maszynie cyfrowej co ze smokiem walczyła)', answer:'Stanisław Lem', wrongs:['Janusz Zajdel','Jacek Dukaj','Sławomir Mrożek']},
     {type:'author', book:'Komunikat (wiersz)', answer:'Julia Hartwig', wrongs:['Wisława Szymborska','Ewa Lipska','Halina Poświatowska']},
+    {type:'author', book:'Odprawa posłów greckich', answer:'Jan Kochanowski', wrongs:['Mikołaj Rej','Ignacy Krasicki','Adam Mickiewicz']},
+    {type:'author', book:'Folwark zwierzęcy', answer:'George Orwell', wrongs:['Aldous Huxley','Ray Bradbury','Ernest Hemingway']},
+    {type:'author', book:'Ferdydurke (fragmenty)', answer:'Witold Gombrowicz', wrongs:['Bruno Schulz','Stanisław Ignacy Witkiewicz','Czesław Miłosz']},
+    {type:'author', book:'Śmierć Pułkownika', answer:'Adam Mickiewicz', wrongs:['Juliusz Słowacki','Cyprian Kamil Norwid','Henryk Sienkiewicz']},
 
     // === CHARACTERS ===
     {type:'character', book:'Akademia Pana Kleksa', name:'Pan Kleks', desc:'ekscentryczny profesor, uczący w magicznej akademii', wrongs:['Pan Twardowski','Doktor Dolittle','Profesor Dumbledore']},
@@ -2275,7 +2377,13 @@ const POLISH_LEKTURY_DB = [
     {type:'character', book:'Zemsta', name:'Rejent Milczek', desc:'pozornie pokorny, ale przebiegły i uparty wróg Cześnika', wrongs:['Cześnik','Papkin','Podstolina']},
     {type:'character', book:'Balladyna', name:'Kirkor', desc:'szlachetny hrabia szukający żony wśród ludu', wrongs:['Grabiec','Kostryn','Pustelnik']},
     {type:'fact', book:'Mały Książę', q:'Dlaczego Mały Książę opuścił swoją planetę?', answer:'Poczuł się nieszczęśliwy i rozczarowany zachowaniem róży.', wrongs:['Szukał pracy','Chciał zwiedzić Ziemię','Uciekał przed baobabami']},
-    {type:'fact', book:'Latarnik', q:'Co spowodowało, że Skawiński stracił pracę w latarni?', answer:'Zaczytał się w "Panu Tadeuszu" i zapomniał zapalić latarnię.', wrongs:['Zachorował','Zasnął na służbie','Został napadnięty']}
+    {type:'fact', book:'Latarnik', q:'Co spowodowało, że Skawiński stracił pracę w latarni?', answer:'Zaczytał się w "Panu Tadeuszu" i zapomniał zapalić latarnię.', wrongs:['Zachorował','Zasnął na służbie','Został napadnięty']},
+    {type:'character', book:'Folwark zwierzęcy', name:'Major', desc:'stary knur, który przed śmiercią wygłosił przemówienie o buncie zwierząt', wrongs:['Napoleon','Snowball','Boxer']},
+    {type:'character', book:'Folwark zwierzęcy', name:'Napoleon', desc:'świnia, która przejęła władzę na folwarku i stała się dyktatorem', wrongs:['Major','Snowball','Squealer']},
+    {type:'fact', book:'Folwark zwierzęcy', q:'Jak brzmiało najważniejsze przykazanie po zmianie przez świnie?', answer:'Wszystkie zwierzęta są równe, ale niektóre są równiejsze od innych.', wrongs:['Żadne zwierzę nie będzie spać w łóżku.','Cztery nogi dobrze, dwie nogi źle.','Śmierć ludziom!']},
+    {type:'character', book:'Ferdydurke', name:'Józio', desc:'30-letni mężczyzna, który zostaje "upupiony" i wysłany z powrotem do szkoły', wrongs:['Miętus','Syfon','Pimko']},
+    {type:'fact', book:'Odprawa posłów greckich', q:'Kto w utworze reprezentuje postawę patriotyczną i dbałość o dobro państwa?', answer:'Antenor.', wrongs:['Parys (Aleksander)','Priam','Helena']},
+    {type:'fact', book:'Śmierć Pułkownika', q:'Kim w rzeczywistości był tytułowy "Pułkownik" opisany w wierszu?', answer:'Emilią Plater.', wrongs:['Generalem Bemem','Tadeuszem Kościuszką','Józefem Poniatowskim']}
 ];
 
 const POLISH_TEORIA_DB = [
@@ -2329,23 +2437,39 @@ const POLISH_GRAMMAR_DB = [
     {q:'Jaką funkcję pełni przecinek w zdaniu: "Janek, przynieś mi wodę"?', a:'Oddziela wołacz.', w:['Oddziela zdania składowe.','Wprowadza wyliczenie.','Oddziela wtrącenie.']}
 ];
 
+const POLISH_OKOLICZNIKI_DB = [
+    {type:'czasu', q:'kiedy? odkąd? dokąd?', ex:'Jest spokojna, odkąd jest ze mną.', target:'odkąd jest ze mną'},
+    {type:'przyczyny', q:'dlaczego? z jakiego powodu?', ex:'Poprosiła mnie, ponieważ byłem najwyższy.', target:'ponieważ byłem najwyższy'},
+    {type:'miejsca', q:'gdzie? skąd? którędy?', ex:'Pójdę, dokąd mnie oczy poniosą.', target:'dokąd mnie oczy poniosą'},
+    {type:'przyzwolenia', q:'mimo czego?', ex:'Byłem ostatni, mimo że biegłem co sił.', target:'mimo że biegłem co sił'},
+    {type:'warunku', q:'pod jakim warunkiem?', ex:'Dostaniesz deser, jeśli zjesz obiad.', target:'jeśli zjesz obiad'},
+    {type:'sposobu', q:'jak? w jaki sposób?', ex:'Zachowywała się tak, jak zwykle.', target:'jak zwykle'},
+    {type:'celu', q:'po co? w jakim celu?', ex:'Weszli, aby obejrzeć wystawę.', target:'aby obejrzeć wystawę'}
+];
+
 const POLISH_ORTOGRAFIA_DB = [
-    {word: 'góra', correct: 'ó', rule: 'Wymienna na o (góra - góry).'},
-    {word: 'rzeka', correct: 'rz', rule: 'Wymienna na r (rzeka - rzeczny).'},
-    {word: 'morze', correct: 'rz', rule: 'Wymienna na r (morze - morski).'},
-    {word: 'wózek', correct: 'ó', rule: 'Wymienna na o (wózek - wozy).'},
+    {word: 'góra', correct: 'ó', rule: 'Wymienna na o (góra – góry).'},
+    {word: 'rzeka', correct: 'rz', rule: 'Wymienna na r (rzeka – rzeczny).'},
+    {word: 'morze', correct: 'rz', rule: 'Wymienna na r (morze – morski).'},
+    {word: 'wózek', correct: 'ó', rule: 'Wymienna na o (wózek – wozy).'},
     {word: 'król', correct: 'ó', rule: 'Wyjątek ortograficzny (historyczna wymiana).'},
     {word: 'herbata', correct: 'h', rule: 'Piszemy h na początku wyrazu.'},
     {word: 'chleb', correct: 'ch', rule: 'Piszemy ch na początku wyrazu.'},
     {word: 'żaba', correct: 'ż', rule: 'Wyjątek ortograficzny (ż niewymienne).'},
-    {word: 'pszczoła', correct: 'sz', rule: 'Piszemy sz po spółgłoskach (p, b, t, d, k, g, ch, j, w).'},
+    {word: 'pszczoła', correct: 'sz', rule: 'Piszemy sz po spółgłoskach b, p, d, t, g, k, ch, j, w.'},
     {word: 'wszystko', correct: 'sz', rule: 'Piszemy sz w grupach spółgłoskowych.'},
-    {word: 'róża', correct: 'ó', rule: 'Wyjątek (róża - różany).'},
+    {word: 'róża', correct: 'ó', rule: 'Wyjątek (róża – różany).'},
     {word: 'kałuża', correct: 'ż', rule: 'Końcówka -uża.'},
-    {word: 'druh', correct: 'h', rule: 'Wymiana na ż (druh - drużyna).'},
+    {word: 'druh', correct: 'h', rule: 'Wymiana na ż (druh – drużyna).'},
     {word: 'humor', correct: 'h', rule: 'Słowo pochodzenia obcego.'},
-    {word: 'drużyna', correct: 'ż', rule: 'Wymiana na h (drużyna - druh).'},
-    {word: 'wachlarz', correct: 'ch', rule: 'Ch po spółgłosce w.'}
+    {word: 'drużyna', correct: 'ż', rule: 'Wymiana na h (drużyna – druh).'},
+    {word: 'wachlarz', correct: 'ch', rule: 'Ch po spółgłosce w.'},
+    // Wyjątki z Holistycznej Analizy
+    {word: 'gżegżółka', correct: 'ż', rule: 'Wyjątek (mimo występowania po g).'},
+    {word: 'bukszpan', correct: 'sz', rule: 'Wyjątek (mimo występowania po b).'},
+    {word: 'kształt', correct: 'sz', rule: 'Wyjątek (mimo występowania po k).'},
+    {word: 'piegża', correct: 'ż', rule: 'Wyjątek (ptak).'},
+    {word: 'pszenica', correct: 'sz', rule: 'Wyjątek (mimo występowania po p).'}
 ];
 
 const POLISH_FRAZEOLOGIA_DB = [
@@ -2579,7 +2703,7 @@ function generatePolishQuestions(topic, count = 15, selectedDiff = 'mix') {
             }
         }
         else if (topic === 'Nauka o języku') {
-            let type = getRand(1, 4);
+            let type = getRand(1, 5);
             if (type <= 2) {
                 // Grammar from DB
                 let gramItem = POLISH_GRAMMAR_DB[getRand(0, POLISH_GRAMMAR_DB.length - 1)];
@@ -2598,7 +2722,7 @@ function generatePolishQuestions(topic, count = 15, selectedDiff = 'mix') {
                 q.options = shuffleArray([orthItem.correct, ...wrongs]);
                 q.correct = q.options.indexOf(orthItem.correct);
                 q.explanation = `Zasada: ${orthItem.rule}`;
-            } else {
+            } else if (type === 4) {
                 // Frazeologia
                 let frazItem = POLISH_FRAZEOLOGIA_DB[getRand(0, POLISH_FRAZEOLOGIA_DB.length - 1)];
                 q.type = 'mcq';
@@ -2607,6 +2731,15 @@ function generatePolishQuestions(topic, count = 15, selectedDiff = 'mix') {
                 q.options = shuffleArray([frazItem.def, ...shuffleArray(allDefs).slice(0, 3)]);
                 q.correct = q.options.indexOf(frazItem.def);
                 q.explanation = `Wyjaśnienie: ${frazItem.def}`;
+            } else {
+                // Okoliczniki (New for Holistic Analysis)
+                let item = POLISH_OKOLICZNIKI_DB[getRand(0, POLISH_OKOLICZNIKI_DB.length - 1)];
+                q.type = 'mcq';
+                q.question = `Zidentyfikuj typ okolicznika wyróżnionego w zdaniu: <i>"${item.ex.replace(item.target, '<u>' + item.target + '</u>')}"</i>`;
+                let types = POLISH_OKOLICZNIKI_DB.map(o => 'Okolicznik ' + o.type);
+                q.options = shuffleArray(makePolishOptions('Okolicznik ' + item.type, types));
+                q.correct = q.options.indexOf('Okolicznik ' + item.type);
+                q.explanation = `Wyróżniony fragment odpowiada na pytania: ${item.q}, co wskazuje na okolicznik ${item.type}.`;
             }
         }
         else {
