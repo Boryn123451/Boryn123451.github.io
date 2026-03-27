@@ -4345,11 +4345,12 @@ const INFORMATOR_TASKS = [
 
 // Combine with existing QUESTIONS if needed, or handle separately in the engine.
 if (typeof QUESTIONS !== 'undefined') {
-    QUESTIONS = QUESTIONS.concat(INFORMATOR_TASKS);
+    QUESTIONS.push(...INFORMATOR_TASKS);
 } else {
     // If QUESTIONS is not yet defined (script order), we define it here or handle in part1
-    var QUESTIONS = INFORMATOR_TASKS;
+    window.QUESTIONS = [...INFORMATOR_TASKS];
 }
+
 
 const THEORY = {
 math: {
@@ -5164,7 +5165,7 @@ window.renderAdminDashboard = function() {
     
     if(totalQ) totalQ.innerText = stats.total || 0;
     if(avgS) avgS.innerText = stats.total > 0 ? Math.round((stats.correct / stats.total) * 100) + '%' : '0%';
-    if(hwidEl) hwidEl.innerText = (window.getHWID ? getHWID() : 'UNKNOWN').toUpperCase();
+    if(hwidEl) hwidEl.innerText = getDeviceId().toUpperCase();
 
     // Mock Chart
     const canvas = document.getElementById('admin-chart-canvas');
@@ -5335,13 +5336,36 @@ window.blockHWID = async function() {
     renderBlockedList();
 };
 
-window.unblockHWID = async function(hwid) {
-    if(!confirm("Na pewno odblokować HWID: " + hwid + "?")) return;
-    await fetchRemoteBlocks();
-    let blocked = getBlockedHWIDs();
-    blocked = blocked.filter(h => h !== hwid);
-    await updateRemoteBlocks(blocked);
-    renderBlockedList();
+window.unblockHWID = async function(targetHwid, btn) {
+    if(btn) {
+        btn.innerHTML = "⏳ Wait...";
+        btn.disabled = true;
+    }
+    
+    console.log("[ADMIN] Próba odblokowania HWID:", targetHwid);
+    if(!confirm("Na pewno odblokować HWID: " + targetHwid + "?")) {
+        if(btn) {
+            btn.innerHTML = "Odblokuj";
+            btn.disabled = false;
+        }
+        return;
+    }
+    
+    try {
+        await fetchRemoteBlocks();
+        let blocked = getBlockedHWIDs();
+        blocked = blocked.filter(h => h !== targetHwid);
+        
+        // Update local first for immediate UI feedback consistency
+        saveBlockedHWIDs(blocked);
+        renderBlockedList(); 
+        
+        await updateRemoteBlocks(blocked);
+    } catch(e) {
+        console.error("[ADMIN] Błąd podczas odblokowywania:", e);
+        alert("Wystąpił błąd podczas odblokowywania urządzenia.");
+        renderBlockedList(); 
+    }
 }
 
 function renderBlockedList() {
@@ -5355,7 +5379,7 @@ function renderBlockedList() {
     container.innerHTML = blocked.map(h => 
         `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:rgba(255,0,0,0.1);border-radius:6px;margin-bottom:6px;border:1px solid rgba(248,113,113,0.3)">
             <span style="color:var(--error);letter-spacing:2px">${h}</span>
-            <button class="btn btn-sm" style="background:rgba(255,255,255,0.1);color:var(--text);padding:4px 10px;font-size:0.8rem" onclick="unblockHWID('${h}')">Odblokuj</button>
+            <button class="btn btn-sm" style="background:rgba(255,255,255,0.1);color:var(--text);padding:4px 10px;font-size:0.8rem" onclick="event.stopPropagation(); window.unblockHWID('${h}', this)">Odblokuj</button>
         </div>`
     ).join('');
 }
