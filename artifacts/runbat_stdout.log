@@ -1,0 +1,46 @@
+Upgrading pip...
+Requirement already satisfied: pip in c:\users\borys\documents\new project\.venv\lib\site-packages (25.0.1)
+Installing backend requirements...
+Requirement already satisfied: fastapi==0.109.2 in c:\users\borys\documents\new project\.venv\lib\site-packages (from -r C:\Users\borys\Documents\New project\backend\requirements.txt (line 1)) (0.109.2)
+Requirement already satisfied: uvicorn==0.29.0 in c:\users\borys\documents\new project\.venv\lib\site-packages (from uvicorn[standard]==0.29.0->-r C:\Users\borys\Documents\New project\backend\requirements.txt (line 2)) (0.29.0)
+Requirement already satisfied: sympy==1.13.1 in c:\users\borys\documents\new project\.venv\lib\site-packages (from -r C:\Users\borys\Documents\New project\backend\requirements.txt (line 3)) (1.13.1)
+Requirement already satisfied: numpy==1.24.4 in c:\users\borys\documents\new project\.venv\lib\site-packages (from -r C:\Users\borys\Documents\New project\backend\requirements.txt (line 4)) (1.24.4)
+Requirement already satisfied: pydantic==2.6.4 in c:\users\borys\documents\new project\.venv\lib\site-packages (from -r C:\Users\borys\Documents\New project\backend\requirements.txt (line 5)) (2.6.4)
+Requirement already satisfied: pytest==8.3.5 in c:\users\borys\documents\new project\.venv\lib\site-packages (from -r C:\Users\borys\Documents\New project\backend\requirements.txt (line 6)) (8.3.5)
+Requirement already satisfied: httpx==0.27.2 in c:\users\borys\documents\new project\.venv\lib\site-packages (from -r C:\Users\borys\Documents\New project\backend\requirements.txt (line 7)) (0.27.2)
+Requirement already satisfied: starlette<0.37.0,>=0.36.3 in c:\users\borys\documents\new project\.venv\lib\site-packages (from fastapi==0.109.2->-r C:\Users\borys\Documents\New project\backend\requirements.txt (line 1)) (0.36.3)
+Requirement already satisfied: typing-extensions>=4.8.0 in c:\users\borys\documents\new project\.venv\lib\site-packages (from fastapi==0.109.2->-r C:\Users\borys\Documents\New project\backend\requirements.txt (line 1)) (4.13.2)
+Requirement already satisfied: click>=7.0 in c:\users\borys\documents\new project\.venv\lib\site-packages (from uvicorn==0.29.0->uvicorn[standard]==0.29.0->-r C:\Users\borys\Documents\New project\backend\requirements.txt (line 2)) (8.1.8)
+Requirement already satisfied: h11>=0.8 in c:\users\borys\documents\new project\.venv\lib\site-packages (from uvicorn==0.29.0->uvicorn[standard]==0.29.0->-r C:\Users\borys\Documents\New project\backend\requirements.txt (line 2)) (0.16.0)
+Requirement already satisfied: mpmath<1.4,>=1.1.0 in c:\users\borys\documents\new project\.venv\lib\site-packages (from sympy==1.13.1->-r C:\Users\borys\Documents\New project\backend\requirements.txt (line 3)) (1.3.0)
+Requirement already satisfied: annotated-types>=0.4.0 in c:\users\borys\documents\new project\.venv\lib\site-packages (from pydantic==2.6.4->-r C:\Users\borys\Documents\New project\backend\requirements.txt (line 5)) (0.7.0)
+Requirement already satisfied: pydantic-core==2.16.3 in c:\users\borys\documents\new project\.venv\lib\site-packages (from pydantic==2.6.4->-r C:\Users\borys\Documents\New project\backend\requirements.txt (line 5)) (2.16.3)
+Requirement already satisfied: colorama in c:\users\borys\documents\new project\.venv\lib\site-packages (from pytest==8.3.5->-r C:\Users\borys\Documents\New project\backend\requirements.txt (line 6)) (0.4.6)
+Requirement already satisfied: exceptiongroup>=1.0.0rc8 in c:\users\borys\documents\new project\.venv\lib\site-packages (from pytest==8.3.5->-r C:\Users\borys\Documents\New project\backend\requirements.txt (line 6)) (1.3.1)
+Requirement already satisfied: iniconfig in c:\users\borys\documents\new project\.venv\lib\site-packages (from pytest==8.3.5->-r C:\Users\borys\Documents\New project\backend\requirements.txt (line 6)) (2.1.0)
+Requirement already satisfied: packaging in c:\users\borys\documents\new project\.venv\lib\site-packages (from pytest==8.3.5->-r C:\Users\borys\Documents\New project\backend\requirements.txt (line 6)) (26.0)
+Requirement already satisfied: pluggy<2,>=1.5 in c:\users\borys\documents\new project\.venv\lib\site-packages (from pytest==8.3.5->-r C:\Users\borys\Documents\New project\backend\requirements.txt (line 6)) (1.5.0)
+Requirement already satisfied: tomli>=1 in c:\users\borys\documents\new project\.venv\lib\site-packages (from pytest==8.3.5->-r C:\Users\borys\Documents\New project\backend\requirements.txt (line 6)) (2.4.1)
+Requirement already satisfied: anyio in c:\users\borys\documents\new project\.venv\lib\site-packages (from httpx==0.27.2->-r C:\Users\borys\Documents\New project\backend\requirements.txt (line 7)) (4.5.2)
+Requirement already satisfied: certifi in c:\users\borys\documents\new project\.venv\lib\site-packages (from httpx==0.27.2->-r C:\Users\borys\Documents\New project\backend\requirements.txt (line 7)) (2026.2.25)
+Requirement already satisfied: httpcore==1.* in c:\users\borys\documents\new project\.venv\lib\site-packages (from httpx==0.27.2->-r C:\Users\borys\Documents\New project\backend\requirements.txt (line 7)) (1.0.9)
+Requirement already satisfied: idna in c:\users\borys\documents\new project\.venv\lib\site-packages (from httpx==0.27.2->-r C:\Users\borys\Documents\New project\backend\requirements.txt (line 7)) (3.11)
+Requirement already satisfied: sniffio in c:\users\borys\documents\new project\.venv\lib\site-packages (from httpx==0.27.2->-r C:\Users\borys\Documents\New project\backend\requirements.txt (line 7)) (1.3.1)
+Requirement already satisfied: httptools>=0.5.0 in c:\users\borys\documents\new project\.venv\lib\site-packages (from uvicorn[standard]==0.29.0->-r C:\Users\borys\Documents\New project\backend\requirements.txt (line 2)) (0.6.4)
+Requirement already satisfied: python-dotenv>=0.13 in c:\users\borys\documents\new project\.venv\lib\site-packages (from uvicorn[standard]==0.29.0->-r C:\Users\borys\Documents\New project\backend\requirements.txt (line 2)) (1.0.1)
+Requirement already satisfied: pyyaml>=5.1 in c:\users\borys\documents\new project\.venv\lib\site-packages (from uvicorn[standard]==0.29.0->-r C:\Users\borys\Documents\New project\backend\requirements.txt (line 2)) (6.0.3)
+Requirement already satisfied: watchfiles>=0.13 in c:\users\borys\documents\new project\.venv\lib\site-packages (from uvicorn[standard]==0.29.0->-r C:\Users\borys\Documents\New project\backend\requirements.txt (line 2)) (0.24.0)
+Requirement already satisfied: websockets>=10.4 in c:\users\borys\documents\new project\.venv\lib\site-packages (from uvicorn[standard]==0.29.0->-r C:\Users\borys\Documents\New project\backend\requirements.txt (line 2)) (13.1)
+Installing frontend dependencies...
+
+up to date, audited 211 packages in 931ms
+
+32 packages are looking for funding
+  run `npm fund` for details
+
+5 moderate severity vulnerabilities
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+
+Run `npm audit` for details.

@@ -1,0 +1,108 @@
+﻿=== Failure Patterns ===
+  OTHER: 27
+  PREVIEW_STATUS_MISMATCH: 20
+  UI_FALLBACK: 17
+  SYSTEM_DICT_RESULT: 15
+  EQUATION_WRONG_CLASSIFICATION: 13
+  EXPECTED_ERROR_GOT_RESULT: 11
+  EQUATION_SET_RESULT: 11
+  WRONG_RESULT_VALUE: 7
+  EQUATION_DOMAIN_RESULT: 6
+  PARSE_ERROR: 4
+  EQUATION_EXPECTED_ERROR_GOT_SOLUTION: 4
+  MISSING_BRACKET_ERROR: 2
+  RUNNER_EXCEPTION: 2
+
+=== PREVIEW_STATUS_MISMATCH Details ===
+  KG-113: preview status=ok | expected result_type: b│╣d sk│adni
+  KG-114: preview status=ok | expected result_type: b│╣d sk│adni
+  KG-115: preview status=ok | expected result_type: b│╣d sk│adni
+  KG-120: preview status=ok | expected result_type: b│╣d sk│adni Macierze - poprawne przypadki
+  KG-130: preview status=error | expected result_type: poprawny wynik Macierze - b│ŕdy i ograniczenia
+  KG-134: preview status=ok | expected result_type: b│╣d sk│adni
+  KG-136: preview status=incomplete | expected result_type: b│╣d sk│adni
+  KG-137: preview status=ok | expected result_type: b│╣d sk│adni
+  KG-138: preview status=error | expected result_type: b│╣d dziedziny
+  KG-139: preview status=ok | expected result_type: b│╣d sk│adni
+  KG-155: preview status=incomplete | expected result_type: b│╣d sk│adni
+  KG-156: preview status=ok | expected result_type: b│╣d sk│adni
+  KG-157: preview status=incomplete | expected result_type: b│╣d sk│adni
+  KG-158: preview status=incomplete | expected result_type: b│╣d sk│adni
+  KG-159: preview status=incomplete | expected result_type: b│╣d sk│adni
+  KG-163: preview status=ok | expected result_type: b│╣d sk│adni
+  KG-164: preview status=ok | expected result_type: b│╣d sk│adni
+  KG-167: preview status=incomplete | expected result_type: b│╣d sk│adni
+  KG-168: preview status=ok | expected result_type: b│╣d sk│adni
+  KG-169: preview status=ok | expected result_type: b│╣d sk│adni
+
+=== EXPECTED_ERROR_GOT_RESULT Details ===
+  KG-132: oczekiwano b│ŕdu, otrzymano [['6/5', '12/5', '18/5'], ['17/5', '34/5', '51/5']] | result_type: b│╣d dziedziny
+  KG-160: oczekiwano b│ŕdu, otrzymano 4023872600770937735437024339230039857193748642107146 | result_type: b│╣d UI Parser dziwnych zapisˇw
+  KG-173: oczekiwano b│ŕdu, otrzymano [['6/5'], ['17/5']] | result_type: b│╣d UI
+  KG-174: oczekiwano b│ŕdu, otrzymano 7 | result_type: b│╣d UI
+  KG-176: oczekiwano b│ŕdu, otrzymano -4 | result_type: b│╣d UI
+  KG-184: oczekiwano b│ŕdu, otrzymano 4 | result_type: b│╣d UI
+  KG-189: oczekiwano b│ŕdu, otrzymano 5 | result_type: b│╣d UI
+  KG-190: oczekiwano b│ŕdu, otrzymano 25 | result_type: b│╣d UI Regresje przekrojowe
+  KG-195: oczekiwano b│ŕdu, otrzymano 1.4142 | result_type: b│╣d UI
+  KG-196: oczekiwano b│ŕdu, otrzymano 1.4142 | result_type: b│╣d UI
+  KG-197: oczekiwano b│ŕdu, otrzymano 1.4142 | result_type: b│╣d UI
+
+=== EQUATION_WRONG_CLASSIFICATION Details ===
+  RW-050: got=one_solution | expected_type=poprawny wynik Rˇwnania z pierwiastkami | input=Rˇwnanie: x^5-x+1=0; Zmienna: x
+  RW-057: got=no_solutions | expected_type=brak rozwi╣za˝ rzeczywistych | input=Rˇwnanie: sqrt(x+4)=-2; Zmienna: x
+  RW-058: got=no_solutions | expected_type=niesko˝czenie wiele rozwi╣za˝ | input=Rˇwnanie: sqrt(x^2)=x; Zmienna: x
+  RW-059: got=no_solutions | expected_type=niesko˝czenie wiele rozwi╣za˝ | input=Rˇwnanie: sqrt(x^2)=-x; Zmienna: x
+  RW-064: got=no_solutions | expected_type=brak rozwi╣za˝ rzeczywistych | input=Rˇwnanie: Abs(x)+1=0; Zmienna: x
+  RW-065: got=no_solutions | expected_type=niesko˝czenie wiele rozwi╣za˝ | input=Rˇwnanie: Abs(x)=x; Zmienna: x
+  RW-066: got=no_solutions | expected_type=niesko˝czenie wiele rozwi╣za˝ | input=Rˇwnanie: Abs(x)=-x; Zmienna: x
+  RW-067: got=no_solutions | expected_type=brak rozwi╣za˝ rzeczywistych | input=Rˇwnanie: Abs(x+1)=x-1; Zmienna: x
+  RW-080: got=no_solutions | expected_type=brak rozwi╣za˝ rzeczywistych Trygonometryczne | input=Rˇwnanie: log(x)=log(-x); Zmienna: x
+  RW-114: got=no_solutions | expected_type=brak rozwi╣za˝ rzeczywistych | input=Rˇwnanie: sqrt(x)+1=0; Zmienna: x
+  RW-115: got=no_solutions | expected_type=brak rozwi╣za˝ rzeczywistych | input=Rˇwnanie: Abs(x)=-2; Zmienna: x
+  RW-150: got=one_solution | expected_type=b│╣d sk│adni Wp│yw exact / approx / precyzji | input=Rˇwnanie: x+1=2; Zmienna:
+  RW-177: got=no_solutions | expected_type=niesko˝czenie wiele rozwi╣za˝ | input=Rˇwnanie: sqrt(x^2)=x; Zmienna: x
+  RW-199: got=one_solution | expected_type=b│╣d sk│adni | input=Rˇwnanie: x-1=0; Zmienna: x
+  RW-200: got=one_solution | expected_type=b│╣d sk│adni 3. Uk│ady rˇwna˝ - 200 testˇw Uk│ady 2x2 oznaczone | input=Rˇwnanie: 0,5x=1; Zmienna: x
+  US-044: got=no_solutions | expected_type=brak rozwi╣za˝ rzeczywistych | input=Modu│: Rˇwnania; Rˇwnanie: sqrt(x)=-1; Zmienna: x.
+  US-046: got=no_solutions | expected_type=brak rozwi╣za˝ rzeczywistych | input=Modu│: Rˇwnania; Rˇwnanie: Abs(x)=-1; Zmienna: x.
+
+=== SYSTEM_DICT_RESULT Details ===
+  UR-048: got={x: 1} | expected_type=b│╣d limitu / ograniczenia | expected=Je┐eli UI wymaga ka┐dego rˇwnania w osobnym wierszu, zapis z ťrednikiem w jednym
+  UR-076: got={x: 2, y: 1} | expected_type=poprawny wynik | expected=Rˇwnanie x-x=0 jest redundantne; wynik to x = 2, y = 1.
+  UR-105: got={x: x, y: -1} | expected_type=brak rozwi╣za˝ rzeczywistych | expected=Brak rozwi╣za˝ rzeczywistych.
+  UR-138: got={x: 0, y: 1} | expected_type=b│╣d dziedziny | expected=Brak rozwi╣za˝ z powodu dzielenia przez zero w mianowniku.
+  UR-140: got={x: 2, y: 0} | expected_type=poprawny wynik Uk│ady z parametrami | expected=Jedynym poprawnym rozwi╣zaniem jest (2,0); x = 1 jest wykluczone przez dziedzinŕ
+  UR-141: got={a: 2*y, x: y, y: y} | expected_type=poprawny wynik | expected=Rozwi╣zanie symboliczne: x = a/2, y = a/2.
+  UR-142: got={a: 2/x, x: x, y: 0} | expected_type=poprawny wynik | expected=Rozwi╣zanie symboliczne: x = 2/a, y = 0 dla a!=0; dla a=0 brak rozwi╣za˝.
+  UR-153: got={x: 1, y: 0} | expected_type=brak rozwi╣za˝ rzeczywistych | expected=Brak rozwi╣za˝ rzeczywistych.
+  UR-155: got={x: x, y: 0} | expected_type=brak rozwi╣za˝ rzeczywistych | expected=Brak rozwi╣za˝ rzeczywistych.
+  UR-164: got={x: 2, y: 1} | expected_type=b│╣d sk│adni | expected=Lista niewiadomych z separatorem ťrednikowym jest odrzucana czytelnym b│ŕdem wal
+  UR-166: got={x: 3 - y, y: y} | expected_type=b│╣d sk│adni | expected=Jeťli semikolon nie jest wspierany jako separator rˇwna˝, pojawia siŕ czytelny b
+  UR-168: got={x: 2, y: 1} | expected_type=b│╣d sk│adni | expected=Puste pole Niewiadome blokuje rozwi╣zanie i zwraca komunikat walidacyjny.
+  UR-170: got={x: 2, y: 1} | expected_type=b│╣d sk│adni KolejnoťŠ niewiadomych i mapowanie | expected=Ko˝cowy pusty element listy niewiadomych jest odrzucany walidacj╣; nie mo┐e twor
+  UR-178: got={y: 5 - x, x: x} | expected_type=poprawny wynik | expected=Przy odwrˇconej kolejnoťci opis rodziny wci╣┐ musi odnosiŠ siŕ do w│aťciwych sym
+  UR-189: got={x: 2, y: 1} | expected_type=b│╣d sk│adni | expected=Puste pole Niewiadome blokuje rozwi╣zanie i zwraca komunikat walidacyjny.
+
+=== AM (Analysis) failures ===
+  AM-018: got=x**3 | expected_type=poprawny wynik | input=Tryb: Pochodna; Funkcja: x^3; Zmienna: x; Rz╣d pochodnej: 0 | expected=Wynik jest rˇwnowa┐ny funkcji wejťciowej x^3.
+  AM-027: got=fallback statyczny UI | expected_type=b│╣d sk│adni | input=Tryb: Pochodna; Funkcja: x^2; Zmienna: x; Rz╣d pochodnej: | expected=Aplikacja traktuje samo bia│e znaki jako nieprawid│ow╣ wartoťŠ i blokuje oblicze
+  AM-036: got=1 | expected_type=poprawny wynik | input=Tryb: Pochodna; Funkcja: (x^2-1)/(x-1); Zmienna: x; Rz╣d pochodnej: 1 | expected=Wynik rˇwnowa┐ny 1 na dziedzinie funkcji; wynik nie mo┐e byŠ b│ŕdny z powodu skr
+  AM-059: got=1 | expected_type=poprawny wynik | input=Tryb: Pochodna; Funkcja: sin(30)+x; Zmienna: x; Rz╣d pochodnej: 1 | expected=Wynik = 1 niezale┐nie od ustawienia jednostek k╣towych.
+  AM-090: got=2*y + 1 | expected_type=poprawny wynik Ca│ki nieoznaczone | input=Tryb: Pochodna; Funkcja: y^2+y; Zmienna: x; Rz╣d pochodnej: 1 | expected=Wynik = 0, poniewa┐ x nie wystŕpuje w funkcji.
+  AM-095: got=C + x**3/3 + x**2 + x | expected_type=poprawny wynik | input=Tryb: Ca│ka nieoznaczona; Funkcja: (x+1)^2; Zmienna: x | expected=Wynik rˇwnowa┐ny (x+1)^3/3 albo rˇwnowa┐nej postaci rozwiniŕtej + C; wynik musi 
+  AM-105: got=C + log(x) | expected_type=poprawny wynik | input=Tryb: Ca│ka nieoznaczona; Funkcja: 1/x; Zmienna: x | expected=Wynik jest rˇwnowa┐ny log(x)+C, log(Abs(x))+C albo innej poprawnej postaci z jaw
+  AM-107: got=C + log(x + 1) | expected_type=poprawny wynik | input=Tryb: Ca│ka nieoznaczona; Funkcja: 1/(x+1); Zmienna: x | expected=Wynik jest rˇwnowa┐ny log(x+1)+C, log(Abs(x+1))+C albo innej poprawnej postaci z
+  AM-154: got=Wyra┐enie prowadzi do wartoťci nieokreťlonej albo niesko˝czonej. | expected_type=poprawny wynik | input=Tryb: Ca│ka oznaczona; Funkcja: log(x); Zmienna: x; Granice: 0 .. 1 | expected=Wynik = -1.
+  AM-158: got=fallback statyczny UI | expected_type=b│╣d dziedziny | input=Tryb: Ca│ka oznaczona; Funkcja: tan(x); Zmienna: x; Granice: 0 .. pi | expected=Ca│ka jest niezdefiniowana na podanym przedziale; wynik liczbowy jest niedopuszc
+  AM-159: got=fallback statyczny UI | expected_type=b│╣d dziedziny | input=Tryb: Ca│ka oznaczona; Funkcja: sqrt(-x); Zmienna: x; Granice: 0 .. 1 | expected=Funkcja nie jest rzeczywista na dodatniej czŕťci przedzia│u; oczekiwany jest b│╣
+  AM-168: got=fallback statyczny UI | expected_type=b│╣d UI | input=Tryb: Pochodna; Funkcja: Tryb: Ca│ka oznaczona; Dane: funkcja x, zmienna x, tylko jedna granica wpis | expected=Prˇba obliczenia jest blokowana czytelnym komunikatem walidacyjnym.
+  AM-170: got=fallback statyczny UI | expected_type=b│╣d UI Parser i preview | input=Tryb: Pochodna; Funkcja: Tryb: szybkie prze│╣czanie Pochodna / Ca│ka nieoznaczona / Ca│ka oznaczona. | expected=UI nie duplikuje kontrolek, nie gubi pˇl i nie zawiesza siŕ.
+  AM-173: got=fallback statyczny UI | expected_type=b│╣d sk│adni | input=Tryb: Pochodna; Funkcja: x-1; Zmienna: x; Rz╣d pochodnej: 1 | expected=Aplikacja albo normalizuje znak minus i zwraca wynik 1, albo zg│asza czytelny b│
+  AM-178: got=fallback statyczny UI | expected_type=b│╣d sk│adni | input=Tryb: Pochodna; Funkcja: x**2; Zmienna: x; Rz╣d pochodnej: 1 | expected=Jeťli parser wspiera sk│adniŕ **, wynik jest rˇwnowa┐ny 2x; jeťli nie wspiera, p
+  AM-182: got=2*y | expected_type=poprawny wynik | input=Tryb: Pochodna; Funkcja: y^2; Zmienna: x; Rz╣d pochodnej: 1 | expected=Wynik = 0.
+  AM-185: got=C + x**2/2 | expected_type=poprawny wynik | input=Tryb: Ca│ka nieoznaczona; Funkcja: x; Zmienna: y | expected=Wynik rˇwnowa┐ny x*y + C; wynik musi zawieraŠ sta│╣ ca│kowania albo rˇwnowa┐ny s
+  AM-186: got=2 | expected_type=poprawny wynik | input=Tryb: Ca│ka oznaczona; Funkcja: x; Zmienna: y; Granice: 0 .. 2 | expected=Wynik = 2x.
+  AM-189: got=C | expected_type=poprawny wynik | input=Tryb: Ca│ka nieoznaczona; Funkcja: 0; Zmienna: x | expected=Wynik jest rˇwnowa┐ny samej sta│ej ca│kowania C albo 0 + C.
+  AM-190: got=cos(y) | expected_type=poprawny wynik Wp│yw ustawie˝ silnika na analizŕ | input=Tryb: Pochodna; Funkcja: sin(y); Zmienna: x; Rz╣d pochodnej: 1 | expected=Wynik = 0.
+  AM-199: got=2*x | expected_type=poprawny wynik | input=Tryb: Pochodna; Funkcja: x^2; Zmienna: x; Rz╣d pochodnej: 1 | expected=Wynik = 2x niezale┐nie od ustawienia jednostek k╣towych.

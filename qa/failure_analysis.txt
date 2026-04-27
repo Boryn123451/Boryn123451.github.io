@@ -1,0 +1,708 @@
+﻿Total: 1000, Passed: 861, Failed: 139
+
+=== Analiza matematyczna (21 failures) ===
+  AM-018: x**3
+    Input: Tryb: Pochodna; Funkcja: x^3; Zmienna: x; Rz╣d pochodnej: 0
+    Expected: Wynik jest rˇwnowa┐ny funkcji wejťciowej x^3.
+    Result type: poprawny wynik
+
+  AM-027: fallback statyczny UI
+    Input: Tryb: Pochodna; Funkcja: x^2; Zmienna: x; Rz╣d pochodnej:
+    Expected: Aplikacja traktuje samo bia│e znaki jako nieprawid│ow╣ wartoťŠ i blokuje obliczenie.
+    Result type: b│╣d sk│adni
+
+  AM-036: 1
+    Input: Tryb: Pochodna; Funkcja: (x^2-1)/(x-1); Zmienna: x; Rz╣d pochodnej: 1
+    Expected: Wynik rˇwnowa┐ny 1 na dziedzinie funkcji; wynik nie mo┐e byŠ b│ŕdny z powodu skrˇcenia mianownika.
+    Result type: poprawny wynik
+
+  AM-059: 1
+    Input: Tryb: Pochodna; Funkcja: sin(30)+x; Zmienna: x; Rz╣d pochodnej: 1
+    Expected: Wynik = 1 niezale┐nie od ustawienia jednostek k╣towych.
+    Result type: poprawny wynik
+
+  AM-090: 2*y + 1
+    Input: Tryb: Pochodna; Funkcja: y^2+y; Zmienna: x; Rz╣d pochodnej: 1
+    Expected: Wynik = 0, poniewa┐ x nie wystŕpuje w funkcji.
+    Result type: poprawny wynik Ca│ki nieoznaczone
+
+  AM-095: C + x**3/3 + x**2 + x
+    Input: Tryb: Ca│ka nieoznaczona; Funkcja: (x+1)^2; Zmienna: x
+    Expected: Wynik rˇwnowa┐ny (x+1)^3/3 albo rˇwnowa┐nej postaci rozwiniŕtej + C; wynik musi za- wieraŠ sta│╣ ca│
+    Result type: poprawny wynik
+
+  AM-105: C + log(x)
+    Input: Tryb: Ca│ka nieoznaczona; Funkcja: 1/x; Zmienna: x
+    Expected: Wynik jest rˇwnowa┐ny log(x)+C, log(Abs(x))+C albo innej poprawnej postaci z jawn╣ sta│╣ ca│kowania.
+    Result type: poprawny wynik
+
+  AM-107: C + log(x + 1)
+    Input: Tryb: Ca│ka nieoznaczona; Funkcja: 1/(x+1); Zmienna: x
+    Expected: Wynik jest rˇwnowa┐ny log(x+1)+C, log(Abs(x+1))+C albo innej poprawnej postaci z jawn╣ sta│╣ ca│kowa
+    Result type: poprawny wynik
+
+  AM-154: Wyra┐enie prowadzi do wartoťci nieokreťlonej albo niesko˝czonej.
+    Input: Tryb: Ca│ka oznaczona; Funkcja: log(x); Zmienna: x; Granice: 0 .. 1
+    Expected: Wynik = -1.
+    Result type: poprawny wynik
+
+  AM-158: fallback statyczny UI
+    Input: Tryb: Ca│ka oznaczona; Funkcja: tan(x); Zmienna: x; Granice: 0 .. pi
+    Expected: Ca│ka jest niezdefiniowana na podanym przedziale; wynik liczbowy jest niedopuszczalny.
+    Result type: b│╣d dziedziny
+
+  AM-159: fallback statyczny UI
+    Input: Tryb: Ca│ka oznaczona; Funkcja: sqrt(-x); Zmienna: x; Granice: 0 .. 1
+    Expected: Funkcja nie jest rzeczywista na dodatniej czŕťci przedzia│u; oczekiwany jest b│╣d dziedziny.
+    Result type: b│╣d dziedziny
+
+  AM-168: fallback statyczny UI
+    Input: Tryb: Pochodna; Funkcja: Tryb: Ca│ka oznaczona; Dane: funkcja x, zmienna x, tylko jedna granica wpis
+    Expected: Prˇba obliczenia jest blokowana czytelnym komunikatem walidacyjnym.
+    Result type: b│╣d UI
+
+  AM-170: fallback statyczny UI
+    Input: Tryb: Pochodna; Funkcja: Tryb: szybkie prze│╣czanie Pochodna / Ca│ka nieoznaczona / Ca│ka oznaczona.
+    Expected: UI nie duplikuje kontrolek, nie gubi pˇl i nie zawiesza siŕ.
+    Result type: b│╣d UI Parser i preview
+
+  AM-173: fallback statyczny UI
+    Input: Tryb: Pochodna; Funkcja: x-1; Zmienna: x; Rz╣d pochodnej: 1
+    Expected: Aplikacja albo normalizuje znak minus i zwraca wynik 1, albo zg│asza czytelny b│╣d sk│adni; niedopus
+    Result type: b│╣d sk│adni
+
+  AM-178: fallback statyczny UI
+    Input: Tryb: Pochodna; Funkcja: x**2; Zmienna: x; Rz╣d pochodnej: 1
+    Expected: Jeťli parser wspiera sk│adniŕ **, wynik jest rˇwnowa┐ny 2x; jeťli nie wspiera, pojawia siŕ czytelny 
+    Result type: b│╣d sk│adni
+
+  AM-182: 2*y
+    Input: Tryb: Pochodna; Funkcja: y^2; Zmienna: x; Rz╣d pochodnej: 1
+    Expected: Wynik = 0.
+    Result type: poprawny wynik
+
+  AM-185: C + x**2/2
+    Input: Tryb: Ca│ka nieoznaczona; Funkcja: x; Zmienna: y
+    Expected: Wynik rˇwnowa┐ny x*y + C; wynik musi zawieraŠ sta│╣ ca│kowania albo rˇwnowa┐ny symbol.
+    Result type: poprawny wynik
+
+  AM-186: 2
+    Input: Tryb: Ca│ka oznaczona; Funkcja: x; Zmienna: y; Granice: 0 .. 2
+    Expected: Wynik = 2x.
+    Result type: poprawny wynik
+
+  AM-189: C
+    Input: Tryb: Ca│ka nieoznaczona; Funkcja: 0; Zmienna: x
+    Expected: Wynik jest rˇwnowa┐ny samej sta│ej ca│kowania C albo 0 + C.
+    Result type: poprawny wynik
+
+  AM-190: cos(y)
+    Input: Tryb: Pochodna; Funkcja: sin(y); Zmienna: x; Rz╣d pochodnej: 1
+    Expected: Wynik = 0.
+    Result type: poprawny wynik Wp│yw ustawie˝ silnika na analizŕ
+
+  AM-199: 2*x
+    Input: Tryb: Pochodna; Funkcja: x^2; Zmienna: x; Rz╣d pochodnej: 1
+    Expected: Wynik = 2x niezale┐nie od ustawienia jednostek k╣towych.
+    Result type: poprawny wynik
+
+=== Kalkulator g│ˇwny (44 failures) ===
+  KG-023: wynik=1 expected=1lub1
+    Input: Wyra┐enie: 2.5*0.4
+    Expected: Podgl╣dzapisujestsemantyczniezgodnyzwejťciem.Wynik=1lub1.0;bezb│ŕduzaokr╣gle˝.
+    Result type: poprawny wynik
+
+  KG-038: wynik=1/100000000000000000000 expected=10^(-20)albo1/100000000000000000000
+    Input: Wyra┐enie: 1/(10^20)
+    Expected: Podgl╣dzapisujestsemantyczniezgodnyzwejťciem.Wynik=10^(-20)albo1/100000000000000000000.
+    Result type: poprawny wynik
+
+  KG-072: wynik=sin(90) expected=0.89399666
+    Input: Wyra┐enie: sin(90)
+    Expected: Podgl╣d zapisu jest semantycznie zgodny z wejťciem. Wynik jest wartoťci╣ przybli┐on╣ oko│o 0.8939966
+    Result type: poprawny wynik
+
+  KG-095: wynik=2 expected=2,
+    Input: Wyra┐enie: 10/5
+    Expected: Podgl╣d zapisu jest semantycznie zgodny z wejťciem. Wynik = 2, nie 2/1.
+    Result type: poprawny wynik
+
+  KG-113: preview status=ok
+    Input: Wyra┐enie: i^2
+    Expected: Podgl╣d zapisu jest semantycznie zgodny z wejťciem. Jeťli parser aliasuje i do I, wynik = -1; w prze
+    Result type: b│╣d sk│adni
+
+  KG-114: preview status=ok
+    Input: Wyra┐enie: 1+2i
+    Expected: Podgl╣d zapisu jest semantycznie zgodny z wejťciem. Parser albo poprawnie interpretuje 2i jako 2*I, 
+    Result type: b│╣d sk│adni
+
+  KG-115: preview status=ok
+    Input: Wyra┐enie: j^2
+    Expected: Podgl╣d zapisu jest semantycznie zgodny z wejťciem. Jeťli parser nie wspiera j jako aliasu, zwraca c
+    Result type: b│╣d sk│adni
+
+  KG-120: preview status=ok
+    Input: Wyra┐enie: arg(1+I)
+    Expected: Podgl╣d zapisu jest semantycznie zgodny z wejťciem. Jeťli funkcja arg jest wspierana, wynik = pi/4; 
+    Result type: b│╣d sk│adni Macierze - poprawne przypadki
+
+  KG-123: Nie uda│o siŕ poprawnie odczytaŠ tego zapisu. Sprawdč, czy nawiasy s╣ domkniŕte, a po ka┐dym operato
+    Input: Wyra┐enie: Matrix([[1,0],[0,1]])*Matrix([[2,3],[4,5]])
+    Expected: Podgl╣d zapisu jest semantycznie zgodny z wejťciem. Wynik jest macierz╣ [[2,3],[4,5]].
+    Result type: poprawny wynik
+
+  KG-124: Nie uda│o siŕ poprawnie odczytaŠ tego zapisu. Sprawdč, czy nawiasy s╣ domkniŕte, a po ka┐dym operato
+    Input: Wyra┐enie: Matrix([[1,2],[3,4]])*Matrix([[0,1],[1,0]])
+    Expected: Podgl╣d zapisu jest semantycznie zgodny z wejťciem. Wynik jest macierz╣ [[2,1],[4,3]].
+    Result type: poprawny wynik
+
+  KG-125: Nie uda│o siŕ poprawnie odczytaŠ tego zapisu. Sprawdč, czy nawiasy s╣ domkniŕte, a po ka┐dym operato
+    Input: Wyra┐enie: det(Matrix([[1,2],[3,4]]))
+    Expected: Podgl╣d zapisu jest semantycznie zgodny z wejťciem. Wynik = -2.
+    Result type: poprawny wynik
+
+  KG-126: Nie uda│o siŕ poprawnie odczytaŠ tego zapisu. Sprawdč, czy nawiasy s╣ domkniŕte, a po ka┐dym operato
+    Input: Wyra┐enie: det(Matrix([[2,0],[0,3]]))
+    Expected: Podgl╣d zapisu jest semantycznie zgodny z wejťciem. Wynik = 6.
+    Result type: poprawny wynik
+
+  KG-128: wynik=[['4']] expected=4
+    Input: Wyra┐enie: Matrix([[1,2,3]])*Matrix([[1],[0],[1]])
+    Expected: Podgl╣d zapisu jest semantycznie zgodny z wejťciem. Wynik = 4.
+    Result type: poprawny wynik
+
+  KG-130: preview status=error
+    Input: Wyra┐enie: Matrix([[1,2],[3,4]]).inv()
+    Expected: Podgl╣d zapisu jest semantycznie zgodny z wejťciem. Wynik jest macierz╣ odwrotn╣ [[- 2,1],[3/2,-1/2]
+    Result type: poprawny wynik Macierze - b│ŕdy i ograniczenia
+
+  KG-132: oczekiwano b│ŕdu, otrzymano [['6/5', '12/5', '18/5'], ['17/5', '34/5', '51/5']]
+    Input: Wyra┐enie: Matrix([[1,2],[3,4]])*Matrix([[1,2,3]])
+    Expected: Podgl╣d zapisu jest semantycznie zgodny z wejťciem. Aplikacja zg│asza b│╣d zgodnoťci wy- miarˇw.
+    Result type: b│╣d dziedziny
+
+  KG-134: preview status=ok
+    Input: Wyra┐enie: Matrix([1,2],[3,4])
+    Expected: Podgl╣d zapisu jest semantycznie zgodny z wejťciem. Aplikacja zg│asza b│╣d sk│adni parsera.
+    Result type: b│╣d sk│adni
+
+  KG-136: preview status=incomplete
+    Input: Wyra┐enie: Matrix([[1,2];[3,4]])
+    Expected: Podgl╣d zapisu jest semantycznie zgodny z wejťciem. Aplikacja zg│asza b│╣d sk│adni parsera.
+    Result type: b│╣d sk│adni
+
+  KG-137: preview status=ok
+    Input: Wyra┐enie: Matrix([[1,2],[3]])
+    Expected: Podgl╣d zapisu jest semantycznie zgodny z wejťciem. Aplikacja zg│asza b│╣d budowy macierzy lub b│╣d 
+    Result type: b│╣d sk│adni
+
+  KG-138: preview status=error
+    Input: Wyra┐enie: Matrix([[1,2],[2,4]]).inv()
+    Expected: Podgl╣d zapisu jest semantycznie zgodny z wejťciem. Aplikacja zg│asza b│╣d dziedziny lub informacjŕ,
+    Result type: b│╣d dziedziny
+
+  KG-139: preview status=ok
+    Input: Wyra┐enie: Matrix([])
+    Expected: Podgl╣d zapisu jest semantycznie zgodny z wejťciem. Aplikacja albo zwraca pust╣ macierz w sposˇb jaw
+    Result type: b│╣d sk│adni
+
+  KG-140: Brakuje zamykaj╣cego nawiasu ')' w wywo│aniu funkcji. Domknij nawias funkcji albo dopisz brakuj╣cy a
+    Input: Wyra┐enie: Matrix([[1,2],[3,4]]
+    Expected: Podgl╣d zapisu jest semantycznie zgodny z wejťciem. Preview nie mo┐e pozostaŠ w stanie poprzedniej p
+    Result type: b│╣d UI Funkcje specjalne - poprawne
+
+  KG-155: preview status=incomplete
+    Input: Wyra┐enie: Abs()
+    Expected: Podgl╣d zapisu jest semantycznie zgodny z wejťciem. Aplikacja zg│asza b│╣d sk│adni.
+    Result type: b│╣d sk│adni
+
+  KG-156: preview status=ok
+    Input: Wyra┐enie: unknownfunc(2)
+    Expected: Podgl╣d zapisu jest semantycznie zgodny z wejťciem. Jeťli parser nie wspiera nieznanych funkcji, zwr
+    Result type: b│╣d sk│adni
+
+  KG-157: preview status=incomplete
+    Input: Wyra┐enie: sign()
+    Expected: Podgl╣d zapisu jest semantycznie zgodny z wejťciem. Aplikacja zg│asza b│╣d sk│adni.
+    Result type: b│╣d sk│adni
+
+  KG-158: preview status=incomplete
+    Input: Wyra┐enie: ceiling(3,)
+    Expected: Podgl╣d zapisu jest semantycznie zgodny z wejťciem. Aplikacja zg│asza b│╣d sk│adni.
+    Result type: b│╣d sk│adni
+
+  KG-159: preview status=incomplete
+    Input: Wyra┐enie: Max()
+    Expected: Podgl╣d zapisu jest semantycznie zgodny z wejťciem. Aplikacja zg│asza b│╣d sk│adni lub walidacji arg
+    Result type: b│╣d sk│adni
+
+  KG-160: oczekiwano b│ŕdu, otrzymano 402387260077093773543702433923003985719374864210714632543799910429938512
+    Input: Wyra┐enie: factorial(1000)
+    Expected: Podgl╣d zapisu jest semantycznie zgodny z wejťciem. Aplikacja zwraca pe│ny wynik ca│kowity albo stab
+    Result type: b│╣d UI Parser dziwnych zapisˇw
+
+  KG-162: wynik=5 expected=5,
+    Input: Wyra┐enie: 2 + 3
+    Expected: Podgl╣d zapisu jest semantycznie zgodny z wejťciem. Wynik = 5, a preview mo┐e byŠ znor- malizowane b
+    Result type: poprawny wynik
+
+  KG-163: preview status=ok
+    Input: Wyra┐enie: 2+ 3
+    Expected: Podgl╣d zapisu jest semantycznie zgodny z wejťciem. Je┐eli pole dopuszcza nowe linie, wynik = 5 albo
+    Result type: b│╣d sk│adni
+
+  KG-164: preview status=ok
+    Input: Wyra┐enie: 2++3
+    Expected: Podgl╣d zapisu jest semantycznie zgodny z wejťciem. Parser albo interpretuje zapis jako 2 + (+3) i z
+    Result type: b│╣d sk│adni
+
+  KG-167: preview status=incomplete
+    Input: Wyra┐enie: ((2+3)
+    Expected: Podgl╣d zapisu jest semantycznie zgodny z wejťciem. Aplikacja zg│asza b│╣d sk│adni i nie u┐ywa stare
+    Result type: b│╣d sk│adni
+
+  KG-168: preview status=ok
+    Input: Wyra┐enie: 2,3
+    Expected: Podgl╣d zapisu jest semantycznie zgodny z wejťciem. Aplikacja zg│asza b│╣d sk│adni albo jawnie inter
+    Result type: b│╣d sk│adni
+
+  KG-169: preview status=ok
+    Input: Wyra┐enie: 2 3
+    Expected: Podgl╣d zapisu jest semantycznie zgodny z wejťciem. Aplikacja zg│asza b│╣d sk│adni.
+    Result type: b│╣d sk│adni
+
+  KG-170: wynik=20 expected=20,
+    Input: Wyra┐enie: 4* 5
+    Expected: Podgl╣d zapisu jest semantycznie zgodny z wejťciem. Wynik = 20, a preview mo┐e zostaŠ znormalizowane
+    Result type: poprawny wynik ZgodnoťŠ pola i preview
+
+  KG-173: oczekiwano b│ŕdu, otrzymano [['6/5'], ['17/5']]
+    Input: Wyra┐enie: Matrix([[1,2],[3,4]])
+    Expected: Podgl╣d zapisu jest semantycznie zgodny z wejťciem. Preview renderuje strukturŕ macierzy albo wyračn
+    Result type: b│╣d UI
+
+  KG-174: oczekiwano b│ŕdu, otrzymano 7
+    Input: Wyra┐enie: 3+4
+    Expected: Podgl╣d zapisu jest semantycznie zgodny z wejťciem. Po zast╣pieniu poprzedniego wyra┐enia preview na
+    Result type: b│╣d UI
+
+  KG-176: oczekiwano b│ŕdu, otrzymano -4
+    Input: Wyra┐enie: -2^2
+    Expected: Podgl╣d zapisu jest semantycznie zgodny z wejťciem. Preview musi jednoznacznie ujawniaŠ interpretacj
+    Result type: b│╣d UI
+
+  KG-179: Brakuje zamykaj╣cego nawiasu ')'. Domknij otwarty nawias, aby zapis by│ kompletny.
+    Input: Wyra┐enie: ((1+2)
+    Expected: Podgl╣d zapisu jest semantycznie zgodny z wejťciem. Po b│ŕdzie sk│adni preview nie mo┐e zostaŠ przy 
+    Result type: b│╣d UI
+
+  KG-184: oczekiwano b│ŕdu, otrzymano 4
+    Input: Wyra┐enie: 2+2
+    Expected: Podgl╣d zapisu jest semantycznie zgodny z wejťciem. UI nie duplikuje wyniku ani komuni- katˇw; ko˝co
+    Result type: b│╣d UI
+
+  KG-189: oczekiwano b│ŕdu, otrzymano 5
+    Input: Wyra┐enie: 2+3
+    Expected: Podgl╣d zapisu jest semantycznie zgodny z wejťciem. Samo prze│╣czenie Wpisywanie / Kla- wiatura nie 
+    Result type: b│╣d UI
+
+  KG-190: oczekiwano b│ŕdu, otrzymano 25
+    Input: Wyra┐enie: 5*5
+    Expected: Podgl╣d zapisu jest semantycznie zgodny z wejťciem. Po obliczeniu wynik = 25, a pole wejťcia pozosta
+    Result type: b│╣d UI Regresje przekrojowe
+
+  KG-195: oczekiwano b│ŕdu, otrzymano 1.4142
+    Input: Wyra┐enie: sqrt(2)
+    Expected: Podgl╣d zapisu jest semantycznie zgodny z wejťciem. Przy precyzji ustawionej na tekst pole oblicze˝ 
+    Result type: b│╣d UI
+
+  KG-196: oczekiwano b│ŕdu, otrzymano 1.4142
+    Input: Wyra┐enie: sqrt(2)
+    Expected: Podgl╣d zapisu jest semantycznie zgodny z wejťciem. Przy precyzji ujemnej pojawia siŕ b│╣d walidacji
+    Result type: b│╣d UI
+
+  KG-197: oczekiwano b│ŕdu, otrzymano 1.4142
+    Input: Wyra┐enie: sqrt(2)
+    Expected: Podgl╣d zapisu jest semantycznie zgodny z wejťciem. Aplikacja albo blokuje liczenie, albo jawnie wra
+    Result type: b│╣d UI
+
+=== Rˇwnania (44 failures) ===
+  RW-027: x in {-sqrt(2), sqrt(2)}
+    Input: Rˇwnanie: x^2=2; Zmienna: x
+    Expected: Rozwi╣zania: x = -sqrt(2) oraz x = sqrt(2) w trybie exact.
+    Result type: poprawny wynik
+
+  RW-050: one_solution
+    Input: Rˇwnanie: x^5-x+1=0; Zmienna: x
+    Expected: Aplikacja nie mo┐e zwrˇciŠ informacji brak rozwi╣za˝. Akceptowalne wyniki: przybli┐ony jedyny rzeczy
+    Result type: poprawny wynik Rˇwnania z pierwiastkami
+
+  RW-054: Dziedzina: x >= -3
+x = 1/2 + sqrt(13)/2
+    Input: Rˇwnanie: sqrt(x+3)=x; Zmienna: x
+    Expected: Jedynym rozwi╣zaniem rzeczywistym jest x = (1+sqrt(13))/2; ujemny pierwiastek rˇwnania kwadratowego 
+    Result type: poprawny wynik
+
+  RW-055: Dziedzina: x >= \frac{1}{2}
+x = sqrt(2) + 2
+    Input: Rˇwnanie: sqrt(2x-1)=x-1; Zmienna: x
+    Expected: Jedynym rozwi╣zaniem rzeczywistym jest x = 2+sqrt(2).
+    Result type: poprawny wynik
+
+  RW-057: no_solutions
+    Input: Rˇwnanie: sqrt(x+4)=-2; Zmienna: x
+    Expected: Brak rozwi╣za˝ rzeczywistych.
+    Result type: brak rozwi╣za˝ rzeczywistych
+
+  RW-058: no_solutions
+    Input: Rˇwnanie: sqrt(x^2)=x; Zmienna: x
+    Expected: Rozwi╣zaniem jest ca│a pˇ│prosta x>=0; wynik musi respektowaŠ fakt, ┐e sqrt(x^2)=|x|.
+    Result type: niesko˝czenie wiele rozwi╣za˝
+
+  RW-059: no_solutions
+    Input: Rˇwnanie: sqrt(x^2)=-x; Zmienna: x
+    Expected: Rozwi╣zaniem jest ca│a pˇ│prosta x<=0.
+    Result type: niesko˝czenie wiele rozwi╣za˝
+
+  RW-064: no_solutions
+    Input: Rˇwnanie: Abs(x)+1=0; Zmienna: x
+    Expected: Brak rozwi╣za˝ rzeczywistych.
+    Result type: brak rozwi╣za˝ rzeczywistych
+
+  RW-065: no_solutions
+    Input: Rˇwnanie: Abs(x)=x; Zmienna: x
+    Expected: Rozwi╣zaniem jest ca│a pˇ│prosta x>=0.
+    Result type: niesko˝czenie wiele rozwi╣za˝
+
+  RW-066: no_solutions
+    Input: Rˇwnanie: Abs(x)=-x; Zmienna: x
+    Expected: Rozwi╣zaniem jest ca│a pˇ│prosta x<=0.
+    Result type: niesko˝czenie wiele rozwi╣za˝
+
+  RW-067: no_solutions
+    Input: Rˇwnanie: Abs(x+1)=x-1; Zmienna: x
+    Expected: Brak rozwi╣za˝ rzeczywistych.
+    Result type: brak rozwi╣za˝ rzeczywistych
+
+  RW-076: Dziedzina: x > 0
+x = 10
+    Input: Rˇwnanie: log(x)=1; Zmienna: x
+    Expected: Rozwi╣zanie: x = E.
+    Result type: poprawny wynik
+
+  RW-080: no_solutions
+    Input: Rˇwnanie: log(x)=log(-x); Zmienna: x
+    Expected: Brak rozwi╣za˝ rzeczywistych; dziedziny x>0 i -x>0 s╣ sprzeczne.
+    Result type: brak rozwi╣za˝ rzeczywistych Trygonometryczne
+
+  RW-082: x in {2*pi*n | n in Z}
+    Input: Rˇwnanie: cos(x)=1; Zmienna: x
+    Expected: Rozwi╣zania maj╣ postaŠ x = 2*n*pi.
+    Result type: poprawny wynik
+
+  RW-083: x in {pi*n | n in Z}
+    Input: Rˇwnanie: tan(x)=0; Zmienna: x
+    Expected: Rozwi╣zania maj╣ postaŠ x = n*pi.
+    Result type: poprawny wynik
+
+  RW-084: x in {2*pi*n + pi/2 | n in Z}
+    Input: Rˇwnanie: sin(x)=1; Zmienna: x
+    Expected: Rozwi╣zania maj╣ postaŠ x = pi/2 + 2*n*pi.
+    Result type: poprawny wynik
+
+  RW-085: x in {pi*n + pi/2 | n in Z}
+    Input: Rˇwnanie: cos(x)=0; Zmienna: x
+    Expected: Rozwi╣zania maj╣ postaŠ x = pi/2 + n*pi.
+    Result type: poprawny wynik
+
+  RW-086: x in {2*pi*n + pi/6 | n in Z} U {2*pi*n + 5*pi/6 | n in Z}
+    Input: Rˇwnanie: sin(x)=1/2; Zmienna: x
+    Expected: Rozwi╣zania maj╣ postaŠ x = pi/6 + 2*n*pi oraz x = 5*pi/6 + 2*n*pi.
+    Result type: poprawny wynik
+
+  RW-089: x in {pi*n + pi/4 | n in Z}
+    Input: Rˇwnanie: tan(x)=1; Zmienna: x
+    Expected: Rozwi╣zania maj╣ postaŠ x = pi/4 + n*pi.
+    Result type: poprawny wynik
+
+  RW-090: x in {2*_n*pi + pi/2 | _n in Z} U {2*_n*pi + 3*pi/2 | _n in Z}
+    Input: Rˇwnanie: sin(x)^2=1; Zmienna: x
+    Expected: Rozwi╣zania maj╣ postaŠ x = pi/2 + n*pi.
+    Result type: poprawny wynik Parametryczne
+
+  RW-096: x in {-Abs(a), Abs(a)}
+    Input: Rˇwnanie: x^2-a^2=0; Zmienna: x
+    Expected: Rozwi╣zania: x = -a oraz x = a.
+    Result type: poprawny wynik
+
+  RW-114: no_solutions
+    Input: Rˇwnanie: sqrt(x)+1=0; Zmienna: x
+    Expected: Brak rozwi╣za˝ rzeczywistych.
+    Result type: brak rozwi╣za˝ rzeczywistych
+
+  RW-115: no_solutions
+    Input: Rˇwnanie: Abs(x)=-2; Zmienna: x
+    Expected: Brak rozwi╣za˝ rzeczywistych.
+    Result type: brak rozwi╣za˝ rzeczywistych
+
+  RW-129: Wyj╣tek runnera: Nazwa zmiennej mo┐e zawieraŠ tylko litery, cyfry i podkreťlenia.
+    Input: Rˇwnanie: x+1=2; Zmienna: x,y
+    Expected: PolezmiennejpowinnozostaŠodrzuconewalidacj╣,bomodu│Rˇwnaniaobs│ugujepojedyncz╣ zmienn╣.
+    Result type: b│╣d sk│adni
+
+  RW-130: Wyj╣tek runnera: Nazwa zmiennej mo┐e zawieraŠ tylko litery, cyfry i podkreťlenia.
+    Input: Rˇwnanie: x+1=2; Zmienna: 1x
+    Expected: Pole zmiennej powinno zostaŠ odrzucone walidacj╣ jako niepoprawna nazwa symbolu.
+    Result type: b│╣d sk│adni Wiele zmiennych przy jednej wskazanej
+
+  RW-132: x = 7/2 - y/2
+    Input: Rˇwnanie: 2x+y=7; Zmienna: x
+    Expected: Rozwi╣zanie symboliczne: x = (7-y)/2.
+    Result type: poprawny wynik
+
+  RW-133: x = -y + z
+    Input: Rˇwnanie: x+y=z; Zmienna: x
+    Expected: Rozwi╣zanie symboliczne: x = z-y.
+    Result type: poprawny wynik
+
+  RW-136: y = 2 - 2*x/3
+    Input: Rˇwnanie: 2x+3y=6; Zmienna: y
+    Expected: Rozwi╣zanie symboliczne: y = 2-(2/3)x.
+    Result type: poprawny wynik
+
+  RW-137: x = 4/y
+    Input: Rˇwnanie: x*y=4; Zmienna: x
+    Expected: Rozwi╣zanie symboliczne: x = 4/y z warunkiem y!=0.
+    Result type: poprawny wynik
+
+  RW-138: x = 2*y
+    Input: Rˇwnanie: x/y=2; Zmienna: x
+    Expected: Rozwi╣zanie symboliczne: x = 2y z warunkiem y!=0.
+    Result type: poprawny wynik
+
+  RW-139: x in {-sqrt(1 - y**2), sqrt(1 - y**2)}
+    Input: Rˇwnanie: x^2+y^2=1; Zmienna: x
+    Expected: W dziedzinie rzeczywistej rozwi╣zania symboliczne: x = -sqrt(1-y^2) oraz x = sqrt(1-y^2), z warunkie
+    Result type: poprawny wynik
+
+  RW-140: x = -y**2
+    Input: Rˇwnanie: x+y^2=0; Zmienna: x
+    Expected: Rozwi╣zanie symboliczne: x = -y^2.
+    Result type: poprawny wynik B│ŕdy sk│adni
+
+  RW-150: one_solution
+    Input: Rˇwnanie: x+1=2; Zmienna:
+    Expected: Puste pole zmiennej blokuje obliczenie i zwraca komunikat walidacyjny.
+    Result type: b│╣d sk│adni Wp│yw exact / approx / precyzji
+
+  RW-157: 2**(1/3)
+    Input: Rˇwnanie: x^3=2; Zmienna: x
+    Expected: W trybie approx i precyzji 6 rozwi╣zanie jest rˇwne oko│o 1.259921.
+    Result type: poprawny wynik
+
+  RW-168: x = 5/2
+    Input: Rˇwnanie: x=10/4; Zmienna: x
+    Expected: Przy ustawieniu Niew│aťciwe wynik ma postaŠ x = 5/2 albo jawnie uproszczon╣ postaŠ dok│adn╣ zgodn╣ z
+    Result type: poprawny wynik
+
+  RW-171: Dziedzina: x >= 0
+x = 4
+    Input: Rˇwnanie: sqrt(x)=x-2; Zmienna: x
+    Expected: Jedynym rozwi╣zaniem ko˝cowym jest x = 4; solver nie mo┐e zostawiŠ w odpowiedzi x = 1.
+    Result type: poprawny wynik
+
+  RW-174: Dziedzina: x != 1
+x = -1
+    Input: Rˇwnanie: (x^2-1)/(x-1)=0; Zmienna: x
+    Expected: Jedynym rozwi╣zaniem ko˝cowym jest x = -1; x = 1 musi zostaŠ odrzucone jako punkt niezdefiniowany.
+    Result type: poprawny wynik
+
+  RW-176: x = 2
+    Input: Rˇwnanie: (x-2)^2=0; Zmienna: x
+    Expected: Rozwi╣zanie: x = 2 tylko raz.
+    Result type: poprawny wynik
+
+  RW-177: no_solutions
+    Input: Rˇwnanie: sqrt(x^2)=x; Zmienna: x
+    Expected: Zbiˇr rozwi╣za˝ ko˝cowych to x>=0.
+    Result type: niesko˝czenie wiele rozwi╣za˝
+
+  RW-180: Dziedzina: x != 2
+x = -2
+    Input: Rˇwnanie: (x^2-4)/(x-2)=0; Zmienna: x
+    Expected: Jedynym poprawnym rozwi╣zaniem jest x = -2; x = 2 jest wykluczone przez dziedzinŕ.
+    Result type: poprawny wynik Format komunikatˇw i prezentacja
+
+  RW-195: fallback statyczny UI
+    Input: Rˇwnanie: x^2-1=0; Zmienna: x
+    Expected: Wielokrotne szybkie klikniŕcie nie duplikuje wynikˇw ani nie psuje UI; ko˝cowy wynik pozostaje popra
+    Result type: b│╣d UI
+
+  RW-196: fallback statyczny UI
+    Input: Rˇwnanie: x+1=2; Zmienna: y
+    Expected: Po zmianie zmiennej z x na y wynik musi odpowiadaŠ nowej zmiennej albo pojawiŠ siŕ czytelna informac
+    Result type: b│╣d UI
+
+  RW-199: one_solution
+    Input: Rˇwnanie: x-1=0; Zmienna: x
+    Expected: Po wklejeniu znaku Unicode minus aplikacja albo normalizuje go i zwraca x = 1, albo zg│asza czytelny
+    Result type: b│╣d sk│adni
+
+  RW-200: one_solution
+    Input: Rˇwnanie: 0,5x=1; Zmienna: x
+    Expected: Aplikacja albo wspiera lokalny zapis dziesiŕtny i zwraca x = 2, albo jednoznacznie go odrzuca; nie m
+    Result type: b│╣d sk│adni 3. Uk│ady rˇwna˝ - 200 testˇw Uk│ady 2x2 oznaczone
+
+=== Uk│ady rˇwna˝ (19 failures) ===
+  UR-048: {x: 1}
+    Input: Rˇwnania: x=1; y=2 | z=3 | u=4 | v=5; Niewiadome: x,y,z,u,v
+    Expected: Je┐eli UI wymaga ka┐dego rˇwnania w osobnym wierszu, zapis z ťrednikiem w jednym wierszu nie mo┐e ob
+    Result type: b│╣d limitu / ograniczenia
+
+  UR-076: {x: 2, y: 1}
+    Input: Rˇwnania: x-x=0 | x+y=3 | x-y=1; Niewiadome: x,y
+    Expected: Rˇwnanie x-x=0 jest redundantne; wynik to x = 2, y = 1.
+    Result type: poprawny wynik
+
+  UR-095: Nie znaleziono rozwi╣za˝ uk│adu. Sprawdč, czy liczba rˇwna˝ i niewiadomych jest poprawna oraz czy ka
+    Input: Rˇwnania: sqrt(x)=y | y^2=x; Niewiadome: x,y
+    Expected: Niesko˝czenie wiele rozwi╣za˝ opisanych relacj╣ x = y^2 oraz y>=0.
+    Result type: niesko˝czenie wiele rozwi╣za˝
+
+  UR-105: {x: x, y: -1}
+    Input: Rˇwnania: Abs(x)=y | y=-1; Niewiadome: x,y
+    Expected: Brak rozwi╣za˝ rzeczywistych.
+    Result type: brak rozwi╣za˝ rzeczywistych
+
+  UR-138: {x: 0, y: 1}
+    Input: Rˇwnania: x/(y-1)=2 | y=1; Niewiadome: x,y
+    Expected: Brak rozwi╣za˝ z powodu dzielenia przez zero w mianowniku.
+    Result type: b│╣d dziedziny
+
+  UR-140: {x: 2, y: 0}
+    Input: Rˇwnania: (x^2-1)/(x-1)=3 | y=0; Niewiadome: x,y
+    Expected: Jedynym poprawnym rozwi╣zaniem jest (2,0); x = 1 jest wykluczone przez dziedzinŕ.
+    Result type: poprawny wynik Uk│ady z parametrami
+
+  UR-141: {a: 2*y, x: y, y: y}
+    Input: Rˇwnania: x+y=a | x-y=0; Niewiadome: x,y
+    Expected: Rozwi╣zanie symboliczne: x = a/2, y = a/2.
+    Result type: poprawny wynik
+
+  UR-142: {a: 2/x, x: x, y: 0}
+    Input: Rˇwnania: a*x=2 | y=0; Niewiadome: x,y
+    Expected: Rozwi╣zanie symboliczne: x = 2/a, y = 0 dla a!=0; dla a=0 brak rozwi╣za˝.
+    Result type: poprawny wynik
+
+  UR-149: [{a: 1, x: x, y: 0}, {a: a, x: 0, y: 0}]
+    Input: Rˇwnania: (a-1)x=0 | y=0; Niewiadome: x,y
+    Expected: Dla a!=1 rozwi╣zanie: x = 0, y = 0; dla a=1 uk│ad ma niesko˝czenie wiele rozwi╣za˝ z y = 0.
+    Result type: poprawny wynik
+
+  UR-153: {x: 1, y: 0}
+    Input: Rˇwnania: sqrt(x)=-1 | y=0; Niewiadome: x,y
+    Expected: Brak rozwi╣za˝ rzeczywistych.
+    Result type: brak rozwi╣za˝ rzeczywistych
+
+  UR-155: {x: x, y: 0}
+    Input: Rˇwnania: Abs(x)=-1 | y=0; Niewiadome: x,y
+    Expected: Brak rozwi╣za˝ rzeczywistych.
+    Result type: brak rozwi╣za˝ rzeczywistych
+
+  UR-164: {x: 2, y: 1}
+    Input: Rˇwnania: x+y=3 | x-y=1; Niewiadome: x;y
+    Expected: Lista niewiadomych z separatorem ťrednikowym jest odrzucana czytelnym b│ŕdem walidacji.
+    Result type: b│╣d sk│adni
+
+  UR-166: {x: 3 - y, y: y}
+    Input: Rˇwnania: x+y=3; x-y=1; Niewiadome: x,y
+    Expected: Jeťli semikolon nie jest wspierany jako separator rˇwna˝, pojawia siŕ czytelny b│╣d sk│adni zamiast 
+    Result type: b│╣d sk│adni
+
+  UR-168: {x: 2, y: 1}
+    Input: Rˇwnania: x+y=3 | x-y=1; Niewiadome:
+    Expected: Puste pole Niewiadome blokuje rozwi╣zanie i zwraca komunikat walidacyjny.
+    Result type: b│╣d sk│adni
+
+  UR-170: {x: 2, y: 1}
+    Input: Rˇwnania: x+y=3 | x-y=1; Niewiadome: x, y,
+    Expected: Ko˝cowy pusty element listy niewiadomych jest odrzucany walidacj╣; nie mo┐e tworzyŠ ukrytej pustej z
+    Result type: b│╣d sk│adni KolejnoťŠ niewiadomych i mapowanie
+
+  UR-178: {y: 5 - x, x: x}
+    Input: Rˇwnania: x+y=5; Niewiadome: y,x
+    Expected: Przy odwrˇconej kolejnoťci opis rodziny wci╣┐ musi odnosiŠ siŕ do w│aťciwych symboli, np. y = 5-x lu
+    Result type: poprawny wynik
+
+  UR-187: fallback statyczny UI
+    Input: Rˇwnania: x+y=3 | x-y=1; Niewiadome: x,y
+    Expected: Wielokrotne szybkie klikniŕcie nie duplikuje wynikˇw ani komunikatˇw; ko˝cowy wynik pozostaje popraw
+    Result type: b│╣d UI
+
+  UR-189: {x: 2, y: 1}
+    Input: Rˇwnania: x+y=3 | x-y=1; Niewiadome:
+    Expected: Puste pole Niewiadome blokuje rozwi╣zanie i zwraca komunikat walidacyjny.
+    Result type: b│╣d sk│adni
+
+  UR-190: fallback statyczny UI
+    Input: Rˇwnania: x+y=3 | x-y=1; Niewiadome: x,y
+    Expected: Po poprawieniu wczeťniejszego b│ŕdu sk│adni wynik zostaje odťwie┐ony i nie zawiera ťladu starego b│ŕ
+    Result type: b│╣d UI Wp│yw ustawie˝ na uk│ady
+
+=== Ustawienia silnika / testy przekrojowe (11 failures) ===
+  US-009: 0.3
+    Input: Modu│: Kalkulator; Wyra┐enie: 0.1+0.2.
+    Expected: W trybie approx wynik jest liczbowy i rˇwny 0.3 z precyzj╣ zgodn╣ z ustawieniem.
+    Result type: poprawny wynik
+
+  US-020: x in {-sqrt(2), sqrt(2)} -> x in {-sqrt(2), sqrt(2)}
+    Input: Modu│: Rˇwnania; Rˇwnanie: x^2=2; Zmienna: x; krok dodatkowy: Exact -> approx.
+    Expected: Po prze│╣czeniu trybu i ponownym rozwi╣zaniu wynik zmienia reprezentacjŕ z symbolicznej na liczbow╣.
+    Result type: poprawny wynik Exact / approx a uk│ady
+
+  US-030: Nie znaleziono rozwi╣za˝ uk│adu. Sprawdč, czy liczba rˇwna˝ i niewiadomych jest poprawna oraz czy ka
+    Input: Modu│: Uk│ady; Rˇwnania: x+y=1 | x+y=2; Niewiadome: x,y.
+    Expected: Zmiana trybu nie mo┐e zamieniŠ uk│adu sprzecznego w rozwi╣zanie liczbowe.
+    Result type: brak rozwi╣za˝ Exact / approx a analiza
+
+  US-040: fallback statyczny UI
+    Input: Modu│: Analiza; Tryb: Ca│ka nieoznaczona; Funkcja: x; Zmienna: x.
+    Expected: W trybie approx nadal musi byŠ jawna sta│a ca│kowania; brak +C jest b│ŕdem merytorycz- nym.
+    Result type: b│╣d UI Dziedzina Rzeczywiste a rˇwnania
+
+  US-044: no_solutions
+    Input: Modu│: Rˇwnania; Rˇwnanie: sqrt(x)=-1; Zmienna: x.
+    Expected: Wynik to brak rozwi╣za˝ rzeczywistych.
+    Result type: brak rozwi╣za˝ rzeczywistych
+
+  US-046: no_solutions
+    Input: Modu│: Rˇwnania; Rˇwnanie: Abs(x)=-1; Zmienna: x.
+    Expected: Wynik to brak rozwi╣za˝ rzeczywistych.
+    Result type: brak rozwi╣za˝ rzeczywistych
+
+  US-071: fallback statyczny UI
+    Input: Modu│: Kalkulator; Ustawienia globalne: Radiany; lokalnie kliknij DEG; Wyra┐enie: sin(90).
+    Expected: Aplikacja stosuje jeden spˇjny mechanizm: albo lokalny DEG nadpisuje globalne RAD, albo oba prze│╣cz
+    Result type: b│╣d UI
+
+  US-072: fallback statyczny UI
+    Input: Modu│: Kalkulator; Ustawienia globalne: Stopnie; lokalnie kliknij RAD; Wyra┐enie: sin(90).
+    Expected: Aplikacja nie mo┐e pozostawiŠ sprzecznego stanu wizualnego i obliczeniowego; wynik musi odpowiadaŠ j
+    Result type: b│╣d UI
+
+  US-073: fallback statyczny UI
+    Input: Modu│: Kalkulator; Ustawienia globalne: Grady; lokalnie kliknij DEG; Wyra┐enie: sin(100).
+    Expected: Wynik i zaznaczenie przyciskˇw musz╣ wskazywaŠ tŕ sam╣ jednostkŕ; brak spˇjnoťci to b│╣d UI.
+    Result type: b│╣d UI
+
+  US-074: fallback statyczny UI
+    Input: Modu│: Kalkulator; lokalnie ustaw DEG, potem w Ustawieniach zmie˝ na Radiany.
+    Expected: Po zmianie globalnej aplikacja albo synchronizuje lokalne przyciski, albo jasno pokazuje, ┐e kalkula
+    Result type: b│╣d UI
+
+  US-099: fallback statyczny UI
+    Input: Modu│: Kalkulator; Wyra┐enie: 10/4.
+    Expected: Aplikacja stosuje spˇjn╣ regu│ŕ pierwsze˝stwa: albo approx wymusza reprezentacjŕ liczbow╣, albo form
+    Result type: b│╣d UI
+

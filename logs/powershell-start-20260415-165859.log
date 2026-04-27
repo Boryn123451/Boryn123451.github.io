@@ -1,0 +1,47 @@
+﻿**********************
+Windows PowerShell transcript start
+Start time: 20260415165859
+Username: BORYS-PC\borys
+RunAs User: BORYS-PC\borys
+Configuration Name: 
+Machine: BORYS-PC (Microsoft Windows NT 10.0.22631.0)
+Host Application: C:\WINDOWS\System32\WindowsPowerShell\v1.0\powershell.exe
+Process ID: 25992
+PSVersion: 5.1.22621.4391
+PSEdition: Desktop
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.22621.4391
+BuildVersion: 10.0.22621.4391
+CLRVersion: 4.0.30319.42000
+WSManStackVersion: 3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+**********************
+Building frontend...
+dist/assets/KaTeX_AMS-Regular-DMm9YOAa.woff              33.52 kB
+dist/assets/KaTeX_Main-Italic-3WenGoN9.ttf               33.58 kB
+dist/assets/KaTeX_Main-Bold-waoOVXN0.ttf                 51.34 kB
+dist/assets/KaTeX_Main-Regular-ypZvNtVU.ttf              53.58 kB
+dist/assets/KaTeX_AMS-Regular-DRggAlZN.ttf               63.63 kB
+dist/assets/index-Dqy47p-0.css                           41.03 kB │ gzip:  11.11 kB
+dist/assets/GraphPanel-Dc7LNTH9.js                        6.40 kB │ gzip:   2.55 kB
+dist/assets/purify.es-B5CD4DQe.js                        22.90 kB │ gzip:   8.84 kB
+dist/assets/index-DjmmI53p.js                            81.03 kB │ gzip:  24.57 kB
+dist/assets/react-KfUPlHYY.js                           141.00 kB │ gzip:  45.31 kB
+dist/assets/index.es-Cjjl561r.js                        150.79 kB │ gzip:  51.60 kB
+dist/assets/html2canvas.esm-CBrSDip1.js                 201.42 kB │ gzip:  48.03 kB
+dist/assets/katex-CjHiWPWQ.js                           255.97 kB │ gzip:  76.92 kB
+dist/assets/jspdf.es.min-bjrTk0jN.js                    390.32 kB │ gzip: 128.75 kB
+dist/assets/plotly-CzoZac1e.js                        1,127.36 kB │ gzip: 377.42 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-ma
+nualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 10.26s
+
+Starting app at http://127.0.0.1:8000
+Stop with Ctrl+C
+Logs folder: C:\Users\borys\Documents\New project\logs
+Session log: C:\Users\borys\Documents\New project\logs\powershell-start-20260415-165859.log
+

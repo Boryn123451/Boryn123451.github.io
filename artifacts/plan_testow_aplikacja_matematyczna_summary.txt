@@ -1,0 +1,10 @@
+Wszystkie przypadki: 1000
+Zaliczone: 1000
+Niezaliczone: 0
+
+Podział modułami:
+- AM: 200/200
+- KG: 200/200
+- RW: 200/200
+- UR: 200/200
+- US: 200/200

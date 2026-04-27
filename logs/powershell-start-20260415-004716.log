@@ -1,0 +1,40 @@
+﻿**********************
+Windows PowerShell transcript start
+Start time: 20260415004716
+Username: BORYS-PC\borys
+RunAs User: BORYS-PC\borys
+Configuration Name: 
+Machine: BORYS-PC (Microsoft Windows NT 10.0.22631.0)
+Host Application: C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\run.ps1 -SkipInstall
+Process ID: 28120
+PSVersion: 5.1.22621.4391
+PSEdition: Desktop
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.22621.4391
+BuildVersion: 10.0.22621.4391
+CLRVersion: 4.0.30319.42000
+WSManStackVersion: 3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+**********************
+Building frontend...
+
+
+Starting app at http://127.0.0.1:8000
+Stop with Ctrl+C
+Logs folder: C:\Users\borys\Documents\New project\logs
+
+python.exe : INFO:     Started server process [27976]
+At C:\Users\borys\Documents\New project\run.ps1:95 char:5
++     & $pythonExe -m uvicorn app.main:app --app-dir (Join-Path $root " ...
++     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (INFO:     Started server process [27976]:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+INFO:     127.0.0.1:51738 - "GET / HTTP/1.1" 200 OK
+**********************
+Windows PowerShell transcript end
+End time: 20260415004742
+**********************

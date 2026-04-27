@@ -1,0 +1,27 @@
+﻿**********************
+Windows PowerShell transcript start
+Start time: 20260417195744
+Username: BORYS-PC\borys
+RunAs User: BORYS-PC\borys
+Configuration Name: 
+Machine: BORYS-PC (Microsoft Windows NT 10.0.22631.0)
+Host Application: powershell -NoLogo -NoProfile -ExecutionPolicy Bypass -File C:\Users\borys\Documents\New project\run.ps1 -SkipInstall
+Process ID: 24392
+PSVersion: 5.1.22621.4391
+PSEdition: Desktop
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.22621.4391
+BuildVersion: 10.0.22621.4391
+CLRVersion: 4.0.30319.42000
+WSManStackVersion: 3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+**********************
+Building frontend...
+
+WARNING: Port 8000 is already in use by python (PID 11772). Starting this instance on port 8001 instead.
+
+Starting app at http://127.0.0.1:8001
+Stop with Ctrl+C
+Logs folder: C:\Users\borys\Documents\New project\logs
+Session log: C:\Users\borys\Documents\New project\logs\powershell-start-20260417-195744.log
+

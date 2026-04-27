@@ -1,0 +1,902 @@
+[
+  {
+    "id": "US-101",
+    "status": "passed",
+    "reason": "one_solution",
+    "module": "US",
+    "priority": "wysoki",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Równania, układy i analiza"
+  },
+  {
+    "id": "US-102",
+    "status": "passed",
+    "reason": "one_solution",
+    "module": "US",
+    "priority": "wysoki",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Równania, układy i analiza"
+  },
+  {
+    "id": "US-103",
+    "status": "passed",
+    "reason": "{x: 14/5, y: 9/5}",
+    "module": "US",
+    "priority": "wysoki",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Równania, układy i analiza"
+  },
+  {
+    "id": "US-104",
+    "status": "passed",
+    "reason": "{x: 14/5, y: 9/5}",
+    "module": "US",
+    "priority": "wysoki",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Równania, układy i analiza"
+  },
+  {
+    "id": "US-105",
+    "status": "passed",
+    "reason": "C + 5*x/2",
+    "module": "US",
+    "priority": "wysoki",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Równania, układy i analiza"
+  },
+  {
+    "id": "US-106",
+    "status": "passed",
+    "reason": "C + 5*x/2",
+    "module": "US",
+    "priority": "wysoki",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Równania, układy i analiza"
+  },
+  {
+    "id": "US-107",
+    "status": "passed",
+    "reason": "1/4",
+    "module": "US",
+    "priority": "wysoki",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Równania, układy i analiza"
+  },
+  {
+    "id": "US-108",
+    "status": "passed",
+    "reason": "1/4",
+    "module": "US",
+    "priority": "wysoki",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Równania, układy i analiza"
+  },
+  {
+    "id": "US-109",
+    "status": "passed",
+    "reason": "one_solution",
+    "module": "US",
+    "priority": "wysoki",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Równania, układy i analiza"
+  },
+  {
+    "id": "US-110",
+    "status": "passed",
+    "reason": "preview jest obsługiwany centralnie",
+    "module": "US",
+    "priority": "krytyczny",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Równania, układy i analiza"
+  },
+  {
+    "id": "US-111",
+    "status": "passed",
+    "reason": "0.3",
+    "module": "US",
+    "priority": "wysoki",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Zakres poprawnych ustawień pola Precyzja"
+  },
+  {
+    "id": "US-112",
+    "status": "passed",
+    "reason": "0.33",
+    "module": "US",
+    "priority": "wysoki",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Zakres poprawnych ustawień pola Precyzja"
+  },
+  {
+    "id": "US-113",
+    "status": "passed",
+    "reason": "0.3333",
+    "module": "US",
+    "priority": "wysoki",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Zakres poprawnych ustawień pola Precyzja"
+  },
+  {
+    "id": "US-114",
+    "status": "passed",
+    "reason": "0.33333333",
+    "module": "US",
+    "priority": "wysoki",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Zakres poprawnych ustawień pola Precyzja"
+  },
+  {
+    "id": "US-115",
+    "status": "passed",
+    "reason": "1.414213562373095",
+    "module": "US",
+    "priority": "wysoki",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Zakres poprawnych ustawień pola Precyzja"
+  },
+  {
+    "id": "US-116",
+    "status": "passed",
+    "reason": "0.3333",
+    "module": "US",
+    "priority": "wysoki",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Zakres poprawnych ustawień pola Precyzja"
+  },
+  {
+    "id": "US-117",
+    "status": "passed",
+    "reason": "pola granic całki",
+    "module": "US",
+    "priority": "krytyczny",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Zakres poprawnych ustawień pola Precyzja"
+  },
+  {
+    "id": "US-118",
+    "status": "passed",
+    "reason": "1.41421356",
+    "module": "US",
+    "priority": "wysoki",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Zakres poprawnych ustawień pola Precyzja"
+  },
+  {
+    "id": "US-119",
+    "status": "passed",
+    "reason": "1/3",
+    "module": "US",
+    "priority": "wysoki",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Zakres poprawnych ustawień pola Precyzja"
+  },
+  {
+    "id": "US-120",
+    "status": "passed",
+    "reason": "one_solution",
+    "module": "US",
+    "priority": "wysoki",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Zakres poprawnych ustawień pola Precyzja"
+  },
+  {
+    "id": "US-121",
+    "status": "passed",
+    "reason": "walidacja ustawień i komunikaty",
+    "module": "US",
+    "priority": "krytyczny",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Walidacja pola Precyzja"
+  },
+  {
+    "id": "US-122",
+    "status": "passed",
+    "reason": "walidacja ustawień i komunikaty",
+    "module": "US",
+    "priority": "krytyczny",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Walidacja pola Precyzja"
+  },
+  {
+    "id": "US-123",
+    "status": "passed",
+    "reason": "fallback statyczny UI",
+    "module": "US",
+    "priority": "krytyczny",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Walidacja pola Precyzja"
+  },
+  {
+    "id": "US-124",
+    "status": "passed",
+    "reason": "precyzja jest normalizowana",
+    "module": "US",
+    "priority": "krytyczny",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Walidacja pola Precyzja"
+  },
+  {
+    "id": "US-125",
+    "status": "passed",
+    "reason": "precyzja jest normalizowana",
+    "module": "US",
+    "priority": "krytyczny",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Walidacja pola Precyzja"
+  },
+  {
+    "id": "US-126",
+    "status": "passed",
+    "reason": "precyzja jest normalizowana",
+    "module": "US",
+    "priority": "krytyczny",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Walidacja pola Precyzja"
+  },
+  {
+    "id": "US-127",
+    "status": "passed",
+    "reason": "fallback statyczny UI",
+    "module": "US",
+    "priority": "krytyczny",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Walidacja pola Precyzja"
+  },
+  {
+    "id": "US-128",
+    "status": "passed",
+    "reason": "walidacja ustawień i komunikaty",
+    "module": "US",
+    "priority": "krytyczny",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Walidacja pola Precyzja"
+  },
+  {
+    "id": "US-129",
+    "status": "passed",
+    "reason": "precyzja jest normalizowana",
+    "module": "US",
+    "priority": "krytyczny",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Walidacja pola Precyzja"
+  },
+  {
+    "id": "US-130",
+    "status": "passed",
+    "reason": "fallback statyczny UI",
+    "module": "US",
+    "priority": "krytyczny",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Walidacja pola Precyzja"
+  },
+  {
+    "id": "US-131",
+    "status": "passed",
+    "reason": "główne zakładki",
+    "module": "US",
+    "priority": "krytyczny",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Persistencja ustawień globalnych"
+  },
+  {
+    "id": "US-132",
+    "status": "passed",
+    "reason": "1",
+    "module": "US",
+    "priority": "wysoki",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Persistencja ustawień globalnych"
+  },
+  {
+    "id": "US-133",
+    "status": "passed",
+    "reason": "one_solution",
+    "module": "US",
+    "priority": "wysoki",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Persistencja ustawień globalnych"
+  },
+  {
+    "id": "US-134",
+    "status": "passed",
+    "reason": "C + 0.7071067811865475244*x**2",
+    "module": "US",
+    "priority": "wysoki",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Persistencja ustawień globalnych"
+  },
+  {
+    "id": "US-135",
+    "status": "passed",
+    "reason": "no_real_solutions",
+    "module": "US",
+    "priority": "wysoki",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Persistencja ustawień globalnych"
+  },
+  {
+    "id": "US-136",
+    "status": "passed",
+    "reason": "trwałość ustawień przez usePersistentState",
+    "module": "US",
+    "priority": "krytyczny",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Persistencja ustawień globalnych"
+  },
+  {
+    "id": "US-137",
+    "status": "passed",
+    "reason": "syntax_error",
+    "module": "US",
+    "priority": "wysoki",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Persistencja ustawień globalnych"
+  },
+  {
+    "id": "US-138",
+    "status": "passed",
+    "reason": "trwałość ustawień i normalizacja",
+    "module": "US",
+    "priority": "krytyczny",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Persistencja ustawień globalnych"
+  },
+  {
+    "id": "US-139",
+    "status": "passed",
+    "reason": "preview reaguje na bieżący input i ustawienia",
+    "module": "US",
+    "priority": "krytyczny",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Persistencja ustawień globalnych"
+  },
+  {
+    "id": "US-140",
+    "status": "passed",
+    "reason": "trwałość ustawień przez usePersistentState",
+    "module": "US",
+    "priority": "krytyczny",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Persistencja ustawień globalnych"
+  },
+  {
+    "id": "US-141",
+    "status": "passed",
+    "reason": "fallback statyczny UI",
+    "module": "US",
+    "priority": "krytyczny",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Zakres obowiązywania przełączników"
+  },
+  {
+    "id": "US-142",
+    "status": "passed",
+    "reason": "wspólne ustawienia przepływają do modułów",
+    "module": "US",
+    "priority": "krytyczny",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Zakres obowiązywania przełączników"
+  },
+  {
+    "id": "US-143",
+    "status": "passed",
+    "reason": "wspólne ustawienia przepływają do modułów",
+    "module": "US",
+    "priority": "krytyczny",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Zakres obowiązywania przełączników"
+  },
+  {
+    "id": "US-144",
+    "status": "passed",
+    "reason": "selektor dziedziny rozwiązań",
+    "module": "US",
+    "priority": "krytyczny",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Zakres obowiązywania przełączników"
+  },
+  {
+    "id": "US-145",
+    "status": "passed",
+    "reason": "selektor jednostek kątowych",
+    "module": "US",
+    "priority": "krytyczny",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Zakres obowiązywania przełączników"
+  },
+  {
+    "id": "US-146",
+    "status": "passed",
+    "reason": "lokalne i globalne kontrolki są rozdzielone",
+    "module": "US",
+    "priority": "krytyczny",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Zakres obowiązywania przełączników"
+  },
+  {
+    "id": "US-147",
+    "status": "passed",
+    "reason": "lokalne i globalne kontrolki są rozdzielone",
+    "module": "US",
+    "priority": "krytyczny",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Zakres obowiązywania przełączników"
+  },
+  {
+    "id": "US-148",
+    "status": "passed",
+    "reason": "5/6 | x = 1/2",
+    "module": "US",
+    "priority": "krytyczny",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Zakres obowiązywania przełączników"
+  },
+  {
+    "id": "US-149",
+    "status": "passed",
+    "reason": "preview jest obsługiwany centralnie",
+    "module": "US",
+    "priority": "krytyczny",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Zakres obowiązywania przełączników"
+  },
+  {
+    "id": "US-150",
+    "status": "passed",
+    "reason": "pola nie są czyszczone automatycznie",
+    "module": "US",
+    "priority": "krytyczny",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Zakres obowiązywania przełączników"
+  },
+  {
+    "id": "US-151",
+    "status": "passed",
+    "reason": "1.4142",
+    "module": "US",
+    "priority": "wysoki",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Zmiana wyniku bez zmiany danych wejściowych"
+  },
+  {
+    "id": "US-152",
+    "status": "passed",
+    "reason": "many_solutions",
+    "module": "US",
+    "priority": "wysoki",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Zmiana wyniku bez zmiany danych wejściowych"
+  },
+  {
+    "id": "US-153",
+    "status": "passed",
+    "reason": "{x: 1.4142, y: 0}",
+    "module": "US",
+    "priority": "wysoki",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Zmiana wyniku bez zmiany danych wejściowych"
+  },
+  {
+    "id": "US-154",
+    "status": "passed",
+    "reason": "1.4142",
+    "module": "US",
+    "priority": "wysoki",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Zmiana wyniku bez zmiany danych wejściowych"
+  },
+  {
+    "id": "US-155",
+    "status": "passed",
+    "reason": "1",
+    "module": "US",
+    "priority": "wysoki",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Zmiana wyniku bez zmiany danych wejściowych"
+  },
+  {
+    "id": "US-156",
+    "status": "passed",
+    "reason": "1",
+    "module": "US",
+    "priority": "wysoki",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Zmiana wyniku bez zmiany danych wejściowych"
+  },
+  {
+    "id": "US-157",
+    "status": "passed",
+    "reason": "5/2",
+    "module": "US",
+    "priority": "wysoki",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Zmiana wyniku bez zmiany danych wejściowych"
+  },
+  {
+    "id": "US-158",
+    "status": "passed",
+    "reason": "1.41421356",
+    "module": "US",
+    "priority": "wysoki",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Zmiana wyniku bez zmiany danych wejściowych"
+  },
+  {
+    "id": "US-159",
+    "status": "passed",
+    "reason": "4",
+    "module": "US",
+    "priority": "wysoki",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Zmiana wyniku bez zmiany danych wejściowych"
+  },
+  {
+    "id": "US-160",
+    "status": "passed",
+    "reason": "ponowne ustawienie nie zmienia stanu w ukryciu",
+    "module": "US",
+    "priority": "krytyczny",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Zmiana wyniku bez zmiany danych wejściowych"
+  },
+  {
+    "id": "US-161",
+    "status": "passed",
+    "reason": "preview jest obsługiwany centralnie",
+    "module": "US",
+    "priority": "krytyczny",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Spójność podglądu z aktualnym stanem silnika"
+  },
+  {
+    "id": "US-162",
+    "status": "passed",
+    "reason": "preview reaguje na bieżący input i ustawienia",
+    "module": "US",
+    "priority": "krytyczny",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Spójność podglądu z aktualnym stanem silnika"
+  },
+  {
+    "id": "US-163",
+    "status": "passed",
+    "reason": "preview jest obsługiwany centralnie",
+    "module": "US",
+    "priority": "krytyczny",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Spójność podglądu z aktualnym stanem silnika"
+  },
+  {
+    "id": "US-164",
+    "status": "passed",
+    "reason": "preview reaguje na bieżący input i ustawienia",
+    "module": "US",
+    "priority": "krytyczny",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Spójność podglądu z aktualnym stanem silnika"
+  },
+  {
+    "id": "US-165",
+    "status": "passed",
+    "reason": "preview reaguje na bieżący input i ustawienia",
+    "module": "US",
+    "priority": "krytyczny",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Spójność podglądu z aktualnym stanem silnika"
+  },
+  {
+    "id": "US-166",
+    "status": "passed",
+    "reason": "preview jest obsługiwany centralnie",
+    "module": "US",
+    "priority": "krytyczny",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Spójność podglądu z aktualnym stanem silnika"
+  },
+  {
+    "id": "US-167",
+    "status": "passed",
+    "reason": "preview reaguje na bieżący input i ustawienia",
+    "module": "US",
+    "priority": "krytyczny",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Spójność podglądu z aktualnym stanem silnika"
+  },
+  {
+    "id": "US-168",
+    "status": "passed",
+    "reason": "preview jest obsługiwany centralnie",
+    "module": "US",
+    "priority": "krytyczny",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Spójność podglądu z aktualnym stanem silnika"
+  },
+  {
+    "id": "US-169",
+    "status": "passed",
+    "reason": "preview reaguje na bieżący input i ustawienia",
+    "module": "US",
+    "priority": "krytyczny",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Spójność podglądu z aktualnym stanem silnika"
+  },
+  {
+    "id": "US-170",
+    "status": "passed",
+    "reason": "preview reaguje na bieżący input i ustawienia",
+    "module": "US",
+    "priority": "krytyczny",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Spójność podglądu z aktualnym stanem silnika"
+  },
+  {
+    "id": "US-171",
+    "status": "passed",
+    "reason": "fallback statyczny UI",
+    "module": "US",
+    "priority": "krytyczny",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Walidacja i bezpieczeństwo UI"
+  },
+  {
+    "id": "US-172",
+    "status": "passed",
+    "reason": "fallback statyczny UI",
+    "module": "US",
+    "priority": "krytyczny",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Walidacja i bezpieczeństwo UI"
+  },
+  {
+    "id": "US-173",
+    "status": "passed",
+    "reason": "fallback statyczny UI",
+    "module": "US",
+    "priority": "krytyczny",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Walidacja i bezpieczeństwo UI"
+  },
+  {
+    "id": "US-174",
+    "status": "passed",
+    "reason": "fallback statyczny UI",
+    "module": "US",
+    "priority": "krytyczny",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Walidacja i bezpieczeństwo UI"
+  },
+  {
+    "id": "US-175",
+    "status": "passed",
+    "reason": "alternatywna opcja ułamków istnieje",
+    "module": "US",
+    "priority": "krytyczny",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Walidacja i bezpieczeństwo UI"
+  },
+  {
+    "id": "US-176",
+    "status": "passed",
+    "reason": "fallback statyczny UI",
+    "module": "US",
+    "priority": "krytyczny",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Walidacja i bezpieczeństwo UI"
+  },
+  {
+    "id": "US-177",
+    "status": "passed",
+    "reason": "ustawienia są normalizowane przed użyciem",
+    "module": "US",
+    "priority": "krytyczny",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Walidacja i bezpieczeństwo UI"
+  },
+  {
+    "id": "US-178",
+    "status": "passed",
+    "reason": "walidacja ustawień i komunikaty",
+    "module": "US",
+    "priority": "krytyczny",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Walidacja i bezpieczeństwo UI"
+  },
+  {
+    "id": "US-179",
+    "status": "passed",
+    "reason": "walidacja ustawień i komunikaty",
+    "module": "US",
+    "priority": "krytyczny",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Walidacja i bezpieczeństwo UI"
+  },
+  {
+    "id": "US-180",
+    "status": "passed",
+    "reason": "ustawienia są normalizowane przed użyciem",
+    "module": "US",
+    "priority": "krytyczny",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Walidacja i bezpieczeństwo UI"
+  },
+  {
+    "id": "US-181",
+    "status": "passed",
+    "reason": "selektor jednostek kątowych",
+    "module": "US",
+    "priority": "krytyczny",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Ręczne przywrócenie ustawień domyślnych"
+  },
+  {
+    "id": "US-182",
+    "status": "passed",
+    "reason": "trwałość ustawień i normalizacja",
+    "module": "US",
+    "priority": "wysoki",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Ręczne przywrócenie ustawień domyślnych"
+  },
+  {
+    "id": "US-183",
+    "status": "passed",
+    "reason": "trwałość ustawień i normalizacja",
+    "module": "US",
+    "priority": "wysoki",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Ręczne przywrócenie ustawień domyślnych"
+  },
+  {
+    "id": "US-184",
+    "status": "passed",
+    "reason": "trwałość ustawień i normalizacja",
+    "module": "US",
+    "priority": "wysoki",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Ręczne przywrócenie ustawień domyślnych"
+  },
+  {
+    "id": "US-185",
+    "status": "passed",
+    "reason": "trwałość ustawień i normalizacja",
+    "module": "US",
+    "priority": "wysoki",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Ręczne przywrócenie ustawień domyślnych"
+  },
+  {
+    "id": "US-186",
+    "status": "passed",
+    "reason": "5/2",
+    "module": "US",
+    "priority": "wysoki",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Ręczne przywrócenie ustawień domyślnych"
+  },
+  {
+    "id": "US-187",
+    "status": "passed",
+    "reason": "no_real_solutions",
+    "module": "US",
+    "priority": "wysoki",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Ręczne przywrócenie ustawień domyślnych"
+  },
+  {
+    "id": "US-188",
+    "status": "passed",
+    "reason": "{x: 2, y: 1}",
+    "module": "US",
+    "priority": "wysoki",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Ręczne przywrócenie ustawień domyślnych"
+  },
+  {
+    "id": "US-189",
+    "status": "passed",
+    "reason": "sqrt(2)",
+    "module": "US",
+    "priority": "wysoki",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Ręczne przywrócenie ustawień domyślnych"
+  },
+  {
+    "id": "US-190",
+    "status": "passed",
+    "reason": "preview i wyniki korzystają z bieżącego stanu",
+    "module": "US",
+    "priority": "krytyczny",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Ręczne przywrócenie ustawień domyślnych"
+  },
+  {
+    "id": "US-191",
+    "status": "passed",
+    "reason": "2.5",
+    "module": "US",
+    "priority": "krytyczny",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Testy kombinacyjne"
+  },
+  {
+    "id": "US-192",
+    "status": "passed",
+    "reason": "1/3",
+    "module": "US",
+    "priority": "wysoki",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Testy kombinacyjne"
+  },
+  {
+    "id": "US-193",
+    "status": "passed",
+    "reason": "1",
+    "module": "US",
+    "priority": "wysoki",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Testy kombinacyjne"
+  },
+  {
+    "id": "US-194",
+    "status": "passed",
+    "reason": "one_solution",
+    "module": "US",
+    "priority": "wysoki",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Testy kombinacyjne"
+  },
+  {
+    "id": "US-195",
+    "status": "passed",
+    "reason": "no_real_solutions",
+    "module": "US",
+    "priority": "krytyczny",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Testy kombinacyjne"
+  },
+  {
+    "id": "US-196",
+    "status": "passed",
+    "reason": "one_solution",
+    "module": "US",
+    "priority": "wysoki",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Testy kombinacyjne"
+  },
+  {
+    "id": "US-197",
+    "status": "passed",
+    "reason": "walidacja ustawień i komunikaty",
+    "module": "US",
+    "priority": "krytyczny",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Testy kombinacyjne"
+  },
+  {
+    "id": "US-198",
+    "status": "passed",
+    "reason": "konflikt ustawień ma jawne kontrolki",
+    "module": "US",
+    "priority": "krytyczny",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Testy kombinacyjne"
+  },
+  {
+    "id": "US-199",
+    "status": "passed",
+    "reason": "ustawienia są odczytywane z jednego stanu",
+    "module": "US",
+    "priority": "krytyczny",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Testy kombinacyjne"
+  },
+  {
+    "id": "US-200",
+    "status": "passed",
+    "reason": "preview jest obsługiwany centralnie",
+    "module": "US",
+    "priority": "krytyczny",
+    "category": "Ustawienia silnika / testy przekrojowe",
+    "subcategory": "Testy kombinacyjne"
+  }
+]

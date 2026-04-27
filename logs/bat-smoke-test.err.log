@@ -1,0 +1,10 @@
+INFO:     Started server process [12920]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+ERROR:    [Errno 10048] error while attempting to bind on address ('127.0.0Application exited with code -1.
+At C:\Users\borys\Documents\New project\run.ps1:174 char:9
++         throw "Application exited with code $LASTEXITCODE."
++         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : OperationStopped: (Application exited with code -1.:String) [], RuntimeException
+    + FullyQualifiedErrorId : Application exited with code -1.
+ 

@@ -1,0 +1,52 @@
+﻿**********************
+Windows PowerShell transcript start
+Start time: 20260415004757
+Username: BORYS-PC\borys
+RunAs User: BORYS-PC\borys
+Configuration Name: 
+Machine: BORYS-PC (Microsoft Windows NT 10.0.22631.0)
+Host Application: C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\run.ps1 -SkipInstall
+Process ID: 29112
+PSVersion: 5.1.22621.4391
+PSEdition: Desktop
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.22621.4391
+BuildVersion: 10.0.22621.4391
+CLRVersion: 4.0.30319.42000
+WSManStackVersion: 3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+**********************
+Building frontend...
+
+
+Starting app at http://127.0.0.1:8000
+Stop with Ctrl+C
+Logs folder: C:\Users\borys\Documents\New project\logs
+
+python.exe : INFO:     Started server process [17604]
+At C:\Users\borys\Documents\New project\run.ps1:95 char:5
++     & $pythonExe -m uvicorn app.main:app --app-dir (Join-Path $root " ...
++     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (INFO:     Started server process [17604]:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+INFO:     127.0.0.1:64008 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64008 - "GET /assets/index-BeWGm3lE.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56614 - "GET /assets/katex-CjHiWPWQ.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59882 - "GET /assets/index-C-0SRQCe.css HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64475 - "GET /assets/react-KfUPlHYY.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64475 - "GET /assets/KaTeX_Main-Regular-B22Nviop.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56614 - "GET /assets/KaTeX_Math-Italic-t53AETM-.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64008 - "GET /assets/KaTeX_AMS-Regular-BQhdFMY1.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59882 - "GET /assets/KaTeX_Size4-Regular-Dl5lxZxV.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60238 - "GET /assets/KaTeX_Size1-Regular-mCD8mA8B.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60238 - "GET /favicon.ico HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60238 - "POST /api/preview HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60238 - "GET /assets/KaTeX_Main-Bold-Cx986IdX.woff2 HTTP/1.1" 200 OK
+**********************
+Windows PowerShell transcript end
+End time: 20260415154706
+**********************

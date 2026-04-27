@@ -1,0 +1,85 @@
+901 US-101 0.16 passed one_solution
+902 US-102 0.02 passed one_solution
+903 US-103 0.07 passed {x: 14/5, y: 9/5}
+904 US-104 0.06 passed {x: 14/5, y: 9/5}
+905 US-105 0.00 failed Wyjątek runnera: not enough values to unpack (expected 2, got 1)
+906 US-106 0.00 failed Wyjątek runnera: not enough values to unpack (expected 2, got 1)
+907 US-107 0.02 passed 1/4
+908 US-108 0.00 passed 1/4
+909 US-109 0.02 passed one_solution
+910 US-110 0.00 passed syntax_error
+911 US-111 0.00 passed 0.3333
+912 US-112 0.00 passed 0.3333
+913 US-113 0.00 passed 0.3333
+914 US-114 0.00 passed 0.33333333
+915 US-115 0.02 passed 1.414213562373095
+916 US-116 0.00 passed 0.3333
+917 US-117 0.02 passed 1.41421356237309514547
+918 US-118 0.02 passed 1.41421356
+919 US-119 0.00 passed 1/3
+920 US-120 0.02 passed one_solution
+921 US-121 0.00 passed 0.3333
+922 US-122 0.00 passed 0.3333
+923 US-123 0.08 passed many_solutions
+924 US-124 0.00 passed 0.3333
+925 US-125 0.00 passed 0.3333
+926 US-126 0.00 passed 0.3333
+927 US-127 0.00 passed 0.3333
+928 US-128 0.00 failed Wpisz co najmniej jedno równanie w osobnym wierszu.
+929 US-129 0.02 passed 1.41421356237309514547
+930 US-130 0.18 passed C + 0.7071067811865475244*x**2
+931 US-131 0.00 passed syntax_error
+932 US-132 0.00 passed 1
+933 US-133 0.03 passed one_solution
+934 US-134 0.14 passed C + 0.7071067811865475244*x**2
+935 US-135 0.04 passed no_real_solutions
+936 US-136 0.00 failed Wpisz co najmniej jedno równanie w osobnym wierszu.
+937 US-137 0.00 passed syntax_error
+938 US-138 0.00 passed syntax_error
+939 US-139 0.00 passed 5/2
+940 US-140 0.00 failed Wpisz co najmniej jedno równanie w osobnym wierszu.
+941 US-141 0.00 passed syntax_error
+942 US-142 0.00 passed syntax_error
+943 US-143 0.00 passed syntax_error
+944 US-144 0.00 passed syntax_error
+945 US-145 0.00 failed Wyjątek runnera: Wpisz wyrażenie matematyczne.
+946 US-146 0.00 passed syntax_error
+947 US-147 0.00 failed fallback statyczny UI
+948 US-148 0.00 passed syntax_error
+949 US-149 0.00 passed trwałość pól przez usePersistentState
+950 US-150 0.00 passed trwałość pól przez usePersistentState
+951 US-151 0.02 passed 1.4142
+952 US-152 0.10 passed many_solutions
+953 US-153 0.00 failed Znak '|' nie jest obslugiwany w tym zapisie. Usuń ten znak albo zastąp go standardowym zapisem matematycznym.
+954 US-154 0.00 failed Wyjątek runnera: Wpisz wyrażenie matematyczne.
+955 US-155 0.00 passed 1
+956 US-156 0.00 failed Wyjątek runnera: Wpisz wyrażenie matematyczne.
+957 US-157 0.00 passed 5/2
+958 US-158 0.02 passed 1.41421356
+959 US-159 0.00 passed 4
+960 US-160 0.02 passed one_solution
+961 US-161 0.00 passed 0.8333
+962 US-162 0.05 passed no_real_solutions
+963 US-163 0.06 passed {x: 14/5, y: 9/5}
+964 US-164 0.13 passed C + x**2/2
+965 US-165 0.02 passed 1.41421356
+966 US-166 0.00 passed 5/2
+967 US-167 0.08 passed x**2 + 1
+968 US-168 0.03 passed one_solution
+969 US-169 0.00 failed fallback statyczny UI
+970 US-170 0.00 passed trwałość pól przez usePersistentState
+971 US-171 0.00 passed 0.3333
+972 US-172 0.08 passed many_solutions
+973 US-173 0.06 passed {x: 1.4142, y: 0}
+974 US-174 0.15 passed C + 0.7071067811865475244*x**2
+975 US-175 0.00 failed fallback statyczny UI
+976 US-176 0.00 failed fallback statyczny UI
+977 US-177 0.00 failed fallback statyczny UI
+978 US-178 0.00 failed fallback statyczny UI
+979 US-179 0.00 failed fallback statyczny UI
+980 US-180 0.00 failed Wyjątek runnera: Wpisz wyrażenie matematyczne.
+981 US-181 0.00 passed trwałość pól przez usePersistentState
+982 US-182 0.00 failed fallback statyczny UI
+983 US-183 0.00 failed fallback statyczny UI
+984 US-184 0.00 failed fallback statyczny UI
+985 US-185 0.00 failed fallback statyczny UI

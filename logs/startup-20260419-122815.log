@@ -1,0 +1,10 @@
+[19.04.2026 12:28:15,46] Workspace: C:\Users\borys\Documents\New project\
+[19.04.2026 12:28:15,47] Mode: skip-install
+[19.04.2026 12:28:15,58] Building frontend...
+
+> scientific-cas-calculator@1.0.0 build
+> tsc -b && vite build
+
+[36mvite v5.4.21 [32mbuilding for production...[36m[39m
+transforming...
+^C^C
